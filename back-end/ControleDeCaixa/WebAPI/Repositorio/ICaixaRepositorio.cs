@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ControleDeCaixa.WebAPI.Repositorio
 {
-    public interface ICaixa
+    public interface ICaixaRepositorio
     {
-        Task<Resultado<IEnumerable<FluxoCaixa>, Falha>> RecuerarFluxoDeCaixaAsync();
+        Task<IEnumerable<FluxoCaixa>> RecuperarFluxoDeCaixaAsync();
     }
 }
