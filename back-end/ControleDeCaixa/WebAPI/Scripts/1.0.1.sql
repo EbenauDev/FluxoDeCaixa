@@ -1,0 +1,51 @@
+﻿CREATE TABLE FluxoCaixaAnual (
+	Id INT NOT NULL PRIMARY KEY IDENTITY,
+	Ano VARCHAR(4) NOT NULL,
+);
+
+CREATE TABLE CaixaMes (
+	Id INT NOT NULL PRIMARY KEY IDENTITY,
+	MesReferencia VARCHAR(9),
+	FluxoCaixaAnualId INT NOT NULL
+);
+
+ALTER TABLE CaixaMes
+ADD CONSTRAINT FK_FluxoCaixaAnual_FluxoCaixaAnualId FOREIGN KEY (FluxoCaixaAnualId)
+    REFERENCES FluxoCaixaAnual(id);
+
+CREATE TABLE CaixaHisto (
+	Id INT NOT NULL PRIMARY KEY IDENTITY,
+	TotalReceitas DECIMAL(10, 2) NULL DEFAULT 0,
+	CaixaInicial DECIMAL(10, 2) NULL DEFAULT 0,
+	FluxoDeCaixa DECIMAL(10, 2) NULL DEFAULT 0,
+	CaixaFinal DECIMAL(10, 2) NULL DEFAULT 0,
+	Data DATETIME NOT NULL,
+	CaixaMesId INT NOT NULL
+);
+
+ALTER TABLE CaixaHisto
+ADD CONSTRAINT FK_CaixaMes_CaixaMesId FOREIGN KEY (CaixaMesId)
+    REFERENCES CaixaMes(id);
+
+
+CREATE TABLE CaixaReceitas (
+	Id INT NOT NULL PRIMARY KEY IDENTITY,
+	Valor DECIMAL(10, 2),
+	Descricao varchar(256) NULL,
+	CaixaMesId INT NOT NULL
+);
+
+ALTER TABLE CaixaReceitas
+ADD CONSTRAINT FK_CaixaReceitas_CaixaMesId FOREIGN KEY (CaixaMesId)
+    REFERENCES CaixaMes(id);
+
+CREATE TABLE CaixaCustos (
+	Id INT NOT NULL PRIMARY KEY IDENTITY,
+	Valor DECIMAL(10, 2),
+	Descricao varchar(256) NULL,
+	CaixaMesId INT NOT NULL
+);
+
+ALTER TABLE CaixaCustos
+ADD CONSTRAINT FK_CaixaCustos_CaixaMesId FOREIGN KEY (CaixaMesId)
+    REFERENCES CaixaMes(id);
