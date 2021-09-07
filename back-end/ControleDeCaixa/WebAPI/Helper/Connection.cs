@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace ControleDeCaixa.WebAPI.Infra
+namespace ControleDeCaixa.WebAPI.Helper
 {
     public static class Connection
     {

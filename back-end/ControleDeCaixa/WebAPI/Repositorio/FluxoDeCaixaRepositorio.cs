@@ -1,17 +1,17 @@
-﻿using ControleDeCaixa.WebAPI.Models;
+﻿using ControleDeCaixa.WebAPI.DTO;
+using ControleDeCaixa.WebAPI.Helper;
+using ControleDeCaixa.WebAPI.Models;
+using Dapper;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ControleDeCaixa.WebAPI.Repositorio
 {
     public class FluxoDeCaixaRepositorio : IFluxoDeCaixaRepositorio
     {
-        private readonly string _stringConexao;
 
-        public async Task<IEnumerable<FluxoDeCaixaAnual>> RecuperarFluxoDeCaixa(string ano)
+        public async Task<FluxoDeCaixaAnual> RecuperarFluxoDeCaixa(string ano)
         {
             const string sql = @"DECLARE @AnoReferencia VARCHAR(4);
 								 SET @AnoReferencia = @ano;
@@ -32,14 +32,14 @@ namespace ControleDeCaixa.WebAPI.Repositorio
 								 LEFT JOIN CaixaCustos (NOLOCK) ON CaixaCustos.CaixaMesId = CaixaMes.Id
 								 WHERE FluxoCaixaAnual.Ano = @AnoReferencia";
 
-            using var conexao = new SqlConnection(_stringConexao);
+            using var conexao = new SqlConnection(Connection.ConnectionValue());
             try
             {
                 await conexao.OpenAsync();
+                return (await conexao.QueryAsync<FluxoDeCaixaDTO>(sql, new { ano })).ConverterParaModel();
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
             finally

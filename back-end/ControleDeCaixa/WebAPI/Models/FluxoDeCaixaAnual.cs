@@ -5,7 +5,7 @@ namespace ControleDeCaixa.WebAPI.Models
 {
     public class FluxoDeCaixaAnual
     {
-        public FluxoDeCaixaAnual(int id, DateTime ano, IEnumerable<CaixaDoMes> caixas)
+        public FluxoDeCaixaAnual(int id, int ano, IEnumerable<CaixaDoMes> caixas)
         {
             Id = id;
             Ano = ano;
@@ -13,7 +13,7 @@ namespace ControleDeCaixa.WebAPI.Models
         }
         
         public int Id { get; set; }
-        public DateTime Ano { get; set; }
+        public int Ano { get; set; }
         public IEnumerable<CaixaDoMes> Caixas { get; set; }
     }
 }

@@ -4,19 +4,19 @@ namespace ControleDeCaixa.WebAPI.Models
 {
     public class CaixaDoMes
     {
-        public CaixaDoMes(int id, string mesReferencia, IEnumerable<Receita> receitas, IEnumerable<Custo> custo, IEnumerable<CaixaHisto> historico)
+        public CaixaDoMes(int id, string mesReferencia, IEnumerable<Receita> receitas, IEnumerable<Custo> custos, IEnumerable<CaixaHisto> historico)
         {
             Id = id;
             MesReferencia = mesReferencia;
             Receitas = receitas;
-            Custo = custo;
+            Custos = custos;
             Historico = historico;
         }
 
         public int Id { get; set; }
         public string MesReferencia { get; set; }
         public IEnumerable<Receita> Receitas { get; set; }
-        public IEnumerable<Custo> Custo { get; set; }
+        public IEnumerable<Custo> Custos { get; set; }
         public IEnumerable<CaixaHisto> Historico { get; set; }
     }
 
