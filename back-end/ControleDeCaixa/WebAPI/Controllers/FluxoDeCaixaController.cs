@@ -18,7 +18,7 @@ namespace ControleDeCaixa.WebAPI.Controllers
         [HttpGet("Ano/{ano}")]
         public async Task<IActionResult> RecuperarFluxoCaixaAnual(string ano)
         {
-            var resultado = await _fluxoDeCaixaRepositorio.RecuperarFluxoDeCaixa(ano);
+            var resultado = await _fluxoDeCaixaRepositorio.RecuperarFluxoDeCaixaAsync(ano);
             return Ok(resultado);
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ControleDeCaixa.WebAPI.Models
+namespace ControleDeCaixa.WebAPI.Entities
 {
     public class FluxoDeCaixaAnual
     {

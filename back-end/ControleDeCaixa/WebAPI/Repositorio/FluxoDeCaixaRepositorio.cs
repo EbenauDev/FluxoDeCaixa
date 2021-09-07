@@ -1,17 +1,18 @@
 ﻿using ControleDeCaixa.WebAPI.DTO;
 using ControleDeCaixa.WebAPI.Helper;
-using ControleDeCaixa.WebAPI.Models;
+using ControleDeCaixa.WebAPI.Entities;
 using Dapper;
 using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using ControleDeCaixa.WebAPI.Models;
 
 namespace ControleDeCaixa.WebAPI.Repositorio
 {
     public class FluxoDeCaixaRepositorio : IFluxoDeCaixaRepositorio
     {
 
-        public async Task<FluxoDeCaixaAnual> RecuperarFluxoDeCaixa(string ano)
+        public async Task<FluxoDeCaixaAnual> RecuperarFluxoDeCaixaAsync(string ano)
         {
             const string sql = @"DECLARE @AnoReferencia VARCHAR(4);
 								 SET @AnoReferencia = @ano;
@@ -46,7 +47,50 @@ namespace ControleDeCaixa.WebAPI.Repositorio
             {
                 await conexao.CloseAsync();
             }
+        }
 
+        public async Task<bool> NovoCustoAsync(CustoInputModel custo)
+        {
+            const string sql = @"INSERT INTO CaixaCustos (Valor, Descricao, CaixaMesId)
+                                 VALUES(@Valor, @Descricao, @CaixaMesId)";
+            using var conexao = new SqlConnection(Connection.ConnectionValue());
+            try
+            {
+                await conexao.OpenAsync();
+                if (await conexao.ExecuteAsync(sql, custo) is var resultado && resultado <= 0)
+                    throw new Exception("Falha ao inserir um novo custo");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                await conexao.CloseAsync();
+            }
+        }
+
+        public async Task<bool> NovaReceitaAsync(ReceitaInputModel receita)
+        {
+            const string sql = @"INSERT INTO CaixaReceitas (Valor, Descricao, CaixaMesId)
+                                 VALUES(@Valor, @Descricao, @CaixaMesId)";
+            using var conexao = new SqlConnection(Connection.ConnectionValue());
+            try
+            {
+                await conexao.OpenAsync();
+                if (await conexao.ExecuteAsync(sql, receita) is var resultado && resultado <= 0)
+                    throw new Exception("Falha ao inserir um novo custo");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                await conexao.CloseAsync();
+            }
         }
     }
 }

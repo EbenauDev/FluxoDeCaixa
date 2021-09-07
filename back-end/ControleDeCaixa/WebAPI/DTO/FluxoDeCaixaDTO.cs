@@ -1,4 +1,4 @@
-﻿using ControleDeCaixa.WebAPI.Models;
+﻿using ControleDeCaixa.WebAPI.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,8 +27,8 @@ namespace ControleDeCaixa.WebAPI.DTO
             var receitas = fluxoDeCaixaDTOs.Select(f => new { f.ReceitaId, f.DescricaoReceita, f.ValorReceita, f.CaixaMesId });
             var custos = fluxoDeCaixaDTOs.Select(f => new { f.CustoId, f.DescricaoCusto, f.ValorCusto, f.CaixaMesId });
 
-            return new FluxoDeCaixaAnual(fluxoCaixa.CaixaAnualId, 
-                                         fluxoCaixa.Ano, 
+            return new FluxoDeCaixaAnual(fluxoCaixa.CaixaAnualId,
+                                         fluxoCaixa.Ano,
                                          caixas: listaCaixas.Select(l => new CaixaDoMes(l.CaixaMesId,
                                                                 l.MesReferencia,
                                                                 receitas: receitas.Where(r => r.CaixaMesId.Equals(l.CaixaMesId)).Select(r => new Receita(r.ReceitaId, r.DescricaoReceita, r.ValorReceita)),
