@@ -2,9 +2,9 @@
 
 namespace ControleDeCaixa.WebAPI.Helper
 {
-    public static class Connection
+    public class ConnectionHelper : IConnectionHelper
     {
-        public static string ConnectionValue()
+        public string GetConnectionString()
         {
             return ConfigurationManager.AppSettings["ConnectionString"];
         }

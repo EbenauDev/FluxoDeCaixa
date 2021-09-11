@@ -1,3 +1,4 @@
+using ControleDeCaixa.WebAPI.Helper;
 using ControleDeCaixa.WebAPI.Repositorio;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +22,7 @@ namespace WebAPI
         {
             services.AddControllers();
             services.AddSingleton<IFluxoDeCaixaRepositorio, FluxoDeCaixaRepositorio>();
+            services.AddSingleton<IConnectionHelper, ConnectionHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

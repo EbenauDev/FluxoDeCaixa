@@ -1,4 +1,5 @@
-﻿using ControleDeCaixa.WebAPI.Repositorio;
+﻿using ControleDeCaixa.WebAPI.InputModel;
+using ControleDeCaixa.WebAPI.Repositorio;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -15,11 +16,10 @@ namespace ControleDeCaixa.WebAPI.Controllers
         }
 
 
-        [HttpGet("Ano/{ano}")]
-        public async Task<IActionResult> RecuperarFluxoCaixaAnual(string ano)
+        [HttpPost]
+        public async Task<IActionResult> NovoFluxoAnualDeCaixa([FromBody] FluxoCaixaAnualInputModel fluxoCaixaAnualInput)
         {
-            var resultado = await _fluxoDeCaixaRepositorio.RecuperarFluxoDeCaixaAsync(ano);
-            return Ok(resultado);
+            return Ok(await _fluxoDeCaixaRepositorio.NovoFluxoAnualDeCaixaAsync(fluxoCaixaAnualInput));
         }
     }
 }

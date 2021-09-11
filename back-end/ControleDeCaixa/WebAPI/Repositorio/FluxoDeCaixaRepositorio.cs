@@ -1,95 +1,50 @@
-﻿using ControleDeCaixa.WebAPI.DTO;
-using ControleDeCaixa.WebAPI.Helper;
-using ControleDeCaixa.WebAPI.Entities;
+﻿using ControleDeCaixa.WebAPI.Helper;
+using ControleDeCaixa.WebAPI.InputModel;
 using Dapper;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using ControleDeCaixa.WebAPI.Models;
 
 namespace ControleDeCaixa.WebAPI.Repositorio
 {
     public class FluxoDeCaixaRepositorio : IFluxoDeCaixaRepositorio
     {
 
-        public async Task<FluxoDeCaixaAnual> RecuperarFluxoDeCaixaAsync(string ano)
-        {
-            const string sql = @"DECLARE @AnoReferencia VARCHAR(4);
-								 SET @AnoReferencia = @ano;
-								 
-								 SELECT FluxoCaixaAnual.Id AS CaixaAnualId, 
-								 	   FluxoCaixaAnual.Ano,
-								 	   CaixaMes.Id AS CaixaMesId,
-								 	   CaixaMes.MesReferencia,
-								 	   CaixaReceitas.Id AS ReceitaId,
-								 	   CaixaReceitas.Valor AS ValorReceita,
-								 	   CaixaReceitas.Descricao AS  DescricaoReceita,
-								 	   CaixaCustos.Id AS CustoId,
-								 	   CaixaCustos.Valor AS ValorCusto,
-								 	   CaixaCustos.Descricao AS DescricaoCusto
-								 FROM FluxoCaixaAnual (NOLOCK)
-								 INNER JOIN CaixaMes (NOLOCK) ON CaixaMes.FluxoCaixaAnualId = FluxoCaixaAnual.Id
-								 LEFT JOIN CaixaReceitas (NOLOCK) ON CaixaReceitas.CaixaMesId = CaixaMes.Id
-								 LEFT JOIN CaixaCustos (NOLOCK) ON CaixaCustos.CaixaMesId = CaixaMes.Id
-								 WHERE FluxoCaixaAnual.Ano = @AnoReferencia";
+        private readonly ILogger _logger;
+        private readonly string _stringDeConexao;
 
-            using var conexao = new SqlConnection(Connection.ConnectionValue());
-            try
-            {
-                await conexao.OpenAsync();
-                return (await conexao.QueryAsync<FluxoDeCaixaDTO>(sql, new { ano })).ConverterParaModel();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                await conexao.CloseAsync();
-            }
+        public FluxoDeCaixaRepositorio(ILoggerFactory loggerFactory,
+                                       IConnectionHelper connectionHelper)
+        {
+            _logger = loggerFactory.CreateLogger<FluxoDeCaixaRepositorio>();
+            _stringDeConexao = connectionHelper.GetConnectionString();
         }
 
-        public async Task<bool> NovoCustoAsync(CustoInputModel custo)
+        public async Task<int> NovoFluxoAnualDeCaixaAsync(FluxoCaixaAnualInputModel fluxoCaixaAnualInput)
         {
-            const string sql = @"INSERT INTO CaixaCustos (Valor, Descricao, CaixaMesId)
-                                 VALUES(@Valor, @Descricao, @CaixaMesId)";
-            using var conexao = new SqlConnection(Connection.ConnectionValue());
-            try
-            {
-                await conexao.OpenAsync();
-                if (await conexao.ExecuteAsync(sql, custo) is var resultado && resultado <= 0)
-                    throw new Exception("Falha ao inserir um novo custo");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                await conexao.CloseAsync();
-            }
-        }
+            const string sql = @"INSERT INTO FluxoCaixaAnual(Ano)
+                                 VALUES (@Ano);
+                                 SELECT SCOPE_IDENTITY() AS Id;";
 
-        public async Task<bool> NovaReceitaAsync(ReceitaInputModel receita)
-        {
-            const string sql = @"INSERT INTO CaixaReceitas (Valor, Descricao, CaixaMesId)
-                                 VALUES(@Valor, @Descricao, @CaixaMesId)";
-            using var conexao = new SqlConnection(Connection.ConnectionValue());
-            try
+            using (var conexao = new SqlConnection(_stringDeConexao))
             {
-                await conexao.OpenAsync();
-                if (await conexao.ExecuteAsync(sql, receita) is var resultado && resultado <= 0)
-                    throw new Exception("Falha ao inserir um novo custo");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                await conexao.CloseAsync();
+                try
+                {
+                    await conexao.OpenAsync();
+                    if (await conexao.QueryFirstOrDefaultAsync<int>(sql, new { fluxoCaixaAnualInput.Ano }) is var resultado && resultado <= 0)
+                        throw new Exception($"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }");
+                    return resultado;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Houve um problema ao inserir um novo fluxo anual. Execption: {exception}", ex);
+                    throw new Exception($"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }");
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
             }
         }
     }
