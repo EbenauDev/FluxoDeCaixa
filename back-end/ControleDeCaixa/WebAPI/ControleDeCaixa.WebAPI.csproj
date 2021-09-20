@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Repositorio\FluxoDeCaixaRepositorio.cs~RF1321d0c2.TMP" />
+    <None Remove="DataAccess\FluxoDeCaixaRepositorio.cs~RF1321d0c2.TMP" />
   </ItemGroup>
 
   <ItemGroup>

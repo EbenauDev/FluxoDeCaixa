@@ -1,4 +1,4 @@
-﻿namespace ControleDeCaixa.WebAPI.Models
+﻿namespace ControleDeCaixa.WebAPI.InputModel
 {
     public class CustoInputModel
     {

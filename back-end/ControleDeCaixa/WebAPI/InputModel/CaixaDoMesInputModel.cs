@@ -1,6 +1,6 @@
-﻿namespace ControleDeCaixa.WebAPI.Models
+﻿namespace ControleDeCaixa.WebAPI.InputModel
 {
-    public class CaixaDoMesInputModel
+    public class Caixa
     {
         public int FluxoAnualId { get; set; }
         public string MesDeReferencia { get; set; }

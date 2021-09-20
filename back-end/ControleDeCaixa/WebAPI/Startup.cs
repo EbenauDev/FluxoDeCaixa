@@ -1,5 +1,5 @@
 using ControleDeCaixa.WebAPI.Helper;
-using ControleDeCaixa.WebAPI.Repositorio;
+using ControleDeCaixa.WebAPI.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +21,7 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<IFluxoDeCaixaRepositorio, FluxoDeCaixaRepositorio>();
+            services.AddSingleton<IFluxoDeCaixaDAO, FluxoDeCaixaDAO>();
             services.AddSingleton<IConnectionHelper, ConnectionHelper>();
         }
 
