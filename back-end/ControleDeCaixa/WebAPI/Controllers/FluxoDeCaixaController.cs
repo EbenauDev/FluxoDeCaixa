@@ -9,8 +9,8 @@ namespace ControleDeCaixa.WebAPI.Controllers
     [ApiController]
     public class FluxoDeCaixaController : ControllerBase
     {
-        private readonly IFluxoDeCaixaDAO _fluxoDeCaixaRepositorio;
-        public FluxoDeCaixaController(IFluxoDeCaixaDAO fluxoDeCaixaRepositorio)
+        private readonly IFluxoDeCaixaRepositorio _fluxoDeCaixaRepositorio;
+        public FluxoDeCaixaController(IFluxoDeCaixaRepositorio fluxoDeCaixaRepositorio)
         {
             _fluxoDeCaixaRepositorio = fluxoDeCaixaRepositorio;
         }
@@ -25,6 +25,18 @@ namespace ControleDeCaixa.WebAPI.Controllers
         public async Task<IActionResult> NovoCaixaMes([FromBody] Caixa caxaInputModel)
         {
             return Ok(await _fluxoDeCaixaRepositorio.NovoCaixaAsync(caxaInputModel));
+        }
+
+        [HttpPost("NovaReceita")]
+        public async Task<IActionResult> NovaReceita([FromBody] OperacaoCaixaInputModel operacaoCaixaInput)
+        {
+            return Ok();
+        }
+
+        [HttpPost("NovoCusto")]
+        public async Task<IActionResult> NovoCusto([FromBody] OperacaoCaixaInputModel operacaoCaixaInput)
+        {
+            return Ok();
         }
     }
 }

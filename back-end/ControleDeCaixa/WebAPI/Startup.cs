@@ -21,7 +21,7 @@ namespace WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<IFluxoDeCaixaDAO, FluxoDeCaixaDAO>();
+            services.AddSingleton<IFluxoDeCaixaRepositorio, FluxoDeCaixaRepositorio>();
             services.AddSingleton<IConnectionHelper, ConnectionHelper>();
         }
 

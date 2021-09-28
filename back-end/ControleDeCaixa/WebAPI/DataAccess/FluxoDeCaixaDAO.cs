@@ -1,4 +1,5 @@
-﻿using ControleDeCaixa.WebAPI.Helper;
+﻿using ControleDeCaixa.WebAPI.Generics;
+using ControleDeCaixa.WebAPI.Helper;
 using ControleDeCaixa.WebAPI.InputModel;
 using Dapper;
 using Microsoft.Extensions.Logging;
@@ -9,18 +10,19 @@ using System.Threading.Tasks;
 namespace ControleDeCaixa.WebAPI.DataAccess
 {
 
-    public class FluxoDeCaixaDAO : IFluxoDeCaixaDAO    {
+    public class FluxoDeCaixaRepositorio : IFluxoDeCaixaRepositorio
+    {
         private readonly ILogger _logger;
         private readonly string _stringDeConexao;
 
-        public FluxoDeCaixaDAO(ILoggerFactory loggerFactory,
+        public FluxoDeCaixaRepositorio(ILoggerFactory loggerFactory,
                                        IConnectionHelper connectionHelper)
         {
-            _logger = loggerFactory.CreateLogger<FluxoDeCaixaDAO>();
+            _logger = loggerFactory.CreateLogger<FluxoDeCaixaRepositorio>();
             _stringDeConexao = connectionHelper.GetConnectionString();
         }
 
-        public async Task<int> NovoFluxoAnualDeCaixaAsync(FluxoCaixaAnualInputModel fluxoCaixaAnualInput)
+        public async Task<Resultado<int, Falha>> NovoFluxoAnualDeCaixaAsync(FluxoCaixaAnualInputModel fluxoCaixaAnualInput)
         {
             const string sql = @"INSERT INTO FluxoCaixaAnual(Ano)
                                  VALUES (@Ano);
@@ -32,13 +34,13 @@ namespace ControleDeCaixa.WebAPI.DataAccess
                 {
                     await conexao.OpenAsync();
                     if (await conexao.QueryFirstOrDefaultAsync<int>(sql, new { fluxoCaixaAnualInput.Ano }) is var resultado && resultado <= 0)
-                        throw new Exception($"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }");
-                    return resultado;
+                        return Resultado<int, Falha>.NovaFalha(Falha.Nova(400, $"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }"));
+                    return Resultado<int, Falha>.NovoSucesso(resultado);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError("Houve um problema ao inserir um novo fluxo anual. Execption: {exception}", ex);
-                    throw new Exception($"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }");
+                    return Resultado<int, Falha>.NovaFalha(Falha.NovaComException(400, $"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }", ex));
                 }
                 finally
                 {
@@ -47,7 +49,7 @@ namespace ControleDeCaixa.WebAPI.DataAccess
             }
         }
 
-        public async Task<int> NovoCaixaAsync(Caixa caixa)
+        public async Task<Resultado<int, Falha>> NovoCaixaAsync(Caixa caixa)
         {
             const string sql = @"INSERT INTO CaixaMes(MesReferencia, FluxoCaixaAnualId)
                                  VALUES (@MesReferencia, @FluxoCaixaAnualId);
@@ -64,13 +66,13 @@ namespace ControleDeCaixa.WebAPI.DataAccess
                         FluxoCaixaAnualId = caixa.FluxoAnualId
                     });
                     if (resultado <= 0)
-                        throw new Exception($"Houve um problema ao inserir um caixa  para o mes de referência {caixa.MesDeReferencia}");
-                    return resultado;
+                        return Resultado<int, Falha>.NovaFalha(Falha.Nova(400, $"Houve um problema ao inserir um caixa  para o mes de referência {caixa.MesDeReferencia}"));
+                    return Resultado<int, Falha>.NovoSucesso(resultado);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError("Houve um problema ao inserir um caixa  para o mes de referência {MesReferencia}. Execption: {exception}", caixa.MesDeReferencia, ex);
-                    throw new Exception($"Houve um problema ao inserir um caixa  para o mes de referência {caixa.MesDeReferencia }");
+                    return Resultado<int, Falha>.NovaFalha(Falha.NovaComException(400, $"Houve um problema ao inserir um caixa  para o mes de referência {caixa.MesDeReferencia}", ex));
                 }
                 finally
                 {
