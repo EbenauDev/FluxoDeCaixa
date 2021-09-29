@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 namespace ControleDeCaixa.WebAPI.DataAccess
 {
 
-    public class FluxoDeCaixaRepositorio : IFluxoDeCaixaRepositorio
+    public class FluxoDeCaixaDataAccess : IFluxoDeCaixaDataAccess
     {
         private readonly ILogger _logger;
         private readonly string _stringDeConexao;
 
-        public FluxoDeCaixaRepositorio(ILoggerFactory loggerFactory,
+        public FluxoDeCaixaDataAccess(ILoggerFactory loggerFactory,
                                        IConnectionHelper connectionHelper)
         {
-            _logger = loggerFactory.CreateLogger<FluxoDeCaixaRepositorio>();
+            _logger = loggerFactory.CreateLogger<FluxoDeCaixaDataAccess>();
             _stringDeConexao = connectionHelper.GetConnectionString();
         }
 

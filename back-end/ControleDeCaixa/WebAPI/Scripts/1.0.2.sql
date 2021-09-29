@@ -21,9 +21,6 @@ CREATE TABLE HistoricoCaixa (
 	Id INT NOT NULL PRIMARY KEY IDENTITY,
 	TotalReceitas DECIMAL(10, 2) NULL,
 	TotalCustos DECIMAL(10, 2) NULL,
-	CaixaInicial DECIMAL(10, 2) NULL,
-	FluxoDeCaixa DECIMAL(10, 2) NULL,
-	CaixaFinal DECIMAL(10, 2) NULL,
 	Data DATETIME NOT NULL,
 	CaixaMesId INT NOT NULL
 );

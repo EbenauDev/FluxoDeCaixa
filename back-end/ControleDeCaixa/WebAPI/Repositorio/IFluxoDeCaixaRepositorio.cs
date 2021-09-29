@@ -1,4 +1,5 @@
-﻿using ControleDeCaixa.WebAPI.Generics;
+﻿using ControleDeCaixa.WebAPI.Entites;
+using ControleDeCaixa.WebAPI.Generics;
 using ControleDeCaixa.WebAPI.InputModel;
 using System.Threading.Tasks;
 
@@ -6,6 +7,6 @@ namespace ControleDeCaixa.WebAPI.Repositorio
 {
     public interface IFluxoDeCaixaRepositorio
     {
-        Task<Resultado<bool, Falha>> IncluirOperacaoCaixaAsync(OperacaoCaixaInputModel operacaoCaixaInput);
+        Task<Resultado<bool, Falha>> IncluirOperacaoCaixaAsync(OperacaoCaixa operacaoCaixa);
     }
 }

@@ -2,6 +2,7 @@
 using ControleDeCaixa.WebAPI.DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using ControleDeCaixa.WebAPI.Handler;
 
 namespace ControleDeCaixa.WebAPI.Controllers
 {
@@ -9,10 +10,13 @@ namespace ControleDeCaixa.WebAPI.Controllers
     [ApiController]
     public class FluxoDeCaixaController : ControllerBase
     {
-        private readonly IFluxoDeCaixaRepositorio _fluxoDeCaixaRepositorio;
-        public FluxoDeCaixaController(IFluxoDeCaixaRepositorio fluxoDeCaixaRepositorio)
+        private readonly IFluxoDeCaixaDataAccess _fluxoDeCaixaRepositorio;
+        private readonly IOperacaoCaixaHandler _operacaoCaixaHandler;
+        public FluxoDeCaixaController(IFluxoDeCaixaDataAccess fluxoDeCaixaRepositorio,
+                                      IOperacaoCaixaHandler operacaoCaixaHandler)
         {
             _fluxoDeCaixaRepositorio = fluxoDeCaixaRepositorio;
+            _operacaoCaixaHandler = operacaoCaixaHandler;
         }
 
         [HttpPost]
@@ -30,13 +34,17 @@ namespace ControleDeCaixa.WebAPI.Controllers
         [HttpPost("NovaReceita")]
         public async Task<IActionResult> NovaReceita([FromBody] OperacaoCaixaInputModel operacaoCaixaInput)
         {
-            return Ok();
+            if (await _operacaoCaixaHandler.IncluirOperacaoCaixaAsync(operacaoCaixaInput) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return CreatedAtAction(nameof(NovaReceita), operacaoCaixaInput);
         }
 
         [HttpPost("NovoCusto")]
         public async Task<IActionResult> NovoCusto([FromBody] OperacaoCaixaInputModel operacaoCaixaInput)
         {
-            return Ok();
+            if (await _operacaoCaixaHandler.IncluirOperacaoCaixaAsync(operacaoCaixaInput) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return CreatedAtAction(nameof(NovaReceita), operacaoCaixaInput);
         }
     }
 }

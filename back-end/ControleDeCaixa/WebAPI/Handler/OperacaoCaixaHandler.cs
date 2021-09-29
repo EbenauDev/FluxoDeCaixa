@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ControleDeCaixa.WebAPI.Entites;
 using ControleDeCaixa.WebAPI.Generics;
+using ControleDeCaixa.WebAPI.Repositorio;
 
 namespace ControleDeCaixa.WebAPI.Handler
 {
@@ -11,6 +12,12 @@ namespace ControleDeCaixa.WebAPI.Handler
     }
     public class OperacaoCaixaHandler : IOperacaoCaixaHandler
     {
+        private readonly IFluxoDeCaixaRepositorio _fluxoDeCaixaRepositorio;
+        public OperacaoCaixaHandler(IFluxoDeCaixaRepositorio fluxoDeCaixaRepositorio)
+        {
+            _fluxoDeCaixaRepositorio = fluxoDeCaixaRepositorio;
+        }
+
         public async Task<Resultado<bool, Falha>> IncluirOperacaoCaixaAsync(OperacaoCaixaInputModel operacaoCaixaInput)
         {
             var operacaoCaixaValidator = new OperacaoCaixaValidator();
@@ -21,6 +28,10 @@ namespace ControleDeCaixa.WebAPI.Handler
                  operacaoCaixaInput.Operacao,
                  operacaoCaixaInput.Descricao,
                  operacaoCaixaInput.Valor);
+
+            if (await _fluxoDeCaixaRepositorio.IncluirOperacaoCaixaAsync(operacaoCaixa) is var resultado && resultado.EhFalha)
+                return Resultado<bool, Falha>.NovaFalha(resultado.Falha);
+            return Resultado<bool, Falha>.NovoSucesso(true);
         }
     }
 }
