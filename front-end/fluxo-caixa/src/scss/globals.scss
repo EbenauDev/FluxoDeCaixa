@@ -1,0 +1,33 @@
+.container {
+    max-width: 1440px;
+}
+
+.tabela {
+    @mixin configuracaoBase {
+        display: grid;
+        grid-template-columns: minmax(200px, 0.4fr) 1fr 1fr;
+        grid-column-gap: 10px;
+        padding-left: 10px;
+        min-height: 35px;
+        font-weight: 700;
+        align-items: center;
+        border-radius: 10px;
+    }
+    .tabela__cabecalho {
+        @include configuracaoBase;
+        color: #fff;
+        font-size: 16px;
+    }
+    .tabela__corpo {
+        @include configuracaoBase;
+        color: #222;
+        font-size: 14px;
+        &:nth-child(odd) {
+            background-color: #ddd;
+        }
+    }
+}
+
+.background-primary {
+    background-color: var(--cor-secundaria5);
+}
