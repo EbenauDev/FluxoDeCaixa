@@ -1,18 +1,19 @@
-# Controle de fluxo de caixa
+# :chart: Controle de fluxo de caixa
 Este projeto tem como objetivos testar conceitos de back-end utilizando .NET Core e conceitos de front-end.
 
-## Conceitos de Back-end que estão sendo abordados
+## :memo: Conceitos de Back-end que estão sendo abordados
 - Padrão DataAccess
 - Padrão Repository
 - Handler
 - Autenticação com JWT
 - Onion Architecture
 - Conceitos de DDD
-- Testes de unidade
+- Generics
 
-## Conceitos de front-end que serão abordados
-- Desing responsivo
-- Requisições AJAX com axios ou o servico de HTTTP do Angular
+## :memo: Conceitos de front-end que serão abordados
+- Sistema de GRID e Flex layout
+- Requisições AJAX com axios no Vue
 - Componentes
 - Autenticação nas requisições 
+- Middleware nas rotas da UI
 
