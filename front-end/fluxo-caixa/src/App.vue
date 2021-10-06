@@ -4,7 +4,6 @@
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@400;600;700&display=swap");
-@import "./scss/globals.scss";
 :root {
   --cor-principal1: #d6e4f5;
   --cor-principal2: #83afe2;
