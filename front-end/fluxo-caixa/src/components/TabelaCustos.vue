@@ -22,8 +22,8 @@
         <div>
           <h4>Adicionar um novo custo</h4>
         </div>
-        <form name="novoCusto">
-          <div>
+        <form class="form" name="novoCusto">
+          <div class="form-group">
             <label for="descricao">Descrição</label>
             <input id="descricao" type="text" />
           </div>
