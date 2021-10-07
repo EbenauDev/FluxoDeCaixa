@@ -1,7 +1,7 @@
 <template>
   <div class="custom-modal">
     <div class="modal-backdrop">
-      <div class="modal-content">
+      <div class="modal-content modal-sm">
         <slot></slot>
       </div>
     </div>
@@ -46,6 +46,10 @@ export default {
       padding: 10px;
       animation: slideInDown;
       animation-duration: 0.5s;
+    }
+    .modal-sm {
+      max-width: 420px;
+      max-height: 355px;
     }
   }
 }

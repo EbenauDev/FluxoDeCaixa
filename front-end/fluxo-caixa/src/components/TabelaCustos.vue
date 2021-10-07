@@ -1,8 +1,22 @@
 <template>
   <div>
     <div class="container">
-      <h3>Tabela Custos</h3>
-      <p>Todos os seus custos estão listados na tabela abaixo</p>
+      <header class="container-header">
+        <div>
+          <h2>Tabela Custos</h2>
+          <p>Todos os seus custos estão listados na tabela abaixo</p>
+        </div>
+        <div>
+          <button
+            class="btn btn-primary upper f-bold"
+            type="button"
+            @click="novoCusto"
+          >
+            Custo
+          </button>
+        </div>
+      </header>
+
       <div class="tabela">
         <div class="tabela__cabecalho background-primary">
           <div>#</div>
@@ -17,23 +31,32 @@
       </div>
     </div>
 
-    <modal>
-      <div>
-        <div>
-          <h4>Adicionar um novo custo</h4>
-        </div>
+    <modal v-if="adicionarNovoCusto">
+      <div class="w-100 p-20">
+        <header>
+          <h2 class="main-color-dark">Adicionar um novo custo</h2>
+          <p>Utilize o formulário abaixo para adicionar um novo custo</p>
+        </header>
         <form class="form" name="novoCusto">
           <div class="form-group">
-            <label for="descricao">Descrição</label>
-            <input id="descricao" type="text" />
+            <label class="form-label" for="descricao">Descrição</label>
+            <input class="form-control" id="descricao" type="text" />
           </div>
-          <div>
-            <label for="valor">Valor</label>
-            <input id="valor" type="text" />
+          <div class="form-group">
+            <label class="form-label" for="valor">Valor</label>
+            <input class="form-control" id="valor" type="text" />
           </div>
-          <div>
-            <button class="btn-cancel" type="button">Cancelar</button>
-            <button class="btn-primary" type="button">Salvar</button>
+          <div class="form-footer">
+            <button class="btn btn-cancel" type="button" @click="closeModal">
+              Cancelar
+            </button>
+            <button
+              class="btn btn-primary f-bold upper"
+              type="button"
+              @click="salvarNovoCusto"
+            >
+              Salvar
+            </button>
           </div>
         </form>
       </div>
@@ -46,6 +69,22 @@ import Modal from "./Modal.vue";
 export default {
   name: "TabelaCustos",
   components: { Modal },
+  data() {
+    return {
+      adicionarNovoCusto: false,
+    };
+  },
+  methods: {
+    closeModal() {
+      this.adicionarNovoCusto = false;
+    },
+    novoCusto() {
+      this.adicionarNovoCusto = true;
+    },
+    salvarNovoCusto() {
+      this.adicionarNovoCusto = false;
+    },
+  },
 };
 </script>
 
