@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container-md ">
+    <div class="container-md">
       <header class="container-header">
         <div>
           <h2>Tabela Custos</h2>
@@ -13,6 +13,7 @@
             @click="novoCusto"
           >
             Custo
+            <span class="p-l-5"><i class="fas fa-plus"></i></span>
           </button>
         </div>
       </header>

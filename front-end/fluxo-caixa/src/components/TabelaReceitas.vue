@@ -12,6 +12,7 @@
           @click="novoReceita"
         >
           Receita
+          <span class="p-l-5"><i class="fas fa-plus"></i></span>
         </button>
       </div>
     </header>
