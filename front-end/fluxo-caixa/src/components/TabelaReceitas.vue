@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div class="container-md">
     <header class="container-header">
       <div>
         <h2>Receitas</h2>
-        <p>Todos as suas fontes de receitas listadas na tabela abaixo</p>
+        <p>Todos as suas fontes de receitas estão listadas na tabela abaixo</p>
       </div>
       <div>
         <button
@@ -24,6 +24,11 @@
       <div class="tabela__corpo">
         <div>1</div>
         <div>Salário</div>
+        <div>R$ 2.254,00</div>
+      </div>
+      <div class="tabela__rodape">
+        <div>Total receitas</div>
+        <div></div>
         <div>R$ 2.254,00</div>
       </div>
     </div>

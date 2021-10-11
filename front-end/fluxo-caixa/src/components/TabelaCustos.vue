@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container">
+    <div class="container-md ">
       <header class="container-header">
         <div>
           <h2>Tabela Custos</h2>
@@ -26,6 +26,11 @@
         <div class="tabela__corpo">
           <div>1</div>
           <div>Placa de vídeo</div>
+          <div>R$ 4.999,00</div>
+        </div>
+        <div class="tabela__rodape">
+          <div>Total custos</div>
+          <div></div>
           <div>R$ 4.999,00</div>
         </div>
       </div>

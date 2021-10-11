@@ -2,6 +2,10 @@
     max-width: 1320px;
 }
 
+.container-md {
+    max-width: 720px;
+}
+
 .container-header {
     display: grid;
     grid-template-columns: 1fr 120px;
@@ -9,6 +13,9 @@
 }
 
 .tabela {
+    min-height: 156px;
+    margin-bottom: 15px;
+    margin-top: 10px;
     @mixin configuracaoBase {
         display: grid;
         grid-template-columns: minmax(200px, 0.4fr) 1fr 1fr;
@@ -17,7 +24,6 @@
         min-height: 35px;
         font-weight: 700;
         align-items: center;
-        border-radius: 10px;
     }
     .tabela__cabecalho {
         @include configuracaoBase;
@@ -28,9 +34,17 @@
         @include configuracaoBase;
         color: #222;
         font-size: 14px;
+        border-bottom: 1px solid #222;
         &:nth-child(odd) {
             background-color: #ddd;
         }
+    }
+    .tabela__rodape {
+        @include configuracaoBase;
+        color: #111;
+        font-size: 16px;
+        background-color: #bfbfbf;
+        border-bottom: 1px solid #222;
     }
 }
 
