@@ -22,13 +22,17 @@ namespace ControleDeCaixa.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> NovoFluxoAnualDeCaixa([FromBody] FluxoCaixaAnualInputModel fluxoCaixaAnualInput)
         {
-            return Ok(await _fluxoDeCaixaRepositorio.NovoFluxoAnualDeCaixaAsync(fluxoCaixaAnualInput));
+            if (await _fluxoDeCaixaRepositorio.NovoFluxoAnualDeCaixaAsync(fluxoCaixaAnualInput) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(resultado.Sucesso);
         }
 
         [HttpPost("CaixaMes")]
         public async Task<IActionResult> NovoCaixaMes([FromBody] Caixa caxaInputModel)
         {
-            return Ok(await _fluxoDeCaixaRepositorio.NovoCaixaAsync(caxaInputModel));
+            if (await _fluxoDeCaixaRepositorio.NovoCaixaAsync(caxaInputModel) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(resultado.Sucesso);
         }
 
         [HttpPost("NovaReceita")]

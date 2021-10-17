@@ -10,22 +10,6 @@
             EhFalha = default;
         }
 
-        internal Resultado(TSucesso sucesso)
-        {
-            Sucesso = sucesso;
-            EhSucesso = true;
-            Falha = default;
-            EhFalha = default;
-        }
-
-        internal Resultado(TFalha falha)
-        {
-            Sucesso = default;
-            EhSucesso = false;
-            Falha = falha;
-            EhFalha = true;
-        }
-
         public static Resultado<TSucesso, TFalha> NovaFalha(TFalha falha)
             => new Resultado<TSucesso, TFalha>(default, falha);
 
