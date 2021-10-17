@@ -1,6 +1,7 @@
 ﻿using ControleDeCaixa.WebAPI.Entites;
 using ControleDeCaixa.WebAPI.Generics;
 using ControleDeCaixa.WebAPI.Helper;
+using ControleDeCaixa.WebAPI.ViewModels;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using System;
@@ -106,28 +107,6 @@ namespace ControleDeCaixa.WebAPI.Repositorio
             return linhasAfetadas;
         }
 
-        public class HistoricoCaixaViewModel
-        {
-            //Construtor default para funcionar com o DAPPER
-            //TODO: Refatorar isso e consultar mais sobre reflection
-            public HistoricoCaixaViewModel()
-            {
 
-            }
-            public HistoricoCaixaViewModel(double totalReceitas, double totalCustos, int caixaMesId)
-            {
-                TotalReceitas = totalReceitas;
-                TotalCustos = totalCustos;
-                CaixaMesId = caixaMesId;
-            }
-
-
-            public double TotalReceitas { get; set; }
-            public double TotalCustos { get; set; }
-            public int CaixaMesId { get; set; }
-
-            public void AtualizarReceitas(double receitas) => TotalReceitas += receitas;
-            public void AtualizarCustos(double custos) => TotalCustos += custos;
-        }
     }
 }
