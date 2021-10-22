@@ -2,26 +2,32 @@
 {
     public struct Resultado<TSucesso, TFalha>
     {
-        public Resultado(TSucesso sucesso, TFalha falha)
+        internal Resultado(TSucesso sucesso)
         {
+            EhFalha = false;
             Sucesso = sucesso;
-            EhSucesso = default;
-            Falha = falha;
-            EhFalha = default;
+            Falha = default;
         }
 
-        public static Resultado<TSucesso, TFalha> NovaFalha(TFalha falha)
-            => new Resultado<TSucesso, TFalha>(default, falha);
+        internal Resultado(TFalha falha)
+        {
+            EhFalha = true;
+            Sucesso = default;
+            Falha = falha;
+        }
 
-        public static Resultado<TSucesso, TFalha> NovoSucesso(TSucesso sucesso)
-            => new Resultado<TSucesso, TFalha>(sucesso, default);
+        public TSucesso Sucesso { get; }
+        public TFalha Falha { get; }
+        public bool EhFalha { get; }
+        public bool EhSucesso => !EhFalha;
 
-        public TSucesso Sucesso { get; private set; }
-        public bool EhSucesso { get; private set; }
-        public TFalha Falha { get; private set; }
-        public bool EhFalha { get; private set; }
+        public static implicit operator Resultado<TSucesso, TFalha>(TFalha falha)
+            => new Resultado<TSucesso, TFalha>(falha);
 
+        public static implicit operator Resultado<TSucesso, TFalha>(TSucesso sucesso)
+            => new Resultado<TSucesso, TFalha>(sucesso);
     }
+
 }
 
 

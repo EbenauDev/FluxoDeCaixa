@@ -8,5 +8,7 @@ namespace ControleDeCaixa.WebAPI.DataAccess
     {
         Task<Resultado<int, Falha>> NovoFluxoAnualDeCaixaAsync(FluxoCaixaAnualInputModel fluxoCaixaAnualInput);
         Task<Resultado<int, Falha>> NovoCaixaAsync(Caixa caixa);
+        Task<Resultado<string, Falha>> RecuperarCaixasPorAnoAsync(string ano);
+
     }
 }

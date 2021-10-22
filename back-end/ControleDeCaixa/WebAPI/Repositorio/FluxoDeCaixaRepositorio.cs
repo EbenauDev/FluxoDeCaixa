@@ -26,7 +26,6 @@ namespace ControleDeCaixa.WebAPI.Repositorio
 
         public async Task<Resultado<bool, Falha>> IncluirOperacaoCaixaAsync(OperacaoCaixa operacaoCaixa)
         {
-
             using (var conexao = new SqlConnection(_stringDeConexao))
             {
                 await conexao.OpenAsync();
@@ -35,20 +34,22 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                     try
                     {
                         await InserirOperacaoAsync(conexao, transacao, operacaoCaixa);
-                        var historico = await HistoricoMaisRecenteAsync(conexao, transacao, operacaoCaixa.CaixaId);
+                        if (await HistoricoMaisRecenteAsync(conexao, transacao, operacaoCaixa.CaixaId) is var historico && historico.EhFalha)
+                            return historico.Falha;
                         if (operacaoCaixa.Operacao == ETipoOperacaoCaixa.Entrada)
-                            historico.AtualizarReceitas(operacaoCaixa.Valor);
+                            historico.Sucesso.AtualizarReceitas(operacaoCaixa.Valor);
                         else
-                            historico.AtualizarCustos(operacaoCaixa.Valor);
-                        var resultadoHistorico = await GerarHistoricoAsync(conexao, transacao, historico);
+                            historico.Sucesso.AtualizarCustos(operacaoCaixa.Valor);
+                        if (await GerarHistoricoAsync(conexao, transacao, historico.Sucesso) is var resultadoHistorico && resultadoHistorico.EhFalha)
+                            throw new Exception(resultadoHistorico.Falha.Mensagem);
                         await transacao.CommitAsync();
-                        return Resultado<bool, Falha>.NovoSucesso(true);
+                        return true;
                     }
                     catch (Exception ex)
                     {
                         await transacao.RollbackAsync();
                         _logger.LogError("Houve um problema ao inserir uma nova operacao para o caixa {CaixaId}. Execption: {exception}", operacaoCaixa.CaixaId, ex);
-                        return Resultado<bool, Falha>.NovaFalha(Falha.NovaComException(400, $"Houve um problema ao inserir uma nova operacao para o caxa {operacaoCaixa.CaixaId}", ex));
+                        return Falha.Nova($"Houve um problema ao inserir uma nova operacao para o caxa {operacaoCaixa.CaixaId}");
                     }
                     finally
                     {
@@ -58,23 +59,23 @@ namespace ControleDeCaixa.WebAPI.Repositorio
             }
         }
 
-        private async Task<int> InserirOperacaoAsync(SqlConnection conexao, DbTransaction transaction, OperacaoCaixa operacaoCaixa)
+        private async Task<Resultado<int, Falha>> InserirOperacaoAsync(SqlConnection conexao, DbTransaction transaction, OperacaoCaixa operacaoCaixa)
         {
             const string insertOperacao = @"INSERT INTO OperacaoCaixa(TipoOperacao, Valor, Descricao, CaixaMesId)
                                             VALUES(@TipoOperacao, @Valor, @Descricao, @CaixaMesId);";
             var linhasAfetadas = await conexao.ExecuteAsync(insertOperacao, new
             {
                 TipoOperacao = (char)operacaoCaixa.Operacao,
-                Valor = operacaoCaixa.Valor,
-                Descricao = operacaoCaixa.Descricao,
-                CaixaMesId = operacaoCaixa.CaixaId
+                operacaoCaixa.Valor,
+                operacaoCaixa.Descricao,
+                operacaoCaixa.CaixaId
             }, transaction);
             if (linhasAfetadas <= 0)
-                throw new Exception("Falha ao inserir a operação de caixa");
+                return Falha.Nova("Falha ao inserir a operação de caixa");
             return linhasAfetadas;
         }
 
-        private async Task<HistoricoCaixaViewModel> HistoricoMaisRecenteAsync(SqlConnection conexao, DbTransaction transaction, int CaixaMesId)
+        private async Task<Resultado<HistoricoCaixaViewModel, Falha>> HistoricoMaisRecenteAsync(SqlConnection conexao, DbTransaction transaction, int CaixaMesId)
         {
             const string historicoMaisRecente = @"SELECT TotalReceitas, 
                                                          TotalCustos, 
@@ -88,25 +89,23 @@ namespace ControleDeCaixa.WebAPI.Repositorio
             return resultado;
         }
 
-        private async Task<int> GerarHistoricoAsync(SqlConnection conexao, DbTransaction transaction, HistoricoCaixaViewModel historico)
+        private async Task<Resultado<int, Falha>> GerarHistoricoAsync(SqlConnection conexao, DbTransaction transaction, HistoricoCaixaViewModel historico)
         {
 
             const string gerarHistorico = @"INSERT INTO HistoricoCaixa(TotalReceitas, TotalCustos, Data, CaixaMesId)
                                             VALUES(@TotalReceitas, @TotalCustos, @Data, @CaixaMesId)";
 
-
             var linhasAfetadas = await conexao.ExecuteAsync(gerarHistorico, new
             {
                 historico.TotalReceitas,
                 historico.TotalCustos,
-                Data = DateTime.Now,
-                CaixaMesId = historico.CaixaMesId
+                DateTime.Now,
+                historico.CaixaMesId
             }, transaction);
             if (linhasAfetadas <= 0)
-                throw new Exception("Falha ao inserir o histórico de caixa");
+                return Falha.Nova("Falha ao inserir o histórico de caixa");
             return linhasAfetadas;
         }
-
 
     }
 }

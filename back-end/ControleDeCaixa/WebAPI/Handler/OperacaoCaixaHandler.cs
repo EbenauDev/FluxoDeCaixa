@@ -22,16 +22,16 @@ namespace ControleDeCaixa.WebAPI.Handler
         {
             var operacaoCaixaValidator = new OperacaoCaixaValidator();
             if (operacaoCaixaValidator.Validate(operacaoCaixaInput) is var resultadoValidator && resultadoValidator.IsValid == false)
-                return Resultado<bool, Falha>.NovaFalha(Falha.Nova(400, "input model está inválida"));
+                return Falha.Nova("input model está inválida");
             var operacaoCaixa = OperacaoCaixa.Nova(
-                 operacaoCaixaInput.CaixaId,
-                 operacaoCaixaInput.Operacao,
-                 operacaoCaixaInput.Descricao,
-                 operacaoCaixaInput.Valor);
-
+                     operacaoCaixaInput.CaixaId,
+                     operacaoCaixaInput.Operacao,
+                     operacaoCaixaInput.Descricao,
+                     operacaoCaixaInput.Valor
+                 );
             if (await _fluxoDeCaixaRepositorio.IncluirOperacaoCaixaAsync(operacaoCaixa) is var resultado && resultado.EhFalha)
-                return Resultado<bool, Falha>.NovaFalha(resultado.Falha);
-            return Resultado<bool, Falha>.NovoSucesso(true);
+                return resultado.Falha;
+            return true;
         }
     }
 }

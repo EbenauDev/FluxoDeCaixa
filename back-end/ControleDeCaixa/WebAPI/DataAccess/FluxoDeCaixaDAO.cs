@@ -3,6 +3,7 @@ using ControleDeCaixa.WebAPI.Helper;
 using ControleDeCaixa.WebAPI.InputModel;
 using Dapper;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -34,13 +35,13 @@ namespace ControleDeCaixa.WebAPI.DataAccess
                 {
                     await conexao.OpenAsync();
                     if (await conexao.QueryFirstOrDefaultAsync<int>(sql, new { fluxoCaixaAnualInput.Ano }) is var resultado && resultado <= 0)
-                        return Resultado<int, Falha>.NovaFalha(Falha.Nova(400, $"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }"));
-                    return Resultado<int, Falha>.NovoSucesso(resultado);
+                        return Falha.Nova($"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }");
+                    return resultado;
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError("Houve um problema ao inserir um novo fluxo anual. Execption: {exception}", ex);
-                    return Resultado<int, Falha>.NovaFalha(Falha.NovaComException(400, $"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }", ex));
+                    return Falha.Nova($"Houve um problema ao inserir um novo fluxo anual para {fluxoCaixaAnualInput.Ano }");
                 }
                 finally
                 {
@@ -66,13 +67,46 @@ namespace ControleDeCaixa.WebAPI.DataAccess
                         FluxoCaixaAnualId = caixa.FluxoAnualId
                     });
                     if (resultado <= 0)
-                        return Resultado<int, Falha>.NovaFalha(Falha.Nova(400, $"Houve um problema ao inserir um caixa  para o mes de referência {caixa.MesDeReferencia}"));
-                    return Resultado<int, Falha>.NovoSucesso(resultado);
+                        return Falha.Nova($"Houve um problema ao inserir um caixa  para o mes de referência {caixa.MesDeReferencia}");
+                    return resultado;
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError("Houve um problema ao inserir um caixa  para o mes de referência {MesReferencia}. Execption: {exception}", caixa.MesDeReferencia, ex);
-                    return Resultado<int, Falha>.NovaFalha(Falha.NovaComException(400, $"Houve um problema ao inserir um caixa  para o mes de referência {caixa.MesDeReferencia}", ex));
+                    return Falha.Nova($"Houve um problema ao inserir um caixa  para o mes de referência {caixa.MesDeReferencia}");
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<Resultado<string, Falha>> RecuperarCaixasPorAnoAsync(string ano)
+        {
+            const string sql = @"SELECT CaixaAnual.Id, 
+	                                    CaixaAnual.Ano,
+	                                    CaixaMes.Id AS CaixaMesId,
+	                                    CaixaMes.MesReferencia
+                                    FROM FluxoCaixaAnual CaixaAnual (NOLOCK)
+                                    INNER JOIN CaixaMes 
+                                    ON CaixaMes.FluxoCaixaAnualId = CaixaAnual.Id 
+                                    WHERE CaixaAnual.Ano = @AnoDeBusca
+                                    FOR JSON AUTO, ROOT('CaixaAnual');";
+            using (var conexao = new SqlConnection(_stringDeConexao))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    var resultado = await conexao.QueryFirstOrDefaultAsync<dynamic>(sql, new { AnoDeBusca = ano });
+                    if (resultado == null)
+                        return "[]";
+                    return JsonConvert.SerializeObject(resultado);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Houve um problema ao tentar recuperar os caixas para o ano {ano}. Execption: {exception}", ano, ex);
+                    return Falha.Nova("Houve um problema ao tentar recuperar os caixas para o ano informado");
                 }
                 finally
                 {
