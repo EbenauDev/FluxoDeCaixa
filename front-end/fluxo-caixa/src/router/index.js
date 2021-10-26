@@ -3,8 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 const routes = [
   {
     path: '/',
-    name: 'PaginaInicial',
-    component: () => import(/* webpackChunkName: "about" */'../views/PaginaInicial.vue')
+    name: 'NaoAutenticado',
+    component: () => import(/* webpackChunkName: "NaoAutenticado" */'../views/NaoAutenticado.vue'),
   },
 ]
 
