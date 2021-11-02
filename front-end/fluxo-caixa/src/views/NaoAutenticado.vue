@@ -20,7 +20,6 @@
           />
         </label>
       </div>
-
       <form
         v-if="opcaoFormulario == 'Login'"
         class="form form-autenticacao"
@@ -41,6 +40,7 @@
           </button>
         </div>
       </form>
+
       <form
         v-if="opcaoFormulario == 'NovaConta'"
         class="form form-autenticacao"
@@ -101,10 +101,35 @@ export default {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 340px 485px;
-  grid-gap: 5rem;
+  grid-template-columns: 370px 420px;
+  grid-gap: 10rem;
   place-content: center;
   place-items: center;
+
+  .__logo {
+    font-family: "Poppins", sans-serif;
+    h1 {
+      font-size: 3rem;
+      margin: 0;
+      line-height: 3rem;
+      text-align: left;
+      color: #fff;
+      &::before {
+        content: "";
+        position: absolute;
+        width: 70px;
+        height: 6px;
+        background: #3ba0ff;
+        margin-top: -15px;
+        border-radius: 6px;
+        box-shadow: 0 3px 6px rgb(0 0 0 / 50%);
+      }
+    }
+    p {
+      color: #fff;
+      margin-top: 5px;
+    }
+  }
 
   .__login {
     width: 100%;
