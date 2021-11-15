@@ -23,6 +23,14 @@ body {
   height: 100vh;
   width: 100vw;
   display: grid;
-  font-family: "Noto Sans Display", sans-serif;
+  color: #fff;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    302deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(1, 29, 101, 1) 59%,
+    rgba(4, 22, 67, 1) 100%
+  );
+  font-family: sans-serif;
 }
 </style>

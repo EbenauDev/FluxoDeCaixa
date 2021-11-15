@@ -1,72 +1,32 @@
 <template>
-  <div class="container-nao-autenticado background-primary">
-    <div class="__logo">
-      <h1>Fluxo de Caixa</h1>
-      <p>Controle suas finanças de um jeito mais simples</p>
+  <div class="tela-principal">
+    <div class="titulo">
+      <h1>Controle suas finanças de um jeito mais simples</h1>
+      <p>Crie sua conta agora mesmo e tenha acesso a recursos incríveis</p>
     </div>
-    <div class="__login">
-      <div class="tooltip">
-        <label :class="{ ativo: opcaoFormulario == 'Login' }">
-          Login
-          <input type="radio" value="Login" hidden v-model="opcaoFormulario" />
-        </label>
-        <label :class="{ ativo: opcaoFormulario == 'NovaConta' }">
-          Nova Conta
+    <div class="formulario">
+      <form name="login" class="form">
+        <div class="tooltip">
+          <p>Login</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
           <input
-            type="radio"
-            value="NovaConta"
-            hidden
-            v-model="opcaoFormulario"
+            class="form-control"
+            type="text"
+            name="Username"
+            id="username"
           />
-        </label>
-      </div>
-      <form
-        v-if="opcaoFormulario == 'Login'"
-        class="form form-autenticacao"
-        name="loginUsuario"
-      >
-        <div class="form-group">
-          <label class="form-label" for="Nickname">Nickname</label>
-          <input class="form-control" id="Nickname" type="text" />
         </div>
         <div class="form-group">
-          <label class="form-label" for="Senha">Senha</label>
-          <input class="form-control" id="Senha" type="password" />
+          <label class="form-label" for="senha">Senha</label>
+          <input class="form-control" type="text" name="Senha" id="senha" />
         </div>
         <div class="form-footer">
-          <span></span>
-          <button class="btn btn-primary f-bold upper" type="button">
-            Login
-          </button>
-        </div>
-      </form>
-
-      <form
-        v-if="opcaoFormulario == 'NovaConta'"
-        class="form form-autenticacao"
-        name="novoUsuario"
-      >
-        <div class="form-group">
-          <label class="form-label" for="Nickname">Nickname</label>
-          <input class="form-control" id="Nickname" type="text" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="Senha">Avatar</label>
-          <input class="form-control" id="Senha" type="url" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="Senha">Senha</label>
-          <input class="form-control" id="Senha" type="password" />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="ConfirmarSenha">Confirmar Senha</label>
-          <input class="form-control" id="ConfirmarSenha" type="password" />
-        </div>
-        <div class="form-footer">
-          <span></span>
-          <button class="btn btn-primary f-bold upper" type="button">
-            Registrar-se
-          </button>
+          <button class="btn btn-primary">Login</button>
+          <div>
+            <span>Você não possui uma conta? Crie uma</span>
+          </div>
         </div>
       </form>
     </div>
@@ -76,97 +36,77 @@
 <script>
 export default {
   name: "NaoAutenticado",
-  data() {
-    return {
-      usuario: {
-        nickname: "",
-        senha: null,
-      },
-      opcaoFormulario: "Login",
-      novoUsuario: {
-        nickname: "",
-        avatar: "",
-        senha: "",
-        confirmarSenha: "",
-        email: "",
-      },
-      fazerNovaConta: false,
-    };
-  },
 };
 </script>
 
-<style lang="scss" scoped>
-.container-nao-autenticado {
-  width: 100%;
-  height: 100%;
+<style lang="scss">
+.tela-principal {
   display: grid;
-  grid-template-columns: 370px 420px;
-  grid-gap: 10rem;
-  place-content: center;
-  place-items: center;
-
-  .__logo {
-    font-family: "Poppins", sans-serif;
+  grid-template-columns: 1fr 1fr;
+  align-content: center;
+  height: 100vh;
+  max-width: 960px;
+  margin: 0 auto;
+  .titulo {
+    font-family: "poppins";
     h1 {
-      font-size: 3rem;
-      margin: 0;
-      line-height: 3rem;
-      text-align: left;
-      color: #fff;
-      &::before {
-        content: "";
-        position: absolute;
-        width: 70px;
-        height: 6px;
-        background: #3ba0ff;
-        margin-top: -15px;
-        border-radius: 6px;
-        box-shadow: 0 3px 6px rgb(0 0 0 / 50%);
-      }
+      font-size: 2.5rem;
+      line-height: 55px;
+      max-width: 437px;
+      margin-bottom: 40px;
     }
     p {
-      color: #fff;
-      margin-top: 5px;
+      font-size: 1rem;
+      line-height: 20px;
+      max-width: 437px;
     }
   }
-
-  .__login {
-    width: 100%;
-    height: 100%;
-    background: #fff;
+  .formulario {
+    background-color: #fff;
     display: flex;
-    border-radius: 4px;
-    box-shadow: 2px 3px 17px 3px #1e1e1ea6;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    .tooltip {
-      max-height: 30px;
-      max-width: 170px;
-      height: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f8f8f8;
-      border-radius: 20px;
-      overflow: hidden;
-      font-size: 14px;
-      label.ativo {
-        background: var(--main-color-dark);
-        color: #fff;
+    align-items: center;
+    padding: 20px;
+    border-radius: 16px;
+    min-height: 300px;
+    div.tooltip {
+      margin-bottom: 15px;
+      p {
+        color: var(--main-color-dark);
+        position: relative;
+        font-weight: 600;
+        font-size: 1.6rem;
+        &::before {
+          content: "";
+          width: 40px;
+          height: 6px;
+          background-color: var(--main-color-dark);
+          border-radius: 6px;
+          position: absolute;
+          top: -10px;
+        }
       }
-      label {
-        flex: 1;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    }
+
+    label.form-label {
+      color: #222;
+    }
+    div.form-footer {
+      flex-direction: column;
+      align-items: center;
+      margin-top: 40px;
+      button {
+        max-width: 190px;
+        width: 100%;
+      }
+      span {
+        color: var(--main-color-dark);
+        font-size: 12px;
+        font-weight: 600;
+        margin-top: 4rem;
+        display: block;
         cursor: pointer;
       }
     }
-  }
-  .form-autenticacao {
   }
 }
 </style>

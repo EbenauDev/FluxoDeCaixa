@@ -53,6 +53,4 @@ export default {
     }
   }
 }
-
-//animate__slideInDown
 </style>
