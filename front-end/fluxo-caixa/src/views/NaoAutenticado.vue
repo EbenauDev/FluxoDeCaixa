@@ -21,6 +21,13 @@
         <div class="form-group">
           <label class="form-label" for="senha">Senha</label>
           <input class="form-control" type="text" name="Senha" id="senha" />
+          <div class="text-right c-black">
+            <span
+              class="cursor-pointer f-13 color-primary f-bold"
+              @click="mostrarModalRecuperarSenha"
+              >Esqueceu a senha?</span
+            >
+          </div>
         </div>
         <div class="form-footer">
           <button class="btn btn-primary">Login</button>
@@ -30,12 +37,31 @@
         </div>
       </form>
     </div>
+    <modal v-if="recuperarSenha">
+      <recuperar-senha :on-close="mostrarModalRecuperarSenha"></recuperar-senha>
+    </modal>
   </div>
 </template>
 
 <script>
+import Modal from "../components/Modal.vue";
+import RecuperarSenha from "./components/RecuperarSenha.vue";
 export default {
   name: "NaoAutenticado",
+  components: {
+    Modal,
+    RecuperarSenha,
+  },
+  data() {
+    return {
+      recuperarSenha: false,
+    };
+  },
+  methods: {
+    mostrarModalRecuperarSenha() {
+      this.recuperarSenha = !this.recuperarSenha;
+    },
+  },
 };
 </script>
 

@@ -6,52 +6,19 @@
     max-width: 720px;
 }
 
-.container-header {
-    display: grid;
-    grid-template-columns: 1fr 120px;
-    align-items: center;
-}
-
-.tabela {
-    min-height: 156px;
-    margin-bottom: 15px;
-    margin-top: 10px;
-    @mixin configuracaoBase {
-        display: grid;
-        grid-template-columns: minmax(200px, 0.4fr) 1fr 1fr;
-        grid-column-gap: 10px;
-        padding-left: 10px;
-        min-height: 35px;
-        font-weight: 700;
-        align-items: center;
-    }
-    .tabela__cabecalho {
-        @include configuracaoBase;
-        color: #fff;
-        font-size: 16px;
-    }
-    .tabela__corpo {
-        @include configuracaoBase;
-        color: #222;
-        font-size: 14px;
-        border-bottom: 1px solid #222;
-        &:nth-child(odd) {
-            background-color: #ddd;
-        }
-    }
-    .tabela__rodape {
-        @include configuracaoBase;
-        color: #111;
-        font-size: 14px;
-        background-color: #bfbfbf;
-        border-bottom: 1px solid #222;
-    }
-}
-
 .background-primary {
     background-color: var(--main-color-dark);
 }
+
 .background-light {
+    background-color: var(--main-color-dark);
+}
+
+.color-primary {
+    color: var(--main-color-dark);
+}
+
+.color-light {
     background-color: var(--main-color-dark);
 }
 
@@ -103,9 +70,6 @@
     min-width: 95px;
 }
 
-.btn-cancel {
-}
-
 .btn-primary {
     background-color: var(--main-color-dark);
     color: #fff;
@@ -143,4 +107,20 @@
 
 .f-bold {
     font-weight: 600;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.c-black {
+    color: #222;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.f-13 {
+    font-size: 13px;
 }
