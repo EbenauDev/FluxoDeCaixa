@@ -5,9 +5,9 @@
       <p>Crie sua conta agora mesmo e tenha acesso a recursos incríveis</p>
     </div>
     <div class="formulario">
-      <form name="login" class="form">
+      <form name="login" class="form" v-if="false">
         <div class="tooltip">
-          <p>Login</p>
+          <p class="m-0">Login</p>
         </div>
         <div class="form-group">
           <label class="form-label" for="username">Username</label>
@@ -36,6 +36,95 @@
           </div>
         </div>
       </form>
+      <form name="novaConta" class="form" v-if="true">
+        <div class="tooltip">
+          <p class="m-0">Nova Conta</p>
+        </div>
+        <div v-if="etapasCadastro == 'primeiraEtapa'">
+          <div>
+            <p class="f-16 color-primary f-bold m-0">Dados Pessoais</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="username">Nome</label>
+            <input
+              class="form-control"
+              type="text"
+              name="Username"
+              id="username"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="username">Data nascimento</label>
+            <input
+              class="form-control"
+              type="text"
+              name="Username"
+              id="username"
+            />
+          </div>
+        </div>
+        <div v-if="etapasCadastro == 'segundaEtapa'">
+          <div>
+            <p class="f-16 color-primary f-bold m-0">Dados de login</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <input
+              class="form-control"
+              type="text"
+              name="Username"
+              id="username"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="username">Avatar</label>
+            <input
+              class="form-control"
+              type="url"
+              name="Username"
+              id="username"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="username">Senha</label>
+            <input
+              class="form-control"
+              type="password"
+              name="Username"
+              id="username"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="username">Confirmar senha</label>
+            <input
+              class="form-control"
+              type="password"
+              name="Username"
+              id="username"
+            />
+          </div>
+        </div>
+        <div class="m-t-5 form-steps">
+          <input
+            type="radio"
+            name="etapasCadastro"
+            v-model="etapasCadastro"
+            value="primeiraEtapa"
+          />
+          <input
+            type="radio"
+            name="etapasCadastro"
+            v-model="etapasCadastro"
+            value="segundaEtapa"
+          />
+        </div>
+        <div class="form-footer">
+          <button class="btn btn-primary">Criar</button>
+          <div>
+            <span>Cancelar</span>
+          </div>
+        </div>
+      </form>
     </div>
     <modal v-if="recuperarSenha">
       <recuperar-senha :on-close="mostrarModalRecuperarSenha"></recuperar-senha>
@@ -55,6 +144,7 @@ export default {
   data() {
     return {
       recuperarSenha: false,
+      etapasCadastro: "primeiraEtapa",
     };
   },
   methods: {
@@ -96,6 +186,7 @@ export default {
     min-height: 300px;
     div.tooltip {
       margin-bottom: 15px;
+
       p {
         color: var(--main-color-dark);
         position: relative;
@@ -115,6 +206,13 @@ export default {
 
     label.form-label {
       color: #222;
+    }
+    .form-steps {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
     }
     div.form-footer {
       flex-direction: column;
