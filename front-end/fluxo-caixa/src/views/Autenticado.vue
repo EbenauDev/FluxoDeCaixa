@@ -1,13 +1,20 @@
 <template>
   <div class="autenticado">
-    <div class="menu-lateral"></div>
+    <div class="menu-lateral">
+      <menu-lateral></menu-lateral>
+    </div>
     <div class="conteudo-principal"></div>
   </div>
 </template>
 
 <script>
+import MenuLateral from "../components/MenuLateral.vue";
+
 export default {
   name: "PaginaInicial",
+  components: {
+    MenuLateral,
+  },
   created() {
     this.$store.dispatch("fluxoDeCaixa/recuperarCaixaMaisRecente");
   },
