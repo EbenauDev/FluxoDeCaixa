@@ -7,9 +7,15 @@ const routes = [
     component: () => import(/* webpackChunkName: "NaoAutenticado" */'../views/NaoAutenticado.vue'),
   },
   {
-    path: '/autenticado/entrada',
+    path: '/autenticado',
     name: 'Autenticado',
     component: () => import(/* webpackChunkName: "Autenticado" */'../views/Autenticado.vue'),
+    children: [
+      {
+        path: "configuracoes-da-conta",
+        component: () => import(/* webpackChunkName: "ConfiguracoesDaConta" */'../views/ConfiguracoesDaConta.vue')
+      }
+    ]
   },
 ]
 
