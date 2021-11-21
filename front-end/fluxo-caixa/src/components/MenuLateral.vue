@@ -2,16 +2,20 @@
   <div class="menu-lateral">
     <div class="__avatar"></div>
     <div class="__opcoes">
-      <div>
-        <button class="opcao opcao--ativo">
-          <i class="fas fa-user-cog"></i>
-        </button>
-      </div>
-      <div>
-        <button class="opcao">
-          <i class="fas fa-database"></i>
-        </button>
-      </div>
+      <button
+        class="opcao"
+        @click="toRoute('configuracoes-da-conta')"
+        :class="{ 'opcao--ativo': routeActive == 'configuracoes-da-conta' }"
+      >
+        <i class="fas fa-user-cog"></i>
+      </button>
+      <button
+        class="opcao"
+        @click="toRoute('visao-geral')"
+        :class="{ 'opcao--ativo': routeActive == 'visao-geral' }"
+      >
+        <i class="fas fa-database"></i>
+      </button>
     </div>
     <div class="__rodape">
       <div>
@@ -26,6 +30,20 @@
 <script>
 export default {
   name: "MenuLateral",
+  data() {
+    return {
+      routeActive: null,
+    };
+  },
+  methods: {
+    toRoute(route) {
+      console.log(this);
+      this.$router.push({
+        path: route,
+      });
+      this.routeActive = route;
+    },
+  },
 };
 </script>
 
@@ -49,7 +67,7 @@ export default {
     max-height: 75px;
     min-height: 70px;
     min-width: 70px;
-    transition: all .2s linear;
+    transition: all 0.2s linear;
     width: 100%;
     height: 100vh;
     background: #ddd;

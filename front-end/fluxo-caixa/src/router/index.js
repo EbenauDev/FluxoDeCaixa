@@ -14,7 +14,11 @@ const routes = [
       {
         path: "configuracoes-da-conta",
         component: () => import(/* webpackChunkName: "ConfiguracoesDaConta" */'../views/ConfiguracoesDaConta.vue')
-      }
+      },
+      {
+        path: "visao-geral",
+        component: () => import(/* webpackChunkName: "ConfiguracoesDaConta" */'../views/VisaoGeral.vue')
+      },
     ]
   },
 ]
