@@ -42,24 +42,6 @@ export default {
   padding: 20px;
   border-radius: 16px;
   min-height: 300px;
-  div.tooltip {
-    margin-bottom: 15px;
-    p {
-      color: var(--main-color-dark);
-      position: relative;
-      font-weight: 600;
-      font-size: 1.6rem;
-      &::before {
-        content: "";
-        width: 40px;
-        height: 6px;
-        background-color: var(--main-color-dark);
-        border-radius: 6px;
-        position: absolute;
-        top: -10px;
-      }
-    }
-  }
 
   label.form-label {
     color: #222;
