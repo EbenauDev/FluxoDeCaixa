@@ -1,5 +1,5 @@
 using ControleDeCaixa.WebAPI.Helper;
-using ControleDeCaixa.WebAPI.DataAccess;
+using ControleDeCaixa.WebAPI.Aplicacao;
 using ControleDeCaixa.WebAPI.Repositorio;
 using ControleDeCaixa.WebAPI.Handler;
 using Microsoft.AspNetCore.Builder;
@@ -24,9 +24,9 @@ namespace WebAPI
         {
             services.AddControllers()
                 .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
-            services.AddSingleton<IFluxoDeCaixaDataAccess, FluxoDeCaixaDataAccess>();
-            services.AddSingleton<IFluxoDeCaixaRepositorio, FluxoDeCaixaRepositorio>();
-            services.AddSingleton<IOperacaoCaixaHandler, OperacaoCaixaHandler>();
+            services.AddSingleton<IPessoaRepositorio, PessoaRepositorio>();
+            services.AddSingleton<IPessoaHandler, PessoaHandler>();
+            services.AddSingleton<ICriptografiaMD5, CriptografiaMD5>();
             services.AddSingleton<IConnectionHelper, ConnectionHelper>();
         }
 
