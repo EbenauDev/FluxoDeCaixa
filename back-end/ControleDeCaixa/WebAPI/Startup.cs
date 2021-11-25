@@ -22,12 +22,12 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-                .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+            services.AddControllers();
             services.AddSingleton<IPessoaRepositorio, PessoaRepositorio>();
             services.AddSingleton<IPessoaHandler, PessoaHandler>();
             services.AddSingleton<ICriptografiaMD5, CriptografiaMD5>();
             services.AddSingleton<IConnectionHelper, ConnectionHelper>();
+            services.AddSingleton<ITokenJWT, TokenJWT>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

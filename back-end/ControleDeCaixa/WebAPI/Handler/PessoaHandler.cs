@@ -1,5 +1,5 @@
 ﻿using ControleDeCaixa.WebAPI.Generics;
-using ControleDeCaixa.WebAPI.InputModels;
+using ControleDeCaixa.WebAPI.Models;
 using ContaPessoa = ControleDeCaixa.WebAPI.Entidades;
 using System;
 using System.Collections.Generic;
@@ -14,10 +14,11 @@ namespace ControleDeCaixa.WebAPI.Handler
 
     public interface IPessoaHandler
     {
-        Task<Resultado<Pessoa, Falha>> NovaConta(PessoalInputModel inputModel);
+        Task<Resultado<Pessoa, Falha>> NovaContaAsync(PessoaInputModel inputModel);
+        Task<Resultado<Pessoa, Falha>> AtualizarContaAsync(int pessoaId, PessoaAtualizada inputModel);
     }
 
-    public class PessoaHandler : IPessoaHandler
+    public sealed class PessoaHandler : IPessoaHandler
     {
         private readonly IPessoaRepositorio _pessoaRepositorio;
         private readonly ICriptografiaMD5 _criptografiaMD5;
@@ -28,7 +29,9 @@ namespace ControleDeCaixa.WebAPI.Handler
             _criptografiaMD5 = criptografiaMD5;
         }
 
-        public async Task<Resultado<Pessoa, Falha>> NovaConta(PessoalInputModel inputModel)
+
+
+        public async Task<Resultado<Pessoa, Falha>> NovaContaAsync(PessoaInputModel inputModel)
         {
             try
             {
@@ -46,6 +49,18 @@ namespace ControleDeCaixa.WebAPI.Handler
                 return Falha.NovaComException("Houve um problema ao criar nova conta. Tente novamente mais tarde", ex);
             }
 
+        }
+
+        public async Task<Resultado<Pessoa, Falha>> AtualizarContaAsync(int pessoaId, PessoaAtualizada inputModel)
+        {
+            if (await _pessoaRepositorio.RecuperarPessoaPorIdAsync(pessoaId) is var pessoa && pessoa.EhFalha)
+                return pessoa.Falha;
+            pessoa.Sucesso
+                .AtualizarAvatar(inputModel.Avatar)
+                .AtualizarEmail(inputModel.Email);
+            if (await _pessoaRepositorio.AtualizarPessoaAsync(pessoa.Sucesso) is var resultadoPessoa && resultadoPessoa.EhFalha)
+                return resultadoPessoa.Falha;
+            return resultadoPessoa.Sucesso;
         }
     }
 }

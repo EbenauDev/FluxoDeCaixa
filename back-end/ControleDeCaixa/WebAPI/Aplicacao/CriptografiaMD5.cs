@@ -3,7 +3,6 @@ using System.Text;
 
 namespace ControleDeCaixa.WebAPI.Aplicacao
 {
-
     public interface ICriptografiaMD5
     {
         string ConverterParaMD5(string input);
