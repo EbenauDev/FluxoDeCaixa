@@ -18,6 +18,7 @@ namespace ControleDeCaixa.WebAPI.Generics
         public static Falha Nova(string mensagem)
             => new Falha(mensagem);
 
+
         public static Falha NovaComException(string mensagem, Exception exception)
             => new Falha(mensagem, exception);
 

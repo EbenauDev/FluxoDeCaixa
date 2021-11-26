@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -24,20 +25,18 @@ namespace ControleDeCaixa.WebAPI.Aplicacao
         public string GerarToken(Pessoa pessoa)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var chaveSecreta = Encoding.ASCII.GetBytes(_configuration["SecretKey"]);
+            var key = Encoding.ASCII.GetBytes(_configuration["SecretKey"]);
+            var tokenExpiration = DateTime.UtcNow.AddMinutes(25);
+            var identity = new ClaimsIdentity(new List<Claim>
+            {
+                 new Claim(ClaimTypes.Name, pessoa.Username.ToString()),
+                 new Claim(ClaimTypes.Role, "ContaRegistrada")
+            });
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                    {
-                        new Claim("Id", pessoa.Id.ToString()),
-                        new Claim(ClaimTypes.Name, pessoa.Username),
-                        new Claim("Perfil", "Registrada")
-                    }),
-                Expires = DateTime.Now.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(
-                        new SymmetricSecurityKey(chaveSecreta),
-                        SecurityAlgorithms.HmacSha256Signature
-                    )
+                Subject = identity,
+                Expires = tokenExpiration,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);

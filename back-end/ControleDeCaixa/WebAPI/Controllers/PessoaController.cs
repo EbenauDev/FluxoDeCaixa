@@ -2,6 +2,7 @@
 using ControleDeCaixa.WebAPI.Handler;
 using ControleDeCaixa.WebAPI.Models;
 using ControleDeCaixa.WebAPI.Repositorio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace ControleDeCaixa.WebAPI.Controllers
             _pessoaRepositorio = pessoaRepositorio;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> UsernameEstahDisponivel([FromQuery] string username)
         {
@@ -29,6 +31,7 @@ namespace ControleDeCaixa.WebAPI.Controllers
             return Ok(resultadoValidacao.Sucesso);
         }
 
+        [AllowAnonymous]
         [HttpPost("NovoCadastro")]
         public async Task<IActionResult> AdicionarNovoCadastro([FromServices] ITokenJWT tokenJWT,
         [FromBody] PessoaInputModel inputModel)
@@ -44,6 +47,7 @@ namespace ControleDeCaixa.WebAPI.Controllers
             });
         }
 
+        [Authorize(Roles = "ContaRegistrada")]
         [HttpPut("AtualizarCadastro")]
         public async Task<IActionResult> AtualizarCadastro([FromQuery] int id, 
                                                            [FromBody] PessoaAtualizada pessoaAtualizada)
@@ -52,6 +56,7 @@ namespace ControleDeCaixa.WebAPI.Controllers
                 return BadRequest(resultadoValidacao.Falha);
             return Ok(resultadoValidacao.Sucesso);
         }
+
 
     }
 }
