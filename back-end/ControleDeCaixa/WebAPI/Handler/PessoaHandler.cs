@@ -35,10 +35,10 @@ namespace ControleDeCaixa.WebAPI.Handler
         {
             try
             {
-                var pessoa = new Pessoa(inputModel.Email,
+                var pessoa = new Pessoa(inputModel.Avatar,
                                         inputModel.Senha,
-                                        inputModel.Avatar,
-                                        inputModel.Username);
+                                        inputModel.Username,
+                                        inputModel.Email);
                 pessoa.AtualizarSenha(_criptografiaMD5.ConverterParaMD5(pessoa.Senha));
                 if (await _pessoaRepositorio.NovaPessoaAsync(pessoa) is var resultado && resultado.EhFalha)
                     return resultado.Falha;

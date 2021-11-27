@@ -34,7 +34,7 @@ namespace WebAPI
                         builder.
                         WithOrigins("http://localhost:8080")
                         .AllowAnyMethod()
-                        .AllowCredentials();
+                        .AllowAnyHeader();
                     });
             });
             services.AddControllers();
@@ -74,7 +74,7 @@ namespace WebAPI
             }
 
             app.UseRouting();
-            app.UseCors();
+            app.UseCors("ConfiguracaoDeCors");
             app.UseAuthentication();
             app.UseAuthorization();
 

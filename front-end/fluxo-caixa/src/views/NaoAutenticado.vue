@@ -5,7 +5,7 @@
       <p>Crie sua conta agora mesmo e tenha acesso a recursos incríveis</p>
     </div>
     <div class="formulario">
-      <form name="login" class="form" v-if="false">
+      <form name="login" class="form" v-if="!criarConta">
         <div class="tooltip">
           <p class="m-0">Login</p>
         </div>
@@ -30,13 +30,15 @@
           </div>
         </div>
         <div class="form-footer">
-          <button class="btn btn-primary">Login</button>
+          <button class="btn btn-primary" type="button">Login</button>
           <div>
-            <span>Você não possui uma conta? Crie uma</span>
+            <span @click="criarConta = !criarConta"
+              >Você não possui uma conta? Crie uma</span
+            >
           </div>
         </div>
       </form>
-      <form name="novaConta" class="form" v-if="true">
+      <form name="novaConta" class="form" v-if="criarConta">
         <div class="tooltip">
           <p class="m-0">Nova Conta</p>
         </div>
@@ -130,11 +132,15 @@
           />
         </div>
         <div class="form-footer">
-          <button class="btn btn-primary" @click="cadastrarNovaContaAsync">
+          <button
+            class="btn btn-primary"
+            type="button"
+            @click="cadastrarNovaContaAsync"
+          >
             Criar
           </button>
           <div>
-            <span>Cancelar</span>
+            <span @click="criarConta = !criarConta">Cancelar</span>
           </div>
         </div>
       </form>
@@ -148,7 +154,7 @@
 <script>
 import Modal from "../components/Modal.vue";
 import RecuperarSenha from "./components/RecuperarSenha.vue";
-import axios from "axios";
+import httpRequest from "@/services/$httpRequest";
 export default {
   name: "NaoAutenticado",
   components: {
@@ -159,6 +165,7 @@ export default {
     return {
       recuperarSenha: false,
       etapasCadastro: "primeiraEtapa",
+      criarConta: false,
       novaConta: {
         nome: "",
         dataNascimento: "",
@@ -176,7 +183,8 @@ export default {
     usernameEstahDisponivelAsync() {
       setTimeout(async () => {
         try {
-          const _usernameEstahDisponvel = await axios.get(
+          console.log(this);
+          const _usernameEstahDisponvel = await httpRequest.get(
             `http://localhost:5000/api/pessoa?username=${this.novaConta.username}`
           );
           console.log(`_usernameEstahDisponvel: ${_usernameEstahDisponvel}`);
@@ -190,7 +198,7 @@ export default {
     },
     async cadastrarNovaContaAsync() {
       try {
-        await axios.post(
+        await httpRequest.post(
           "http://localhost:5000/api/pessoa/NovoCadastro",
           JSON.stringify(this.novaConta)
         );
