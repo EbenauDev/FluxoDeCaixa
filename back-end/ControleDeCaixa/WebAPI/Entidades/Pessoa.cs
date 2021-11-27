@@ -1,18 +1,24 @@
-﻿namespace ControleDeCaixa.WebAPI.Entidades
+﻿using System;
+
+namespace ControleDeCaixa.WebAPI.Entidades
 {
     public class Pessoa
     {
-        public Pessoa(int id, string avatar, string senha, string username, string email)
+        public Pessoa(int id, string nome, DateTime dataNascimento, string avatar, string senha, string username, string email)
         {
             Id = id;
+            Nome = nome;
+            DataNascimento = dataNascimento;
             Avatar = avatar;
             Senha = senha;
             Username = username;
             Email = email;
         }
 
-        public Pessoa(string avatar, string senha, string username, string email)
+        public Pessoa(string nome, DateTime dataNascimento, string avatar, string senha, string username, string email)
         {
+            Nome = nome;
+            DataNascimento = dataNascimento;
             Avatar = avatar;
             Senha = senha;
             Username = username;
@@ -20,6 +26,8 @@
         }
 
         public int Id { get; set; }
+        public string Nome { get; set; }
+        public DateTime DataNascimento { get; set; }
         public string Avatar { get; set; }
         public string Senha { get; set; }
         public string Username { get; set; }

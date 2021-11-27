@@ -1,11 +1,6 @@
 const state = {
     loadingAutenticacao: false,
-    pessoa: {
-        nickname: "JoaoTiago",
-        nome: "João Tiago",
-        senha: 123456,
-        avatar: ""
-    }
+    pessoa: {}
 
 }
 

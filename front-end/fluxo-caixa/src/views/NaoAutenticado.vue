@@ -42,7 +42,7 @@
         <div class="tooltip">
           <p class="m-0">Nova Conta</p>
         </div>
-        <div v-if="etapasCadastro == 'primeiraEtapa'">
+        <div>
           <div>
             <p class="f-16 color-primary f-bold m-0">Dados Pessoais</p>
           </div>
@@ -54,6 +54,7 @@
               name="Nome"
               id="nome"
               v-model="novaConta.nome"
+              required
             />
           </div>
           <div class="form-group">
@@ -65,11 +66,24 @@
               type="text"
               name="DataNascimento"
               id="dataNascimento"
+              v-format-date="{ format: 'DD/MM/YYYY' }"
               v-model="novaConta.dataNascimento"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email">E-mail</label>
+            <input
+              class="form-control"
+              type="email"
+              name="Email"
+              id="email"
+              v-model="novaConta.email"
+              required
             />
           </div>
         </div>
-        <div v-if="etapasCadastro == 'segundaEtapa'">
+        <div>
           <div>
             <p class="f-16 color-primary f-bold m-0">Dados de login</p>
           </div>
@@ -82,6 +96,7 @@
               id="username"
               @change="usernameEstahDisponivelAsync"
               v-model="novaConta.username"
+              required
             />
           </div>
           <div class="form-group">
@@ -102,6 +117,7 @@
               name="Senha"
               id="senha"
               v-model="novaConta.senha"
+              required
             />
           </div>
           <div class="form-group">
@@ -114,22 +130,9 @@
               name="ConfirmarSenha"
               id="confirmarSenha"
               v-model="novaConta.confirmarSenha"
+              required
             />
           </div>
-        </div>
-        <div class="m-t-5 form-steps">
-          <input
-            type="radio"
-            name="etapasCadastro"
-            v-model="etapasCadastro"
-            value="primeiraEtapa"
-          />
-          <input
-            type="radio"
-            name="etapasCadastro"
-            v-model="etapasCadastro"
-            value="segundaEtapa"
-          />
         </div>
         <div class="form-footer">
           <button
@@ -155,6 +158,7 @@
 import Modal from "../components/Modal.vue";
 import RecuperarSenha from "./components/RecuperarSenha.vue";
 import httpRequest from "@/services/$httpRequest";
+import dateFormater from "@/util/formatar-datas";
 export default {
   name: "NaoAutenticado",
   components: {
@@ -198,6 +202,10 @@ export default {
     },
     async cadastrarNovaContaAsync() {
       try {
+        this.novaConta.dataNascimento = dateFormater(
+          "DD/MM/YYYY",
+          this.novaConta.dataNascimento
+        );
         await httpRequest.post(
           "http://localhost:5000/api/pessoa/NovoCadastro",
           JSON.stringify(this.novaConta)

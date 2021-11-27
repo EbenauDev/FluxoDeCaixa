@@ -18,9 +18,9 @@ namespace ControleDeCaixa.WebAPI.Repositorio
 
         public async Task<Resultado<Pessoa, Falha>> NovaPessoaAsync(Pessoa pessoa)
         {
-            const string sql = @"INSERT INTO Pessoa (Email, Senha, Username, Avatar)
-                                 VALUES(@Email, @Senha, @Username, @Avatar);
-                                 
+            const string sql = @"INSERT INTO Pessoa (Nome, DataNascimento, Avatar, Senha, Username, Email)
+                                 VALUES(@Nome, @DataNascimento, @Avatar, @Senha, @Username, @Email);
+
                                  SELECT SCOPE_IDENTITY() AS Id;";
             using (var conexao = new SqlConnection(_connectionString))
             {
@@ -29,10 +29,12 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                     await conexao.OpenAsync();
                     var idConfiguracaoPessoa = await conexao.QueryFirstOrDefaultAsync<int>(sql, new
                     {
-                        pessoa.Email,
+                        pessoa.Nome,
+                        pessoa.DataNascimento,
+                        pessoa.Avatar,
                         pessoa.Senha,
                         pessoa.Username,
-                        pessoa.Avatar
+                        pessoa.Email
                     });
                     if (idConfiguracaoPessoa == 0)
                         return Falha.Nova($"Houve um problema ao tentar criar a conta para {pessoa.Username}");
@@ -76,10 +78,12 @@ namespace ControleDeCaixa.WebAPI.Repositorio
         public async Task<Resultado<Pessoa, Falha>> RecuperarPessoaPorIdAsync(int pessoaId)
         {
             const string sql = @"SELECT Id, 
-                                        Email, 
+                                        Nome, 
+                                        DataNascimento, 
+                                        Avatar, 
                                         Senha, 
                                         Username, 
-                                        Avatar
+                                        Email
                                  WHERE Id = @pessoaId";
             using (var conexao = new SqlConnection(_connectionString))
             {
@@ -101,7 +105,8 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 }
             }
         }
-        public async Task<Resultado<Pessoa, Falha>> AtualizarPessoaAsync(Pessoa pessoa) {
+        public async Task<Resultado<Pessoa, Falha>> AtualizarPessoaAsync(Pessoa pessoa)
+        {
             const string sql = @"UPDATE Pessoa 
                                  SET Email = @Email, 
                                      Senha = @Senha, 

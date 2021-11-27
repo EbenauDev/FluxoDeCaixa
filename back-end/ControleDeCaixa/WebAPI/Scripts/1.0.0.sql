@@ -1,2 +1,26 @@
 ﻿CREATE DATABASE ControleFluxoCaixa;
-USE  ControleFluxoCaixa
+USE  ControleFluxoCaixa;
+
+
+CREATE TABLE Pessoa(
+	Id int NOT NULL PRIMARY KEY IDENTITY,
+	Nome VARCHAR(60) not null,
+	DataNascimento DATETIME NOT NULL,
+	Avatar VARCHAR(256) NULL,
+	Senha VARCHAR(36) NOT NULL,
+	Username VARCHAR(60) NOT NULL,
+	Email VARCHAR(45) NOT NULL
+)
+GO
+
+CREATE TABLE Sessao(
+	Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+	IdPessoa INT NOT NULL,
+	DataDeLogin DATETIME NULL,
+	DataLogout DATETIME NULL
+)
+
+ALTER TABLE Sessao
+ADD CONSTRAINT FK_Sessao_IdPessoa FOREIGN KEY (IdPessoa)
+    REFERENCES Pessoa(id);
+

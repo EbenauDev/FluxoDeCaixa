@@ -35,7 +35,9 @@ namespace ControleDeCaixa.WebAPI.Handler
         {
             try
             {
-                var pessoa = new Pessoa(inputModel.Avatar,
+                var pessoa = new Pessoa(inputModel.Nome,
+                                        inputModel.DataNascimento,    
+                                        inputModel.Avatar,
                                         inputModel.Senha,
                                         inputModel.Username,
                                         inputModel.Email);
