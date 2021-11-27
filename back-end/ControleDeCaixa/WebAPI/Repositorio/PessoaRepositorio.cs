@@ -51,11 +51,11 @@ namespace ControleDeCaixa.WebAPI.Repositorio
         }
         public async Task<Resultado<bool, Falha>> UsernameEstahDisponivelAsync(string username)
         {
-            const string sql = @"DECLARE @Username VARCHAR(45) = @username;
+            const string sql = @"DECLARE @UsernameParaPesquisar VARCHAR(45) = @username;
             
                                 SELECT IIF(COUNT(Username) > 0, 1, 0) AS UsernameJahEstahEmUso
                                 FROM Pessoa (NOLOCK)
-                                WHERE Username = @Username;";
+                                WHERE Username = @UsernameParaPesquisar;";
             using (var conexao = new SqlConnection(_connectionString))
             {
                 try

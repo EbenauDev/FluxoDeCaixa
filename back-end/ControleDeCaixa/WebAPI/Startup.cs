@@ -25,7 +25,18 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "ConfiguracaoDeCors",
+                    builder =>
+                    {
+                        builder.
+                        WithOrigins("http://localhost:8080")
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                    });
+            });
             services.AddControllers();
             var key = Encoding.ASCII.GetBytes(Configuration["SecretKey"]);
             services.AddAuthentication(x =>
@@ -63,7 +74,7 @@ namespace WebAPI
             }
 
             app.UseRouting();
-
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 

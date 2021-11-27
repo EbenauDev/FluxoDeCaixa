@@ -45,21 +45,25 @@
             <p class="f-16 color-primary f-bold m-0">Dados Pessoais</p>
           </div>
           <div class="form-group">
-            <label class="form-label" for="username">Nome</label>
+            <label class="form-label" for="nome">Nome</label>
             <input
               class="form-control"
               type="text"
-              name="Username"
-              id="username"
+              name="Nome"
+              id="nome"
+              v-model="novaConta.nome"
             />
           </div>
           <div class="form-group">
-            <label class="form-label" for="username">Data nascimento</label>
+            <label class="form-label" for="dataNascimento"
+              >Data nascimento</label
+            >
             <input
               class="form-control"
               type="text"
-              name="Username"
-              id="username"
+              name="DataNascimento"
+              id="dataNascimento"
+              v-model="novaConta.dataNascimento"
             />
           </div>
         </div>
@@ -74,33 +78,40 @@
               type="text"
               name="Username"
               id="username"
+              @change="usernameEstahDisponivelAsync"
+              v-model="novaConta.username"
             />
           </div>
           <div class="form-group">
-            <label class="form-label" for="username">Avatar</label>
+            <label class="form-label" for="avatar">Avatar</label>
             <input
               class="form-control"
               type="url"
-              name="Username"
-              id="username"
+              name="Avatar"
+              id="avatar"
+              v-model="novaConta.avatar"
             />
           </div>
           <div class="form-group">
-            <label class="form-label" for="username">Senha</label>
+            <label class="form-label" for="senha">Senha</label>
             <input
               class="form-control"
               type="password"
-              name="Username"
-              id="username"
+              name="Senha"
+              id="senha"
+              v-model="novaConta.senha"
             />
           </div>
           <div class="form-group">
-            <label class="form-label" for="username">Confirmar senha</label>
+            <label class="form-label" for="confirmarSenha"
+              >Confirmar senha</label
+            >
             <input
               class="form-control"
               type="password"
-              name="Username"
-              id="username"
+              name="ConfirmarSenha"
+              id="confirmarSenha"
+              v-model="novaConta.confirmarSenha"
             />
           </div>
         </div>
@@ -119,7 +130,9 @@
           />
         </div>
         <div class="form-footer">
-          <button class="btn btn-primary">Criar</button>
+          <button class="btn btn-primary" @click="cadastrarNovaContaAsync">
+            Criar
+          </button>
           <div>
             <span>Cancelar</span>
           </div>
@@ -135,6 +148,7 @@
 <script>
 import Modal from "../components/Modal.vue";
 import RecuperarSenha from "./components/RecuperarSenha.vue";
+import axios from "axios";
 export default {
   name: "NaoAutenticado",
   components: {
@@ -145,11 +159,48 @@ export default {
     return {
       recuperarSenha: false,
       etapasCadastro: "primeiraEtapa",
+      novaConta: {
+        nome: "",
+        dataNascimento: "",
+        email: "",
+        senha: "",
+        avatar: "",
+        username: "",
+      },
     };
   },
   methods: {
     mostrarModalRecuperarSenha() {
       this.recuperarSenha = !this.recuperarSenha;
+    },
+    usernameEstahDisponivelAsync() {
+      setTimeout(async () => {
+        try {
+          const _usernameEstahDisponvel = await axios.get(
+            `http://localhost:5000/api/pessoa?username=${this.novaConta.username}`
+          );
+          console.log(`_usernameEstahDisponvel: ${_usernameEstahDisponvel}`);
+        } catch (error) {
+          this.$toast.open({
+            message: `Houve um problema ao tentar verificar se o username ${this.novaConta.username} está disponível.`,
+            type: "error",
+          });
+        }
+      }, 200);
+    },
+    async cadastrarNovaContaAsync() {
+      try {
+        await axios.post(
+          "http://localhost:5000/api/pessoa/NovoCadastro",
+          JSON.stringify(this.novaConta)
+        );
+      } catch (error) {
+        this.$toast.open({
+          message:
+            "Houve um problema ao tentar salvar o seu cadastro. Por favor, tente novamente mais tarde.",
+          type: "error",
+        });
+      }
     },
   },
 };
