@@ -24,3 +24,16 @@ ALTER TABLE Sessao
 ADD CONSTRAINT FK_Sessao_IdPessoa FOREIGN KEY (IdPessoa)
     REFERENCES Pessoa(id);
 
+
+CREATE TABLE MovimentacoesAnuais(
+	Id INT IDENTITY NOT NULL PRIMARY KEY,
+	IdPessoa INT NOT NULL,
+	Ano VARCHAR(4) NOT NULL,
+	Descricao VARCHAR(256) NULL,
+	DataDeCriacao DATETIME NOT NULL
+)
+GO
+
+ALTER TABLE MovimentacoesAnuais
+ADD CONSTRAINT FK_MovimentacoesAnuais_IdPessoa FOREIGN KEY (IdPessoa)
+    REFERENCES Pessoa(id);

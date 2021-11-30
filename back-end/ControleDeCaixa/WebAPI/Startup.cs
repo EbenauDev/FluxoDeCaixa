@@ -63,6 +63,8 @@ namespace WebAPI
             services.AddSingleton<ITokenJWT, TokenJWT>();
             services.AddSingleton<ILoginRepositorio, LoginRepositorio>();
             services.AddSingleton<ILoginHandler, LoginHandler>();
+            services.AddSingleton<IMovimentacoesRepositorio, MovimentacoesRepositorio>();
+            services.AddSingleton<IMovimentacoesHandler, MovimentacoesHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
