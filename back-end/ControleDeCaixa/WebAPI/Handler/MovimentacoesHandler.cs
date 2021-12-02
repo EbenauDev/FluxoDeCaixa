@@ -3,8 +3,6 @@ using ControleDeCaixa.WebAPI.Generics;
 using ControleDeCaixa.WebAPI.Models;
 using ControleDeCaixa.WebAPI.Repositorio;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ControleDeCaixa.WebAPI.Handler
@@ -13,6 +11,7 @@ namespace ControleDeCaixa.WebAPI.Handler
     public interface IMovimentacoesHandler
     {
         Task<Resultado<MovimentacaoAnual, Falha>> NovoAnoDeMovimentacoesAsync(MoviementacoesAnuais moviementacoes, int pessoaId);
+        Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacao(MesDeMovimentacoes movimentacao, int pessoaId);
     }
 
     public class MovimentacoesHandler : IMovimentacoesHandler
@@ -36,6 +35,18 @@ namespace ControleDeCaixa.WebAPI.Handler
                     dataDeCriacao: DateTime.Now
                 );
             if (await _movimentacoesRepositorio.NovoAnoDeMovimentacaoAsync(anoDeMovimentacao) is var resultado && resultado.EhFalha)
+                return resultado.Falha;
+            return resultado.Sucesso;
+        }
+
+        public async Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacao(MesDeMovimentacoes movimentacao, int pessoaId)
+        {
+            var operacao = new MovimentacaoMes(
+                    movimentacao.IdAnoMovimentacoes,
+                    movimentacao.MesDeReferencia,
+                    movimentacao.Descricao
+                );
+            if (await _movimentacoesRepositorio.NovoMesDeMovimentacoesAsync(operacao) is var resultado && resultado.EhFalha)
                 return resultado.Falha;
             return resultado.Sucesso;
         }

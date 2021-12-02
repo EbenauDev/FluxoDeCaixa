@@ -37,3 +37,54 @@ GO
 ALTER TABLE MovimentacoesAnuais
 ADD CONSTRAINT FK_MovimentacoesAnuais_IdPessoa FOREIGN KEY (IdPessoa)
     REFERENCES Pessoa(id);
+
+	CREATE TABLE MesDeMovimentacoes(
+	Id INT IDENTITY NOT NULL PRIMARY KEY,
+	IdAnoMovimentacoes INT NOT NULL,
+	MesDeReferencia DateTime NOT NULL,
+	Descricao VARCHAR(256) NULL,
+	DataDeCriacao DATETIME NOT NULL
+)
+GO
+
+ALTER TABLE MesDeMovimentacoes
+ADD CONSTRAINT FK_MesDeMovimentacoes_IdAnoMovimentacoes FOREIGN KEY (IdAnoMovimentacoes)
+    REFERENCES MovimentacoesAnuais(id);
+
+
+CREATE TABLE OperacoesDoMes(
+	Id INT IDENTITY NOT NULL PRIMARY KEY,
+	Valor DECIMAL(12, 2) NOT NULL,
+	MesId INT NOT NULL,
+	Descricao VARCHAR(320) NULL,
+	TipoOperacao CHAR(1) NOT NULL,
+	DataDeRegistro DATETIME NOT NULL
+)
+GO
+
+
+ALTER TABLE OperacoesDoMes
+ADD CONSTRAINT FK_OperacoesDoMes_IdPessoa FOREIGN KEY (MesId)
+    REFERENCES MesDeMovimentacoes(id);
+
+CREATE TABLE TemplatesEmail(
+	Id INT IDENTITY NOT NULL PRIMARY KEY,
+	HTML VARCHAR(MAX) NOT NULL,
+	Assunto VARCHAR(100) NULL,
+	EnderecoDeOrigem VARCHAR(256) NOT NULL,
+	DataDeRegistro DATETIME NOT NULL
+)
+GO
+
+CREATE TABLE TokenSenha(
+	Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+	ExpiraEm DateTime NOT NULL ,
+	GeradoEm DateTime NOT NULL,
+	DataDeRegistro DATETIME NOT NULL,
+	PessoaId INT NOT NULL
+)
+GO
+
+ALTER TABLE TokenSenha
+ADD CONSTRAINT FK_TokenSenha_IdPessoa FOREIGN KEY (PessoaId)
+    REFERENCES Pessoa(id);
