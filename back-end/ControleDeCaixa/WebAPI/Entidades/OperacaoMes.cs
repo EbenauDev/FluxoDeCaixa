@@ -7,7 +7,7 @@ namespace ControleDeCaixa.WebAPI.Entidades
 {
     public class OperacaoMes
     {
-        public OperacaoMes(int id, double valor, int mesId, int descricao, EMovimentacaoMes tipoOperacao)
+        public OperacaoMes(int id, double valor, int mesId, string descricao, EMovimentacaoMes tipoOperacao)
         {
             Id = id;
             Valor = valor;
@@ -16,7 +16,7 @@ namespace ControleDeCaixa.WebAPI.Entidades
             TipoOperacao = tipoOperacao;
         }
 
-        public OperacaoMes(double valor, int mesId, int descricao, EMovimentacaoMes tipoOperacao)
+        public OperacaoMes(double valor, int mesId, string descricao, EMovimentacaoMes tipoOperacao)
         {
             Valor = valor;
             MesId = mesId;
@@ -27,7 +27,7 @@ namespace ControleDeCaixa.WebAPI.Entidades
         public int Id { get; set; }
         public double Valor { get; set; }
         public int MesId { get; set; }
-        public int Descricao { get; set; }
+        public string Descricao { get; set; }
         public EMovimentacaoMes TipoOperacao { get; set; }
 
         public OperacaoMes DefinirId(int id)

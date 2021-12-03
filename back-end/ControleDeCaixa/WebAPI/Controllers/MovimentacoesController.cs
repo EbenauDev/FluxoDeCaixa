@@ -32,5 +32,13 @@ namespace ControleDeCaixa.WebAPI.Controllers
                 return BadRequest(resultado.Falha);
             return Ok(resultado.Sucesso);
         }
+
+        [HttpPost("{pessoaId}/OperacaoMes")]
+        public async Task<IActionResult> NovaOperacaoDoMes([FromRoute] int pessoaId, [FromBody] OperacoesMes operacoesMes)
+        {
+            if (await _movimentacoesHandler.NovaOperacaoNoMesAsync(operacoesMes, pessoaId) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(resultado.Sucesso);
+        }
     }
 }

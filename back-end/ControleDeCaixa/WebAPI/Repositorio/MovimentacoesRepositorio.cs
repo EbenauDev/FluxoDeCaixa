@@ -133,10 +133,10 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                     await conexao.OpenAsync();
                     var resultadoIdMovimentacaoAnual = await conexao.QueryFirstOrDefaultAsync<int>(sql, new
                     {
-                        Valor = operacaoMes.Valor,
-                        MesId = operacaoMes.MesId,
-                        Descricao = operacaoMes.Descricao,
-                        TipoOperacao = operacaoMes.TipoOperacao,
+                        operacaoMes.Valor,
+                        operacaoMes.MesId,
+                        operacaoMes.Descricao,
+                        TipoOperacao = (char)operacaoMes.TipoOperacao,
                         DataDeRegistro = DateTime.Now
                     });
                     if (resultadoIdMovimentacaoAnual == 0)

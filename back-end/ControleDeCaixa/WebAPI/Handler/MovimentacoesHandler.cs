@@ -12,6 +12,7 @@ namespace ControleDeCaixa.WebAPI.Handler
     {
         Task<Resultado<MovimentacaoAnual, Falha>> NovoAnoDeMovimentacoesAsync(MoviementacoesAnuais moviementacoes, int pessoaId);
         Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacao(MesDeMovimentacoes movimentacao, int pessoaId);
+        Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacoesMes operacoes, int pessoaId);
     }
 
     public class MovimentacoesHandler : IMovimentacoesHandler
@@ -41,12 +42,26 @@ namespace ControleDeCaixa.WebAPI.Handler
 
         public async Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacao(MesDeMovimentacoes movimentacao, int pessoaId)
         {
-            var operacao = new MovimentacaoMes(
+            var movimentacaoMes = new MovimentacaoMes(
                     movimentacao.IdAnoMovimentacoes,
                     movimentacao.MesDeReferencia,
                     movimentacao.Descricao
                 );
-            if (await _movimentacoesRepositorio.NovoMesDeMovimentacoesAsync(operacao) is var resultado && resultado.EhFalha)
+            if (await _movimentacoesRepositorio.NovoMesDeMovimentacoesAsync(movimentacaoMes) is var resultado && resultado.EhFalha)
+                return resultado.Falha;
+            return resultado.Sucesso;
+        }
+
+        public async Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacoesMes operacoes, int pessoaId)
+        {
+    
+            var movimentacaoMes = new OperacaoMes(
+                operacoes.Valor,
+                operacoes.MesId,
+                operacoes.Descricao,
+                (EMovimentacaoMes)operacoes.TipoOperacao
+               );
+            if (await _movimentacoesRepositorio.NovaOperacaoNoMesAsync(movimentacaoMes) is var resultado && resultado.EhFalha)
                 return resultado.Falha;
             return resultado.Sucesso;
         }
