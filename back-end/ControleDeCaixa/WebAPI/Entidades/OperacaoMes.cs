@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ControleDeCaixa.WebAPI.Entidades
 {
     public class OperacaoMes
     {
-        public OperacaoMes(int id, double valor, int mesId, string descricao, EMovimentacaoMes tipoOperacao)
+        public OperacaoMes(int id, double valor, int mesId, string descricao, ETipoOperacaoMes tipoOperacao)
         {
             Id = id;
             Valor = valor;
@@ -16,7 +14,7 @@ namespace ControleDeCaixa.WebAPI.Entidades
             TipoOperacao = tipoOperacao;
         }
 
-        public OperacaoMes(double valor, int mesId, string descricao, EMovimentacaoMes tipoOperacao)
+        public OperacaoMes(double valor, int mesId, string descricao, ETipoOperacaoMes tipoOperacao)
         {
             Valor = valor;
             MesId = mesId;
@@ -28,7 +26,9 @@ namespace ControleDeCaixa.WebAPI.Entidades
         public double Valor { get; set; }
         public int MesId { get; set; }
         public string Descricao { get; set; }
-        public EMovimentacaoMes TipoOperacao { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ETipoOperacaoMes TipoOperacao { get; set; }
 
         public OperacaoMes DefinirId(int id)
         {
@@ -37,9 +37,10 @@ namespace ControleDeCaixa.WebAPI.Entidades
         }
     }
 
-    public enum EMovimentacaoMes
+    public enum ETipoOperacaoMes
     {
-        Custos = 'C',
-        Receitas = 'R'
+        Saida = 'S',
+        Entrada = 'E'
     }
+
 }

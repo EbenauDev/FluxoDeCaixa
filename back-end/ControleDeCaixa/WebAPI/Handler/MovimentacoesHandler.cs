@@ -59,7 +59,7 @@ namespace ControleDeCaixa.WebAPI.Handler
                 operacoes.Valor,
                 operacoes.MesId,
                 operacoes.Descricao,
-                (EMovimentacaoMes)operacoes.TipoOperacao
+                (ETipoOperacaoMes)Enum.Parse(typeof(ETipoOperacaoMes), operacoes.TipoOperacao)
                );
             if (await _movimentacoesRepositorio.NovaOperacaoNoMesAsync(movimentacaoMes) is var resultado && resultado.EhFalha)
                 return resultado.Falha;

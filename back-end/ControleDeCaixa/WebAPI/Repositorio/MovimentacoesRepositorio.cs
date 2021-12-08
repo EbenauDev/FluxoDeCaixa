@@ -2,6 +2,7 @@
 using ControleDeCaixa.WebAPI.Generics;
 using ControleDeCaixa.WebAPI.Helper;
 using ControleDeCaixa.WebAPI.Models;
+using ControleDeCaixa.WebAPI.Repositorio.DTO;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace ControleDeCaixa.WebAPI.Repositorio
         Task<Resultado<MovimentacaoAnual, Falha>> NovoAnoDeMovimentacaoAsync(MovimentacaoAnual movimentacaoAnual);
         Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacoesAsync(MovimentacaoMes mesDeMovimentacoes);
         Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacaoMes mesDeMovimentacoes);
+        Task<Resultado<IEnumerable<MesDeMovimentacaoDTO>, Falha>> RecuperarMesesDeMovimentacaoDoAnoAsync(int pessoaId, int anoId);
+        Task<Resultado<IEnumerable<AnoDeMovimentacaoDTO>, Falha>> RecuperarAnosDeMovimentacoesAsync(int pessoaId);
     }
 
     public class MovimentacoesRepositorio : IMovimentacoesRepositorio
@@ -98,9 +101,9 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                     await conexao.OpenAsync();
                     var resultadoIdMovimentacaoAnual = await conexao.QueryFirstOrDefaultAsync<int>(sql, new
                     {
-                        IdAnoMovimentacoes = mesDeMovimentacoes.IdAnoMovimentacoes,
-                        MesDeReferencia = mesDeMovimentacoes.MesDeReferencia,
-                        Descricao = mesDeMovimentacoes.Descricao,
+                        mesDeMovimentacoes.IdAnoMovimentacoes,
+                        mesDeMovimentacoes.MesDeReferencia,
+                        mesDeMovimentacoes.Descricao,
                         DataDeCriacao = DateTime.Now
                     });
                     if (resultadoIdMovimentacaoAnual == 0)
@@ -154,6 +157,59 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 }
             }
 
+        }
+
+        public async Task<Resultado<IEnumerable<MesDeMovimentacaoDTO>, Falha>> RecuperarMesesDeMovimentacaoDoAnoAsync(int pessoaId, int anoId)
+        {
+            const string sql = @"SELECT MesDeMovimentacoes.Id,
+	                                    MesDeMovimentacoes.MesDeReferencia,
+	                                    MesDeMovimentacoes.DataDeCriacao
+	                                    FROM MovimentacoesAnuais (NOLOCK) 
+                                 INNER JOIN MesDeMovimentacoes (NOLOCK) 
+                                 ON MesDeMovimentacoes.IdAnoMovimentacoes =  MovimentacoesAnuais.Id
+                                 WHERE MovimentacoesAnuais.IdPessoa = @pessoaId AND MovimentacoesAnuais.Id = @anoId;";
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    return (await conexao.QueryAsync<MesDeMovimentacaoDTO>(sql, new { pessoaId, anoId })).ToList();
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException($"Falha ao recuperar meses de movimentações para o ano {anoId}", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<Resultado<IEnumerable<AnoDeMovimentacaoDTO>, Falha>> RecuperarAnosDeMovimentacoesAsync(int pessoaId)
+        {
+            const string sql = @"SELECT Id,
+	                                    Ano,
+	                                    Descricao,
+	                                    DataDeCriacao
+                                 FROM MovimentacoesAnuais (NOLOCK)
+                                 WHERE IdPessoa = @pessoaId;";
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    return (await conexao.QueryAsync<AnoDeMovimentacaoDTO>(sql, new { pessoaId })).ToList();
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException($"Falha ao recuperar os anos de movimentações para a pessoa {pessoaId}", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
         }
     }
 }
