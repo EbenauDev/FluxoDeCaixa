@@ -16,16 +16,12 @@ namespace ControleDeCaixa.WebAPI.Aplicacao
 
     public sealed class TokenJWT : ITokenJWT
     {
-        private readonly IConfiguration _configuration;
-        public TokenJWT(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        private readonly string _secretKey = String.Empty;
 
         public string GerarToken(Pessoa pessoa)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["SecretKey"]);
+            var key = Encoding.ASCII.GetBytes(_secretKey);
             var tokenExpiration = DateTime.UtcNow.AddMinutes(25);
             var identity = new ClaimsIdentity(new List<Claim>
             {

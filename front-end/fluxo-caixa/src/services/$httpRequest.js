@@ -10,18 +10,30 @@ export default {
         _defaultHeaders.headers[key] = value;
     },
     post: (url, payload) => {
-        return axios.post(
-            url,
-            payload,
-            _defaultHeaders
-        )
+        return new Promise((resolve, reject) => {
+            axios.post(
+                url,
+                payload,
+                _defaultHeaders
+            ).then((response) => {
+                resolve(response.data);
+            }).catch(error => {
+                reject(error);
+            });
+        })
     },
     put: (url, payload) => {
-        return axios.put(
-            url,
-            JSON.stringify(payload),
-            _defaultHeaders
-        )
+        return new Promise((resolve, reject) => {
+            axios.put(
+                url,
+                JSON.stringify(payload),
+                _defaultHeaders
+            ).then((response) => {
+                resolve(response.data);
+            }).catch(error => {
+                reject(error);
+            });
+        })
     },
     path: (url, payload) => {
         return axios.patch(

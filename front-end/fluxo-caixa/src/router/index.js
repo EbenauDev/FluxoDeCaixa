@@ -13,10 +13,12 @@ const routes = [
     children: [
       {
         path: "configuracoes-da-conta",
-        component: () => import(/* webpackChunkName: "ConfiguracoesDaConta" */'../views/ConfiguracoesDaConta.vue')
+        name: "Autenticado.ConfiguracoesDaConta",
+        component: () => import(/* webpackChunkName: "ConfiguracoesDaConta" */'../views/ConfiguracoesDaConta.vue'),
       },
       {
         path: "visao-geral",
+        name: "Autenticado.VisaoGeral",
         component: () => import(/* webpackChunkName: "ConfiguracoesDaConta" */'../views/VisaoGeral.vue')
       },
     ]

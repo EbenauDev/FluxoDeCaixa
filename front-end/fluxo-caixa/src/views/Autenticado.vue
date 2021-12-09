@@ -11,14 +11,20 @@
 
 <script>
 import MenuLateral from "../components/MenuLateral.vue";
-
+import { mapState } from "vuex";
 export default {
   name: "PaginaInicial",
   components: {
     MenuLateral,
   },
   created() {
+    console.log(this.pessoa);
     this.$store.dispatch("fluxoDeCaixa/recuperarCaixaMaisRecente");
+  },
+  computed: {
+    ...mapState({
+      pessoa: (state) => state.pessoa.pessoa,
+    }),
   },
 };
 </script>

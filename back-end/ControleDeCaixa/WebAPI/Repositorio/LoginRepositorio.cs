@@ -27,12 +27,14 @@ namespace ControleDeCaixa.WebAPI.Repositorio
         public async Task<Resultado<Pessoa, Falha>> RecuperarContaAsync(Login login)
         {
             const string sql = @"SELECT Id,
+                                        Nome,
+	                                    DataNascimento,
                                         Avatar,
 	                                    Senha,
 	                                    Username,
                                         Email
-                                FROM Pessoa
-                                WHERE Username = @username;";
+                                 FROM Pessoa(NOLOCK)
+                                 WHERE Username = @username;";
 
             using (var conexao = new SqlConnection(_connectionString))
             {

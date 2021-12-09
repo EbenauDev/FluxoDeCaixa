@@ -62,6 +62,7 @@ namespace WebAPI
             services.AddSingleton<IConnectionHelper, ConnectionHelper>();
             services.AddSingleton<ITokenJWT, TokenJWT>();
             services.AddSingleton<ILoginRepositorio, LoginRepositorio>();
+            services.AddSingleton<ISessaoRepositorio, SessaoRepositorio>();
             services.AddSingleton<ILoginHandler, LoginHandler>();
             services.AddSingleton<IMovimentacoesRepositorio, MovimentacoesRepositorio>();
             services.AddSingleton<IMovimentacoesHandler, MovimentacoesHandler>();

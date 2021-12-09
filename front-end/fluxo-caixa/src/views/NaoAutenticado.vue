@@ -16,11 +16,18 @@
             type="text"
             name="Username"
             id="username"
+            v-model="credenciais.username"
           />
         </div>
         <div class="form-group">
           <label class="form-label" for="senha">Senha</label>
-          <input class="form-control" type="text" name="Senha" id="senha" />
+          <input
+            class="form-control"
+            type="text"
+            name="Senha"
+            id="senha"
+            v-model="credenciais.senha"
+          />
           <div class="text-right c-black">
             <span
               class="cursor-pointer f-13 color-primary f-bold"
@@ -30,7 +37,9 @@
           </div>
         </div>
         <div class="form-footer">
-          <button class="btn btn-primary" type="button">Login</button>
+          <button class="btn btn-primary" type="button" @click="realizarLogin">
+            Login
+          </button>
           <div>
             <span @click="criarConta = !criarConta"
               >Você não possui uma conta? Crie uma</span
@@ -158,6 +167,7 @@
 import Modal from "../components/Modal.vue";
 import RecuperarSenha from "./components/RecuperarSenha.vue";
 import httpRequest from "@/services/$httpRequest";
+import sessionService from "@/services/$sessionService";
 import dateFormater from "@/util/formatar-datas";
 export default {
   name: "NaoAutenticado",
@@ -177,6 +187,10 @@ export default {
         senha: "",
         avatar: "",
         username: "",
+      },
+      credenciais: {
+        username: "",
+        senha: "",
       },
     };
   },
@@ -206,11 +220,33 @@ export default {
           "DD/MM/YYYY",
           this.novaConta.dataNascimento
         );
-        await httpRequest.post(
+        var pessoa = await httpRequest.post(
           "http://localhost:5000/api/pessoa/NovoCadastro",
           JSON.stringify(this.novaConta)
         );
+        httpRequest.setHeaders("Authorization", `Bearer ${pessoa.token}`);
+        this.$store["pessoa/atualizarPessoaState"](pessoa);
+        this.$router.push("Autenticado");
       } catch (error) {
+        this.$toast.open({
+          message:
+            "Houve um problema ao tentar salvar o seu cadastro. Por favor, tente novamente mais tarde.",
+          type: "error",
+        });
+      }
+    },
+    async realizarLogin() {
+      try {
+        var pessoa = await httpRequest.post(
+          "http://localhost:5000/api/Login/Autenticar",
+          this.credenciais
+        );
+        httpRequest.setHeaders("Authorization", `Bearer ${pessoa.token}`);
+        sessionService.setSessionToken(pessoa.token);
+        this.$store.dispatch("pessoa/atualizarPessoaState", pessoa);
+        this.$router.push("Autenticado");
+      } catch (error) {
+        console.error(error);
         this.$toast.open({
           message:
             "Houve um problema ao tentar salvar o seu cadastro. Por favor, tente novamente mais tarde.",
