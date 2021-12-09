@@ -38,7 +38,6 @@ export default {
     .modal-content {
       max-width: 720px;
       max-height: 600px;
-      height: 100%;
       width: 100%;
       background: #fff;
       display: flex;
@@ -49,7 +48,8 @@ export default {
     }
     .modal-sm {
       max-width: 420px;
-      max-height: 355px;
+      max-height: 430px;
+      min-height: 140px;
     }
   }
 }

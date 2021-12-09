@@ -16,7 +16,7 @@ namespace ControleDeCaixa.WebAPI.Aplicacao
 
     public sealed class TokenJWT : ITokenJWT
     {
-        private readonly string _secretKey = String.Empty;
+        private readonly string _secretKey = String.Empty; 
 
         public string GerarToken(Pessoa pessoa)
         {

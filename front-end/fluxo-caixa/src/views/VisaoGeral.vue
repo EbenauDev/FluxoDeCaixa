@@ -1,10 +1,19 @@
 <template>
   <div>
-    <div class="card">
-      <p class="cursor-pointer">
-        Mes corrente: <strong class="color-primary">Novembro</strong> | Ano:
-        <strong class="color-primary">2021</strong>
-      </p>
+    <div class="card card">
+      <div class="card__header">
+        <div>
+          <p class="m-0 card__title">Ano</p>
+        </div>
+        <div class="card-header__actions">
+          <button
+            class="btn btn-outline"
+            @click="devoAdicionarNovoAno = !devoAdicionarNovoAno"
+          >
+            Novo ano
+          </button>
+        </div>
+      </div>
     </div>
     <div class="visao-geral">
       <div>
@@ -52,8 +61,38 @@
         </div>
       </div>
     </div>
-    <div v-if="false">
-      <modal></modal>
+    <div v-if="devoAdicionarNovoAno">
+      <modal>
+        <form name="novoAnoDeContas" class="form">
+          <div class="form-group">
+            <label class="form-label color-primary" for="username"
+              >Ano de controle</label
+            >
+            <select name="" id="" class="form-control">
+              <option :value="item" v-for="item in anosDeControle" :key="item">
+                Ano {{ item }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-footer">
+            <button
+              class="btn"
+              type="button"
+              @click="devoAdicionarNovoAno = !devoAdicionarNovoAno"
+            >
+              Cancelar
+            </button>
+            <button
+              class="btn btn-primary"
+              type="button"
+              @click="cadastrarNovaContaAsync"
+            >
+              Criar
+            </button>
+          </div>
+        </form>
+      </modal>
     </div>
   </div>
 </template>
@@ -65,6 +104,23 @@ export default {
   name: "VisaoGeral",
   components: {
     Modal,
+  },
+  computed: {
+    anosDeControle() {
+      new Date().getFullYear();
+      var _anos = [new Date().getFullYear()];
+      var _counter = 0;
+      while (_counter < 4) {
+        _counter++;
+        _anos.push(new Date().getFullYear() + _counter);
+      }
+      return _anos;
+    },
+  },
+  data() {
+    return {
+      devoAdicionarNovoAno: false,
+    };
   },
 };
 </script>
