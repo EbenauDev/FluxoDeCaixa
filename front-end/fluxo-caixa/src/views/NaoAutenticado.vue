@@ -202,10 +202,7 @@ export default {
       setTimeout(async () => {
         try {
           console.log(this);
-          const _usernameEstahDisponvel = await httpRequest.get(
-            `http://localhost:5000/api/pessoa?username=${this.novaConta.username}`
-          );
-          console.log(`_usernameEstahDisponvel: ${_usernameEstahDisponvel}`);
+          await httpRequest.get(`pessoa?username=${this.novaConta.username}`);
         } catch (error) {
           this.$toast.open({
             message: `Houve um problema ao tentar verificar se o username ${this.novaConta.username} está disponível.`,
@@ -221,7 +218,7 @@ export default {
           this.novaConta.dataNascimento
         );
         var pessoa = await httpRequest.post(
-          "http://localhost:5000/api/pessoa/NovoCadastro",
+          "pessoa/NovoCadastro",
           JSON.stringify(this.novaConta)
         );
         httpRequest.setHeaders("Authorization", `Bearer ${pessoa.token}`);
@@ -238,7 +235,7 @@ export default {
     async realizarLogin() {
       try {
         var pessoa = await httpRequest.post(
-          "http://localhost:5000/api/Login/Autenticar",
+          "Login/Autenticar",
           this.credenciais
         );
         httpRequest.setHeaders("Authorization", `Bearer ${pessoa.token}`);
@@ -246,7 +243,6 @@ export default {
         this.$store.dispatch("pessoa/atualizarPessoaState", pessoa);
         this.$router.push("Autenticado");
       } catch (error) {
-        console.error(error);
         this.$toast.open({
           message:
             "Houve um problema ao tentar salvar o seu cadastro. Por favor, tente novamente mais tarde.",

@@ -63,35 +63,7 @@
     </div>
     <div v-if="devoAdicionarNovoAno">
       <modal>
-        <form name="novoAnoDeContas" class="form">
-          <div class="form-group">
-            <label class="form-label color-primary" for="username"
-              >Ano de controle</label
-            >
-            <select name="" id="" class="form-control">
-              <option :value="item" v-for="item in anosDeControle" :key="item">
-                Ano {{ item }}
-              </option>
-            </select>
-          </div>
-
-          <div class="form-footer">
-            <button
-              class="btn"
-              type="button"
-              @click="devoAdicionarNovoAno = !devoAdicionarNovoAno"
-            >
-              Cancelar
-            </button>
-            <button
-              class="btn btn-primary"
-              type="button"
-              @click="cadastrarNovaContaAsync"
-            >
-              Criar
-            </button>
-          </div>
-        </form>
+        <novo-ano-de-movimentacoes></novo-ano-de-movimentacoes>
       </modal>
     </div>
   </div>
@@ -100,22 +72,12 @@
 
 <script>
 import Modal from "../components/Modal.vue";
+import NovoAnoDeMovimentacoes from "./components/NovoAnoDeMovimentacoes.vue";
 export default {
   name: "VisaoGeral",
   components: {
     Modal,
-  },
-  computed: {
-    anosDeControle() {
-      new Date().getFullYear();
-      var _anos = [new Date().getFullYear()];
-      var _counter = 0;
-      while (_counter < 4) {
-        _counter++;
-        _anos.push(new Date().getFullYear() + _counter);
-      }
-      return _anos;
-    },
+    NovoAnoDeMovimentacoes,
   },
   data() {
     return {
