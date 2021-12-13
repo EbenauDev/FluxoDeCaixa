@@ -4,6 +4,11 @@ using System;
 
 namespace ControleDeCaixa.WebAPI.Helper
 {
+    public interface IConnectionHelper
+    {
+        string GetConnectionString();
+    }
+
     public class ConnectionHelper : IConnectionHelper
     {
         private IConfiguration _configuration;

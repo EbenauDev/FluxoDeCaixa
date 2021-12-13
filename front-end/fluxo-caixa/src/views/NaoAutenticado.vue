@@ -23,7 +23,7 @@
           <label class="form-label" for="senha">Senha</label>
           <input
             class="form-control"
-            type="text"
+            type="password"
             name="Senha"
             id="senha"
             v-model="credenciais.senha"
@@ -201,7 +201,6 @@ export default {
     usernameEstahDisponivelAsync() {
       setTimeout(async () => {
         try {
-          console.log(this);
           await httpRequest.get(`pessoa?username=${this.novaConta.username}`);
         } catch (error) {
           this.$toast.open({
@@ -219,12 +218,13 @@ export default {
         );
         var pessoa = await httpRequest.post(
           "pessoa/NovoCadastro",
-          JSON.stringify(this.novaConta)
+          this.novaConta
         );
         httpRequest.setHeaders("Authorization", `Bearer ${pessoa.token}`);
-        this.$store["pessoa/atualizarPessoaState"](pessoa);
+        this.$store.dispatch("pessoa/atualizarPessoaState", pessoa);
         this.$router.push("Autenticado");
       } catch (error) {
+        console.log(error);
         this.$toast.open({
           message:
             "Houve um problema ao tentar salvar o seu cadastro. Por favor, tente novamente mais tarde.",

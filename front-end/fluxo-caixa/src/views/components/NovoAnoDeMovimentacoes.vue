@@ -70,13 +70,18 @@ export default {
     };
   },
   methods: {
+    async recuperarAnosDeMovimentacoes() {
+      await this.$store.dispatch(
+        "movimentacoes/recuperarAnosDeMovimentacoes",
+        this.pessoa.id
+      );
+    },
     async novoAnoDeMovimentacoes() {
       try {
-        const _url = `http://localhost:5001/Movimentacoes/${this.pessoa.id}/NovoAnoDeMovimentacoes`;
-        var resultado = await httpRequest.post(_url, this.movimentacoes);
-        console.log(resultado);
+        const _url = `Movimentacoes/Pessoa/${this.pessoa.id}/NovoAnoDeMovimentacoes`;
+        await httpRequest.post(_url, this.movimentacoes);
+        await this.recuperarAnosDeMovimentacoes();
       } catch (error) {
-        console.error(error);
         this.$toast.open({
           message:
             "Houve um problema ao tentar registrar o ano de movimentações. Por favor, tente novamente mais tarde.",

@@ -1,4 +1,5 @@
 ﻿using ControleDeCaixa.WebAPI.Aplicacao;
+using ControleDeCaixa.WebAPI.Entidades;
 using ControleDeCaixa.WebAPI.Handler;
 using ControleDeCaixa.WebAPI.Models;
 using ControleDeCaixa.WebAPI.Repositorio;
@@ -40,23 +41,43 @@ namespace ControleDeCaixa.WebAPI.Controllers
                 return BadRequest(resultado.Falha);
             return Ok(new
             {
+                resultado.Sucesso.Id,
                 resultado.Sucesso.Avatar,
                 resultado.Sucesso.Email,
                 resultado.Sucesso.Username,
+                resultado.Sucesso.Nome,
+                DataNascimento = resultado.Sucesso.DataNascimento.ToString("dd/MM/yyyy"),
                 Token = tokenJWT.GerarToken(resultado.Sucesso)
             });
         }
 
         [Authorize(Roles = "ContaRegistrada")]
-        [HttpPut("AtualizarCadastro")]
-        public async Task<IActionResult> AtualizarCadastro([FromQuery] int id, 
-                                                           [FromBody] PessoaAtualizada pessoaAtualizada)
+        [HttpPut("{pessoaId}/AtualizarCadastro")]
+        public async Task<IActionResult> AtualizarImagem([FromRoute] int pessoaId,
+                                                         [FromBody] PessoaAtualizada pessoaAtualizada)
         {
-            if (await _pessoaHandler.AtualizarContaAsync(id, pessoaAtualizada) is var resultadoValidacao && resultadoValidacao.EhFalha)
-                return BadRequest(resultadoValidacao.Falha);
-            return Ok(resultadoValidacao.Sucesso);
+            if (await _pessoaHandler.AtualizarContaAsync(pessoaId, pessoaAtualizada) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(PessoaResumida.ConverterParaPessoaResumida(resultado.Sucesso));
         }
 
+        [Authorize(Roles = "ContaRegistrada")]
+        [HttpPut("{pessoaId}/AlterarSenha")]
+        public async Task<IActionResult> AtualizarSenhas([FromRoute] int pessoaId,
+                                                         [FromBody] AlterarSenha alterarSenha)
+        {
+            if (await _pessoaHandler.AtualizarSenhaAsync(pessoaId, alterarSenha) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(PessoaResumida.ConverterParaPessoaResumida(resultado.Sucesso));
+        }
 
+        [Authorize(Roles = "ContaRegistrada")]
+        [HttpGet("{pessoaId}")]
+        public async Task<IActionResult> RecuperarPessoaPorId([FromRoute] int pessoaId)
+        {
+            if (await _pessoaRepositorio.RecuperarPessoaPorIdAsync(pessoaId) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(PessoaResumida.ConverterParaPessoaResumida(resultado.Sucesso));
+        }
     }
 }

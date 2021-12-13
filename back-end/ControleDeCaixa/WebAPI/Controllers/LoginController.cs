@@ -34,6 +34,8 @@ namespace ControleDeCaixa.WebAPI.Controllers
                 resultado.Sucesso.Avatar,
                 resultado.Sucesso.Email,
                 resultado.Sucesso.Username,
+                DataNascimento = resultado.Sucesso.DataNascimento.ToString("dd/MM/yyyy"),
+                resultado.Sucesso.Nome,
                 Token = tokenJWT.GerarToken(resultado.Sucesso)
             });
         }

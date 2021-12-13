@@ -1,21 +1,9 @@
 <template>
   <div>
-    <div class="card card">
-      <div class="card__header">
-        <div>
-          <p class="m-0 card__title">Ano</p>
-        </div>
-        <div class="card-header__actions">
-          <button
-            class="btn btn-outline"
-            @click="devoAdicionarNovoAno = !devoAdicionarNovoAno"
-          >
-            Novo ano
-          </button>
-        </div>
-      </div>
+    <div>
+      <card-movimentacoes-anuais></card-movimentacoes-anuais>
     </div>
-    <div class="visao-geral">
+    <div class="visao-geral" v-if="movimentacoesMesEstahAtivo">
       <div>
         <div class="card">
           <div class="card__header">
@@ -23,17 +11,108 @@
               <p class="m-0 card__title">Receitas</p>
             </div>
             <div class="card-header__actions">
-              <button class="btn btn-outline">Nova receita</button>
+              <button
+                class="btn btn-outline"
+                type="button"
+                @click="inserirOperacaoDoMes('receita')"
+              >
+                Nova receita
+              </button>
+            </div>
+          </div>
+          <div class="card__body">
+            <div class="tabela-operacoes-mes">
+              <div class="__cabecalho">
+                <div>#</div>
+                <div>Descrição</div>
+                <div>Valor</div>
+                <div></div>
+              </div>
+              <div
+                v-if="movimentacoesDoMes && movimentacoesDoMes.receitas.length"
+              >
+                <div
+                  class="__corpo"
+                  v-for="receita in movimentacoesDoMes.receitas"
+                  :key="receita.id"
+                >
+                  <div>1</div>
+                  <div>{{ receita.descricao }}</div>
+                  <div>{{ Number(receita.valor).toReal() }}</div>
+                  <div class="table-actions">
+                    <button
+                      class="btn btn-small m-r-5"
+                      type="button"
+                      @click="removerOperacaoDoMes(receita)"
+                    >
+                      <i class="far fa-trash-alt"></i>
+                    </button>
+                    <button
+                      class="btn btn-small btn-primary"
+                      @click="editarOperacaoDoMes('receita', receita)"
+                      type="button"
+                    >
+                      <i class="fas fa-pen"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
         <div class="card">
           <div class="card__header">
             <div>
               <p class="m-0 card__title">Custos</p>
             </div>
             <div class="card-header__actions">
-              <button class="btn btn-outline">Novo custo</button>
+              <button
+                class="btn btn-outline"
+                type="button"
+                @click="inserirOperacaoDoMes('custo')"
+              >
+                Novo custo
+              </button>
+            </div>
+          </div>
+          <div class="card__body">
+            <div class="tabela-operacoes-mes">
+              <div class="__cabecalho">
+                <div>#</div>
+                <div>Descrição</div>
+                <div>Valor</div>
+                <div></div>
+              </div>
+              <div
+                v-if="movimentacoesDoMes && movimentacoesDoMes.despesas.length"
+              >
+                <div
+                  class="__corpo"
+                  v-for="despesa in movimentacoesDoMes.despesas"
+                  :key="despesa.id"
+                >
+                  <div>1</div>
+                  <div>{{ despesa.descricao }}</div>
+                  <div>{{ Number(despesa.valor).toReal() }}</div>
+                  <div class="table-actions">
+                    <button
+                      class="btn btn-small m-r-5"
+                      type="button"
+                      @click="removerOperacaoDoMes(despesa)"
+                    >
+                      <i class="far fa-trash-alt"></i>
+                    </button>
+                    <button
+                      class="btn btn-small btn-primary"
+                      type="button"
+                      @click="editarOperacaoDoMes('custo', despesa)"
+                    >
+                      <i class="fas fa-pen"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -45,14 +124,40 @@
               <p class="m-0 card__title">Novembro de 2021</p>
             </div>
             <div class="card-header__actions">
-              <button class="btn btn-outline">Historico</button>
+              <button class="btn btn-outline" @click="verHistoricoDeOperacoes">
+                Historico
+              </button>
+            </div>
+          </div>
+          <div class="card__body historico">
+            <div class="card historico__card">
+              <p class="f-14">Total de Receitas</p>
+              <p class="f-bold main-color-dark f-16">
+                {{
+                  Number(movimentacoesDoMes.saldoDoMes.totalReceitas).toReal()
+                }}
+              </p>
+            </div>
+            <div class="card historico__card">
+              <p class="f-14">Total de Custos</p>
+              <p class="f-bold main-color-dark f-16">
+                {{
+                  Number(movimentacoesDoMes.saldoDoMes.totalDespesas).toReal()
+                }}
+              </p>
+            </div>
+            <div class="card historico__card">
+              <p class="f-14">Saldo do Mês</p>
+              <p class="f-bold main-color-dark f-16">
+                {{ Number(movimentacoesDoMes.saldoDoMes.saldoTotal).toReal() }}
+              </p>
             </div>
           </div>
         </div>
         <div class="card">
           <div class="card__header">
             <div>
-              <p class="m-0 card__title">Progresso 2021</p>
+              <p class="m-0 card__title">Metas</p>
             </div>
             <div class="card-header__actions">
               <button class="btn btn-outline">Novo objetivo</button>
@@ -61,9 +166,26 @@
         </div>
       </div>
     </div>
-    <div v-if="devoAdicionarNovoAno">
-      <modal>
-        <novo-ano-de-movimentacoes></novo-ano-de-movimentacoes>
+    <div v-else class="card empty-state">
+      <div class="__icone">
+        <i class="fas fa-coins main-color-dark"></i>
+      </div>
+      <div class="__mensagem">
+        <h1 class="main-color-dark">Nenhum movimentação encontrada</h1>
+        <p>
+          Utilize os filtros no card acima para visualizar as movimentações aqui
+          ou se preferir, crie um novo controle de finanças
+        </p>
+      </div>
+    </div>
+    <div>
+      <modal v-if="exibirModalOperacao">
+        <nova-operacao-no-mes
+          :modo="configuracaoModalOperacaoMes.modo"
+          :tipo-operacao="configuracaoModalOperacaoMes.tipoOperacao"
+          :operacao="configuracaoModalOperacaoMes.operacao"
+          :on-cancel="configuracaoModalOperacaoMes.onCancel"
+        ></nova-operacao-no-mes>
       </modal>
     </div>
   </div>
@@ -71,55 +193,112 @@
 
 
 <script>
+import CardMovimentacoesAnuais from "./components/CardMovimentacoesAnuais.vue";
+import NovaOperacaoNoMes from "./components/NovaOperacaoNoMes.vue";
 import Modal from "../components/Modal.vue";
-import NovoAnoDeMovimentacoes from "./components/NovoAnoDeMovimentacoes.vue";
+import { mapState } from "vuex";
 export default {
   name: "VisaoGeral",
   components: {
+    CardMovimentacoesAnuais,
+    NovaOperacaoNoMes,
     Modal,
-    NovoAnoDeMovimentacoes,
+  },
+  computed: {
+    ...mapState({
+      pessoa: (state) => state.pessoa.pessoa,
+      movimentacoesDoMes: (state) => state.movimentacoes.movimentacoesDoMes,
+    }),
+    movimentacoesMesEstahAtivo() {
+      return this.$store.getters["movimentacoes/possuiMesDeMovimentacoes"];
+    },
   },
   data() {
     return {
-      devoAdicionarNovoAno: false,
+      exibirModalOperacao: false,
+      operacaoMes: {},
+      configuracaoModalOperacaoMes: {
+        modo: "insercao",
+        tipoOperacao: "receita",
+        operacao: {},
+      },
     };
+  },
+  methods: {
+    async removerOperacaoDoMes(operacaoDoMes) {
+      await this.$store.dispatch("movimentacoes/removerOperacaoDoMes", {
+        mesId: this.movimentacoesDoMes.id,
+        operacaoMesId: operacaoDoMes.id,
+      });
+    },
+    editarOperacaoDoMes(tipoOperacao, operacaoDoMes) {
+      this.configuracaoModalOperacaoMes = {
+        modo: "atualizar",
+        tipoOperacao,
+        operacao: { ...operacaoDoMes, pessoaId: this.pessoa.id },
+        onCancel: () => (this.exibirModalOperacao = !this.exibirModalOperacao),
+      };
+      this.exibirModalOperacao = !this.exibirModalOperacao;
+    },
+    inserirOperacaoDoMes(tipoOperacao) {
+      this.configuracaoModalOperacaoMes = {
+        modo: "inserir",
+        tipoOperacao,
+        operacao: {
+          id: 0,
+          mesId: this.movimentacoesDoMes.id,
+          tipoOperacao: tipoOperacao == "receita" ? "Entrada" : "Saida",
+        },
+        onCancel: () => (this.exibirModalOperacao = !this.exibirModalOperacao),
+      };
+      this.exibirModalOperacao = !this.exibirModalOperacao;
+    },
+    fecharModalDeOperacoes() {
+      this.exibirModalOperacaoMes = !this.exibirModalOperacaoMes;
+    },
+    verHistoricoDeOperacoes() {
+      this.$router.push({
+        name: "Autenticado.Historico",
+        params: {
+          pessoaId: this.pessoa.id,
+          anoId: this.movimentacoesDoMes.idAnoMovimentacoes,
+        },
+      });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.card {
-  padding: 10px 15px;
-  border-radius: 10px;
-  background-color: #fff;
-  color: #333;
-  margin: 2rem 1rem;
-  .card__header {
-    display: grid;
-    grid-template-columns: 1fr 160px;
-    align-items: center;
-    .card__title {
-      font-size: 18px;
-      font-weight: bold;
-      color: var(--main-color-dark);
-      position: relative;
-      &::before {
-        content: "";
-        width: 35px;
-        height: 6px;
-        background-color: var(--main-color-dark);
-        border-radius: 6px;
-        position: absolute;
-        top: -10px;
-      }
-    }
-    .card-header__actions {
-      justify-self: flex-end;
-    }
-  }
-}
 .visao-geral {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
+}
+
+.empty-state {
+  max-width: 970px;
+  min-height: 320px;
+  text-align: center;
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+  flex-direction: column;
+  .__icone {
+    i {
+      font-size: 4.5em;
+    }
+  }
+}
+
+.historico {
+  display: flex;
+  justify-content: center;
+  .historico__card {
+    box-shadow: 0 2px 3px rgba($color: #000000, $alpha: 0.5);
+    text-align: center;
+    min-width: 125px;
+    width: 100%;
+    max-width: 135px;
+  }
 }
 </style>

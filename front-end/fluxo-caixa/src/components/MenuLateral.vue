@@ -19,6 +19,15 @@
       </button>
       <button
         class="opcao"
+        @click="toRoute('Autenticado.ConfiguracoesDeSeguranca')"
+        :class="{
+          'opcao--ativo': routeActive == 'Autenticado.ConfiguracoesDeSeguranca',
+        }"
+      >
+        <i class="fas fa-user-shield"></i>
+      </button>
+      <button
+        class="opcao"
         @click="toRoute('Autenticado.VisaoGeral')"
         :class="{ 'opcao--ativo': routeActive == 'Autenticado.VisaoGeral' }"
       >
@@ -102,6 +111,7 @@ export default {
       border-radius: 50%;
       cursor: pointer;
       border: 3px solid #fff;
+      object-fit: cover;
     }
   }
   .__opcoes {

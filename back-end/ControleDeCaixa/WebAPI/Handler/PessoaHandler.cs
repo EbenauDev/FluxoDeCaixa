@@ -16,6 +16,7 @@ namespace ControleDeCaixa.WebAPI.Handler
     {
         Task<Resultado<Pessoa, Falha>> NovaContaAsync(PessoaInputModel inputModel);
         Task<Resultado<Pessoa, Falha>> AtualizarContaAsync(int pessoaId, PessoaAtualizada inputModel);
+        Task<Resultado<Pessoa, Falha>> AtualizarSenhaAsync(int pessoaId, AlterarSenha alterarSenha);
     }
 
     public sealed class PessoaHandler : IPessoaHandler
@@ -29,14 +30,12 @@ namespace ControleDeCaixa.WebAPI.Handler
             _criptografiaMD5 = criptografiaMD5;
         }
 
-
-
         public async Task<Resultado<Pessoa, Falha>> NovaContaAsync(PessoaInputModel inputModel)
         {
             try
             {
                 var pessoa = new Pessoa(inputModel.Nome,
-                                        inputModel.DataNascimento,    
+                                        inputModel.DataNascimento,
                                         inputModel.Avatar,
                                         inputModel.Senha,
                                         inputModel.Username,
@@ -61,6 +60,19 @@ namespace ControleDeCaixa.WebAPI.Handler
                 .AtualizarAvatar(inputModel.Avatar)
                 .AtualizarEmail(inputModel.Email);
             if (await _pessoaRepositorio.AtualizarPessoaAsync(pessoa.Sucesso) is var resultadoPessoa && resultadoPessoa.EhFalha)
+                return resultadoPessoa.Falha;
+            return resultadoPessoa.Sucesso;
+        }
+
+        public async Task<Resultado<Pessoa, Falha>> AtualizarSenhaAsync(int pessoaId, AlterarSenha alterarSenha)
+        {
+            if (alterarSenha.Senha.Equals(alterarSenha.ConfirmarSenha) == false)
+                return Falha.Nova("As senhas não conferem");
+            if (await _pessoaRepositorio.RecuperarPessoaPorIdAsync(pessoaId) is var resultado && resultado.EhFalha)
+                return resultado.Falha;
+            var pessoa = resultado.Sucesso;
+            resultado.Sucesso.AtualizarSenha(_criptografiaMD5.ConverterParaMD5(alterarSenha.Senha));
+            if (await _pessoaRepositorio.AtualizarPessoaAsync(pessoa) is var resultadoPessoa && resultadoPessoa.EhFalha)
                 return resultadoPessoa.Falha;
             return resultadoPessoa.Sucesso;
         }

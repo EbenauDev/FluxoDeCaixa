@@ -1,8 +1,8 @@
-import { createApp, } from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-
+import "@/services/stringPrototypes"
 import "animate.css";
 
 //VueToast
@@ -11,6 +11,7 @@ import 'vue-toast-notification/dist/theme-sugar.css';
 
 const app = createApp(App);
 
+
 app.directive('formatDate', (el, binding) => {
     const _formaters = {
         "DD/MM/YYYY": (event) => {
@@ -18,7 +19,6 @@ app.directive('formatDate', (el, binding) => {
             target.maxLength = 10;
             target.minLength = 10;
             const pattern = new RegExp("[0-9]{2}/[0-9]{2}/[0-9]{4}");
-            console.log(target.value);
             if (target.value.length == 2)
                 target.value += "/";
             if (target.value.length == 5)
@@ -40,7 +40,10 @@ app.directive('formatDate', (el, binding) => {
     el.addEventListener("input", handler)
 });
 
+app.use(VueToast);
 app.use(store);
 app.use(router);
-app.use(VueToast)
 app.mount('#app');
+
+export default app;
+

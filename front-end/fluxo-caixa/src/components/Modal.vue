@@ -25,6 +25,7 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 999;
   .modal-backdrop {
     background-color: #000000ba;
     width: 100vw;

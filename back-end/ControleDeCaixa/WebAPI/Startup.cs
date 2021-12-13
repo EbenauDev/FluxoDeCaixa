@@ -32,12 +32,16 @@ namespace WebAPI
                     builder =>
                     {
                         builder.
-                        WithOrigins("http://localhost:8080")
+                        WithOrigins("http://localhost:8080", "https://ui-movimentacoes.azurewebsites.net/")
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                     });
             });
-            services.AddControllers();
+            services
+           .AddControllers()
+           .AddNewtonsoftJson(options =>
+               options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter()));
+
             var key = Encoding.ASCII.GetBytes(Configuration["SecretKey"]);
             services.AddAuthentication(x =>
             {

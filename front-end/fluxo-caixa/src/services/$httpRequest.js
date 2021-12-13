@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const _baseURL = process.env.VUE_APP_BASE_URL;
-console.log(process.env);
 const _defaultHeaders = {
     headers: {
         "Content-Type": "application/json"
@@ -19,8 +18,8 @@ export default {
                 _defaultHeaders
             ).then((response) => {
                 resolve(response.data);
-            }).catch(error => {
-                reject(error);
+            }).catch((error,) => {
+                reject(error.response.data);
             });
         })
     },
@@ -44,10 +43,17 @@ export default {
             _defaultHeaders
         )
     },
-    get: (url) => {
-        return axios.get(
-            url,
-        )
+    get: (context) => {
+        return new Promise((resolve, reject) => {
+            axios.get(
+                `${_baseURL}${context}`,
+                _defaultHeaders
+            ).then((response) => {
+                resolve(response.data);
+            }).catch(error => {
+                reject(error);
+            });
+        });
     },
     delete: (context) => {
         return axios.delete(

@@ -27,7 +27,6 @@ namespace ControleDeCaixa.WebAPI.Entidades
         public int MesId { get; set; }
         public string Descricao { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
         public ETipoOperacaoMes TipoOperacao { get; set; }
 
         public OperacaoMes DefinirId(int id)

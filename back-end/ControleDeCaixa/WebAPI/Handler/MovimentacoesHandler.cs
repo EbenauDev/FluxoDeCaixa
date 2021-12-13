@@ -11,7 +11,7 @@ namespace ControleDeCaixa.WebAPI.Handler
     public interface IMovimentacoesHandler
     {
         Task<Resultado<MovimentacaoAnual, Falha>> NovoAnoDeMovimentacoesAsync(MoviementacoesAnuais moviementacoes, int pessoaId);
-        Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacao(MesDeMovimentacoes movimentacao, int pessoaId);
+        Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacaoAsync(MesDeMovimentacoes movimentacao, int pessoaId);
         Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacoesMes operacoes, int pessoaId);
     }
 
@@ -40,13 +40,15 @@ namespace ControleDeCaixa.WebAPI.Handler
             return resultado.Sucesso;
         }
 
-        public async Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacao(MesDeMovimentacoes movimentacao, int pessoaId)
+        public async Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacaoAsync(MesDeMovimentacoes movimentacao, int pessoaId)
         {
             var movimentacaoMes = new MovimentacaoMes(
                     movimentacao.IdAnoMovimentacoes,
                     movimentacao.MesDeReferencia,
-                    movimentacao.Descricao
-                );
+                    movimentacao.Descricao);
+            if (await _movimentacoesRepositorio.MesDeMovimentacaoJahExisteAsync(movimentacao.IdAnoMovimentacoes,
+                                                                           movimentacao.MesDeReferencia.Month) is var resultadoValidacao && resultadoValidacao.Sucesso)
+                return Falha.Nova("Já existe um mes de movimentações para o ano informado");
             if (await _movimentacoesRepositorio.NovoMesDeMovimentacoesAsync(movimentacaoMes) is var resultado && resultado.EhFalha)
                 return resultado.Falha;
             return resultado.Sucesso;
@@ -54,13 +56,12 @@ namespace ControleDeCaixa.WebAPI.Handler
 
         public async Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacoesMes operacoes, int pessoaId)
         {
-    
+
             var movimentacaoMes = new OperacaoMes(
                 operacoes.Valor,
                 operacoes.MesId,
                 operacoes.Descricao,
-                (ETipoOperacaoMes)Enum.Parse(typeof(ETipoOperacaoMes), operacoes.TipoOperacao)
-               );
+                (ETipoOperacaoMes)Enum.Parse(typeof(ETipoOperacaoMes), operacoes.TipoOperacao));
             if (await _movimentacoesRepositorio.NovaOperacaoNoMesAsync(movimentacaoMes) is var resultado && resultado.EhFalha)
                 return resultado.Falha;
             return resultado.Sucesso;

@@ -68,6 +68,11 @@
     align-items: center;
     justify-content: center;
     min-width: 95px;
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
 }
 
 .btn-primary {
@@ -87,6 +92,11 @@
         background-color: var(--main-color-dark);
         color: #fff;
     }
+}
+
+.btn-small {
+    min-height: 30px;
+    min-width: 45px;
 }
 
 .w-100 {
@@ -132,12 +142,28 @@
     cursor: pointer;
 }
 
+.f-16 {
+    font-size: 16px;
+}
+
 .f-13 {
     font-size: 13px;
 }
 
+.f-11 {
+    font-size: 11px;
+}
+
+.c-red {
+    color: rgb(202, 44, 44);
+}
+
 .m-0 {
     margin: 0;
+}
+
+.m-r-5 {
+    margin-right: 5px;
 }
 
 div.tooltip {
@@ -193,5 +219,83 @@ div.tooltip {
             display: block;
             cursor: pointer;
         }
+    }
+}
+
+.card {
+    padding: 10px 15px;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #333;
+    margin: 2rem 1rem;
+    .card__header {
+        display: grid;
+        grid-template-columns: 1fr 160px;
+        align-items: center;
+        .card__title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--main-color-dark);
+            position: relative;
+            &::before {
+                content: "";
+                width: 35px;
+                height: 6px;
+                background-color: var(--main-color-dark);
+                border-radius: 6px;
+                position: absolute;
+                top: -10px;
+            }
+        }
+        .card-header__actions {
+            justify-self: flex-end;
+        }
+    }
+}
+
+.d-inline-block {
+    display: inline-block;
+}
+
+.tabela-operacoes-mes {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    @mixin estilo-base {
+        display: grid;
+        grid-template-columns: 30px 1fr 0.45fr 120px;
+        min-height: 30px;
+        align-items: center;
+        padding: 4px 8px;
+    }
+    .__cabecalho {
+        @include estilo-base;
+        color: #fff;
+        background-color: var(--main-color-dark);
+    }
+    .__corpo {
+        @include estilo-base;
+    }
+}
+
+.table-actions {
+    display: flex;
+}
+
+.m-l-25 {
+    margin-left: 25px;
+}
+
+.m-r-25 {
+    margin-right: 25px;
+}
+
+@media print {
+    html,
+    body {
+        background: #fff !important;
+    }
+    .no-print {
+        display: none !important;
+        visibility: hidden !important;
     }
 }

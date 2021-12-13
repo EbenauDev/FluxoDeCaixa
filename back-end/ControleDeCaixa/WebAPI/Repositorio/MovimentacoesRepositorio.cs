@@ -20,6 +20,12 @@ namespace ControleDeCaixa.WebAPI.Repositorio
         Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacaoMes mesDeMovimentacoes);
         Task<Resultado<IEnumerable<MesDeMovimentacaoDTO>, Falha>> RecuperarMesesDeMovimentacaoDoAnoAsync(int pessoaId, int anoId);
         Task<Resultado<IEnumerable<AnoDeMovimentacaoDTO>, Falha>> RecuperarAnosDeMovimentacoesAsync(int pessoaId);
+        Task<Resultado<MovimentacaoMes, Falha>> ListarMovimentacoesDoMesAsync(int anoId, int mesId);
+        Task<Resultado<bool, Falha>> ExcluirOperacaoDoMesAsync(int mesId, int operacaoMesId);
+        Task<Resultado<OperacaoMes, Falha>> AtualizarOperacaoNoMesAsync(int operacaoMesId, OperacaoMes mesDeMovimentacoes);
+        Task<Resultado<HistoricoAnual, Falha>> HistoricoMovimentacoesAsync(int pessoaId, int anoId);
+        Task<Resultado<bool, Falha>> MesDeMovimentacaoJahExisteAsync(int anoId, int mes);
+
     }
 
     public class MovimentacoesRepositorio : IMovimentacoesRepositorio
@@ -211,5 +217,228 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 }
             }
         }
+
+        public async Task<Resultado<MovimentacaoMes, Falha>> ListarMovimentacoesDoMesAsync(int anoId, int mesId)
+        {
+            const string sql = @"SELECT Id,
+                                        IdAnoMovimentacoes,
+	                                    MesDeReferencia, 
+	                                    Descricao
+                                 FROM MesDeMovimentacoes (NOLOCK)
+                                 WHERE IdAnoMovimentacoes = @AnoId AND Id = @MesId;
+
+                                 SELECT OperacoesDoMes.Id, 
+	                                    Valor, 
+	                                    MesId, 
+	                                    OperacoesDoMes.Descricao, 
+	                                    TipoOperacao
+                                 FROM OperacoesDoMes (NOLOCK)
+                                 INNER JOIN MesDeMovimentacoes ON MesDeMovimentacoes.Id = OperacoesDoMes.MesId 
+                                            AND MesDeMovimentacoes.IdAnoMovimentacoes = @AnoId AND OperacoesDoMes.MesId = @MesId";
+
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                await conexao.OpenAsync();
+                using (var queryMultipla = await conexao.QueryMultipleAsync(sql, new { AnoId = anoId, MesId = mesId }))
+                {
+                    try
+                    {
+                        var mesDeMovimentacao = (await queryMultipla.ReadAsync<dynamic>())
+                                       .Select(m => new MovimentacaoMes((int)m.Id, (int)m.IdAnoMovimentacoes, m.MesDeReferencia, m.Descricao))
+                                       .FirstOrDefault();
+
+                        var movimentacoesMes = (await queryMultipla.ReadAsync<dynamic>());
+                        if (movimentacoesMes.Any())
+                        {
+                            var operacoes = movimentacoesMes.Select(o => new OperacaoMes((int)o.Id,
+                                                   (double)o.Valor,
+                                                   (int)o.MesId,
+                                                   (string)o.Descricao,
+                                                   (ETipoOperacaoMes)Char.Parse(o.TipoOperacao)));
+
+                            mesDeMovimentacao.DefinirDespesas(operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Saida));
+                            mesDeMovimentacao.DefinirReceitas(operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Entrada));
+                            mesDeMovimentacao.DefinirSaldo(new Saldo(
+                                totalReceitas: operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Entrada).Sum(o => o.Valor),
+                                totalDespesas: operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Saida).Sum(o => o.Valor)
+                                ));
+                        }
+                        return mesDeMovimentacao;
+                    }
+                    catch (Exception ex)
+                    {
+                        return Falha.NovaComException($"Falha ao carregar as movimentações para o mês {mesId}", ex);
+                    }
+                    finally
+                    {
+                        await conexao.CloseAsync();
+                    }
+                }
+            }
+        }
+
+        public async Task<Resultado<bool, Falha>> ExcluirOperacaoDoMesAsync(int mesId, int operacaoMesId)
+        {
+            const string sql = @"DELETE FROM OperacoesDoMes WHERE Id = @operacaoMesId AND MesId = @mesId;";
+
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    var linhasAfetadas = await conexao.ExecuteAsync(sql, new
+                    {
+                        mesId,
+                        operacaoMesId
+                    });
+                    if (linhasAfetadas == 0)
+                        return Falha.Nova($"Houve um problema ao tentar remover as operações do mês {mesId}");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException($"Falha ao tentar remover as operações do mês {mesId}", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<Resultado<OperacaoMes, Falha>> AtualizarOperacaoNoMesAsync(int operacaoMesId, OperacaoMes operacao)
+        {
+            const string sql = @"UPDATE OperacoesDoMes
+	                                   SET Valor = @Valor,
+		                                   Descricao = @Descricao,
+		                                   TipoOperacao = @TipoOperacao,
+		                                   DataDeRegistro = @DataDeRegistro
+                                 WHERE Id =  @operacaoMesId;";
+
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    var linhasAfetadas = await conexao.ExecuteAsync(sql, new
+                    {
+                        operacaoMesId,
+                        operacao.Valor,
+                        operacao.Descricao,
+                        TipoOperacao = (char)operacao.TipoOperacao,
+                        DataDeRegistro = DateTime.Now
+                    });
+                    if (linhasAfetadas <= 0)
+                        return Falha.Nova("Falha ao atualizar operação do mês");
+                    operacao.DefinirId(operacaoMesId);
+                    return operacao;
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException($"Falha ao atualizar operação do mês", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<Resultado<HistoricoAnual, Falha>> HistoricoMovimentacoesAsync(int pessoaId, int anoId)
+        {
+            const string sql = @"SELECT Id, 
+	                                    Ano, 
+	                                    Descricao, 
+	                                    DataDeCriacao  
+                                 FROM MovimentacoesAnuais (NOLOCK)
+                                 WHERE Id = @AnoId AND IdPessoa = @PessoaId;
+
+                                 SELECT Id,
+                                        IdAnoMovimentacoes,
+	                                    MesDeReferencia, 
+	                                    Descricao
+                                 FROM MesDeMovimentacoes (NOLOCK)
+                                 WHERE IdAnoMovimentacoes = @AnoId;
+
+                                 SELECT OperacoesDoMes.Id, 
+	                                    Valor, 
+	                                    MesId, 
+	                                    OperacoesDoMes.Descricao, 
+	                                    TipoOperacao
+                                 FROM OperacoesDoMes (NOLOCK)
+                                 INNER JOIN MesDeMovimentacoes ON MesDeMovimentacoes.Id = OperacoesDoMes.MesId AND MesDeMovimentacoes.IdAnoMovimentacoes = @AnoId;";
+
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                await conexao.OpenAsync();
+                try
+                {
+                    using (var queryMultipla = await conexao.QueryMultipleAsync(sql, new { AnoId = anoId, PessoaId = pessoaId }))
+                    {
+                        var ano = await queryMultipla.ReadFirstOrDefaultAsync<AnoDeMovimentacaoDTO>();
+                        var meses = (await queryMultipla.ReadAsync<dynamic>())
+                                        .Select(m => new MovimentacaoMes((int)m.Id, (int)m.IdAnoMovimentacoes, m.MesDeReferencia, m.Descricao));
+
+                        var movimentacoesMes = (await queryMultipla.ReadAsync<dynamic>())
+                                        .Select(o => new OperacaoMes((int)o.Id,
+                                                (double)o.Valor,
+                                                (int)o.MesId,
+                                                (string)o.Descricao,
+                                                (ETipoOperacaoMes)Char.Parse(o.TipoOperacao)));
+
+
+
+
+                        return new HistoricoAnual(ano.Id,
+                                                  ano.Ano,
+                                                  ano.DataDeCriacao,
+                                                  movimentacoesMes: meses.Select(m => new HistoricoMes(m.Id,
+                                                              m.MesDeReferencia,
+                                                              m.Descricao,
+                                                              movimentacoesMes.Where(movimentacao => movimentacao.MesId == m.Id)
+                                                  )));
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    return Falha.NovaComException($"Falha ao atualizar operação do mês", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
+
+
+        public async Task<Resultado<bool, Falha>> MesDeMovimentacaoJahExisteAsync(int anoId, int mes)
+        {
+            const string sql = @"SELECT COUNT(Id) AS MesJahExiste 
+                                  FROM MesDeMovimentacoes (NOLOCK)
+                                  WHERE IdAnoMovimentacoes = @AnoId AND (MONTH(DataDeCriacao) = @MesReferencia)";
+
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    return await conexao.QueryFirstOrDefaultAsync<bool>(sql, new
+                    {
+                        AnoId = anoId,
+                        MesReferencia = mes
+                    });
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException($"Falha ao verificar se o mês {mes} já existe para o ano informado", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
     }
 }
+

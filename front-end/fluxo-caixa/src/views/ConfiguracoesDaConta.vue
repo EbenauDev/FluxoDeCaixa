@@ -13,9 +13,10 @@
           <input
             class="form-control"
             type="text"
-            name="Username"
+            name="Nome"
             id="nome"
             v-model="dadosDaConta.nome"
+            readonly
           />
         </div>
         <div class="form-group">
@@ -23,9 +24,10 @@
           <input
             class="form-control"
             type="text"
-            name="Username"
+            name="DataNascimento"
             id="dataNascimento"
             v-model="dadosDaConta.dataNascimento"
+            readonly
           />
         </div>
       </div>
@@ -38,29 +40,19 @@
           <input
             class="form-control"
             type="url"
-            name="Username"
+            name="Avatar"
             id="avatar"
             v-model="dadosDaConta.avatar"
           />
         </div>
         <div class="form-group">
-          <label class="form-label" for="novaSenha">Nova senha</label>
+          <label class="form-label" for="email">Email</label>
           <input
             class="form-control"
-            type="password"
-            name="Username"
-            id="novaSenha"
-            v-model="dadosDaConta.novaSenha"
-          />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="confirmarSenha">Confirmar senha</label>
-          <input
-            class="form-control"
-            type="password"
-            name="confirmarSenha"
-            id="username"
-            v-model="dadosDaConta.confirmarSenha"
+            type="url"
+            name="Email"
+            id="email"
+            v-model="dadosDaConta.email"
           />
         </div>
       </div>
@@ -82,17 +74,20 @@ export default {
     ...mapState({
       pessoa: (state) => state.pessoa.pessoa,
     }),
-    dadosDaConta() {
-      return {
-        ...this.pessoa,
-      };
-    },
+  },
+  created() {
+    this.dadosDaConta = Object.assign({}, this.pessoa);
+  },
+  data() {
+    return {
+      dadosDaConta: {},
+    };
   },
   methods: {
     async atualizarConta() {
       try {
         var pessoa = await httpRequest.put(
-          "Pessoa/AtualizarCadastro",
+          `Pessoa/${this.pessoa.id}/AtualizarCadastro`,
           this.dadosDaConta
         );
         this.$store.dispatch("pessoa/atualizarPessoaState", pessoa);
@@ -100,6 +95,7 @@ export default {
           message: "Seu cadastro foi atualizado com sucesso.",
           type: "success",
         });
+        this.$router.push("Autenticado");
       } catch (error) {
         this.$toast.open({
           message:

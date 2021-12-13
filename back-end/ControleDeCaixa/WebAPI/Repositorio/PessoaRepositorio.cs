@@ -93,6 +93,7 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                                         Senha, 
                                         Username, 
                                         Email
+                                 FROM Pessoa
                                  WHERE Id = @pessoaId";
             using (var conexao = new SqlConnection(_connectionString))
             {
@@ -114,6 +115,7 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 }
             }
         }
+
         public async Task<Resultado<Pessoa, Falha>> AtualizarPessoaAsync(Pessoa pessoa)
         {
             const string sql = @"UPDATE Pessoa 
@@ -126,7 +128,13 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 try
                 {
                     await conexao.OpenAsync();
-                    var resultado = await conexao.ExecuteAsync(sql, pessoa);
+                    var resultado = await conexao.ExecuteAsync(sql, new
+                    {
+                        pessoa.Email,
+                        pessoa.Senha,
+                        pessoa.Avatar,
+                        pessoaId = pessoa.Id,
+                    });
                     if (resultado <= 0)
                         return Falha.Nova($"Houve um problema ao atualizar pessoa de Id {pessoa.Id}");
                     return pessoa;
