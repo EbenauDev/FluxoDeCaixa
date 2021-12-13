@@ -3,7 +3,8 @@ import axios from "axios";
 const _baseURL = 'https://api-movimentacoes.azurewebsites.net/';
 const _defaultHeaders = {
     headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'Access-Control-Allow-Origin': '*',
     },
 }
 export default {
