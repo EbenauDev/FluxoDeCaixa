@@ -244,6 +244,7 @@ export default {
       });
     },
     formatarMesDeReferencia(mesDeReferencia) {
+      moment.locale('pt-br');
       return moment(mesDeReferencia).format("MMMM [de] YYYY");
     },
     editarOperacaoDoMes(tipoOperacao, operacaoDoMes) {
