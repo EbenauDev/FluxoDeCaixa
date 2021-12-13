@@ -32,7 +32,7 @@ namespace WebAPI
                     builder =>
                     {
                         builder.
-                        WithOrigins("http://localhost:8080", "https://ashy-water-053a06810.azurestaticapps.net/")
+                         AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                     });
