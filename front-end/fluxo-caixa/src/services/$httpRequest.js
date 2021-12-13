@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const _baseURL = process.env.VUE_APP_BASE_URL;
+const _baseURL = 'http://api-movimentacoes.azurewebsites.net/';
 const _defaultHeaders = {
     headers: {
         "Content-Type": "application/json"
