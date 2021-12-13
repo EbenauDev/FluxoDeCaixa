@@ -110,8 +110,12 @@ export default {
         const _url = `Movimentacoes/Pessoa/${this.pessoa.id}/MesDeMovimentacoes`;
         await httpRequest.post(_url, this.mesDeMovimentacao);
         await this.recuperarAnosDeMovimentacoes();
+        this.$toast.open({
+          message: "Mês de movimentações inserido com sucesso",
+          type: "success",
+        });
+        this.onCancel && this.onCancel();
       } catch (error) {
-        console.log(error);
         this.$toast.open({
           message: error.mensagem,
           type: "error",

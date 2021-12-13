@@ -81,6 +81,11 @@ export default {
         const _url = `Movimentacoes/Pessoa/${this.pessoa.id}/NovoAnoDeMovimentacoes`;
         await httpRequest.post(_url, this.movimentacoes);
         await this.recuperarAnosDeMovimentacoes();
+        this.$toast.open({
+          message: "Ano de movimentações inserido com sucesso",
+          type: "success",
+        });
+        this.onCancel && this.onCancel();
       } catch (error) {
         this.$toast.open({
           message:

@@ -13,16 +13,16 @@ const actions = {
         commit("limparPessoa");
     },
     async recuperarPessoaPorId({ commit }, pessoaId) {
-        try {
-            var resultado = await httpRequest.get(`Pessoa/${pessoaId}`);
-            commit("atualizarPessoa", resultado);
-        } catch (error) {
-            this.$toast.open({
-                message:
-                    "Houve um problema ao tentar carregar o seu cadastro",
-                type: "error",
-            });
-        }
+        return new Promise((resolve, reject) => {
+            httpRequest.get(`Pessoa/${pessoaId}`)
+                .then((resultado) => {
+                    commit("atualizarPessoa", resultado);
+                    resolve();
+                })
+                .catch(erro => {
+                    reject(erro);
+                })
+        });
     }
 }
 

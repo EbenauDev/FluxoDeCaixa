@@ -103,8 +103,16 @@ export default {
           `Movimentacoes/Pessoa/${pessoaId}/Ano/${anoId}/Historico`
         );
         this.historico = resultado;
+        this.$toast.open({
+          message: "Histórico carregado com sucesso",
+          type: "success",
+        });
       } catch (error) {
-        console.error(error);
+        this.$toast.open({
+          message:
+            "Houve um problema ao tentar salvar o seu cadastro. Por favor, tente novamente mais tarde.",
+          type: "error",
+        });
       }
     },
     //

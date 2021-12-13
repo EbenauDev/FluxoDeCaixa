@@ -30,51 +30,63 @@ const getters = {
 }
 
 const actions = {
-    async recuperarAnosDeMovimentacoes({ commit }, pessoaId) {
-        try {
-            var resultado = await httpRequest.get(`Movimentacoes/Pessoa/${pessoaId}/ListarAnosDeMovimentacoes`);
-            commit("atualizarAnoDeMovimentacoes", resultado);
-        } catch (error) {
-            console.error(error);
-        }
+    recuperarAnosDeMovimentacoes({ commit }, pessoaId) {
+        return new Promise((resolve, reject) => {
+            httpRequest.get(`Movimentacoes/Pessoa/${pessoaId}/ListarAnosDeMovimentacoes`)
+                .then(resultado => {
+                    commit("atualizarAnoDeMovimentacoes", resultado);
+                    resolve();
+                })
+                .catch(erro => {
+                    reject(erro);
+                })
+        });
     },
-    async recuperarMesesDeMovimentacoes({ commit }, { pessoaId, anoId }) {
-        try {
-            var resultado = await httpRequest.get(`Movimentacoes/Pessoa/${pessoaId}/Ano/${anoId}/MesDeMovimentacoes`);
-            commit("atualizarMesesDeMovimentacoes", resultado);
-        } catch (error) {
-            console.error(error);
-        }
+    recuperarMesesDeMovimentacoes({ commit }, { pessoaId, anoId }) {
+        return new Promise((resolve, reject) => {
+            httpRequest.get(`Movimentacoes/Pessoa/${pessoaId}/Ano/${anoId}/MesDeMovimentacoes`)
+                .then(resultado => {
+                    commit("atualizarMesesDeMovimentacoes", resultado);
+                    resolve();
+                })
+                .catch(erro => {
+                    reject(erro);
+                })
+        });
     },
-    async recuperarMovimentacoesDoMes({ commit }, { pessoaId, anoId, mesId }) {
-        try {
-            var resultado = await httpRequest.get(`Movimentacoes/Pessoa/${pessoaId}/Ano/${anoId}/Mes/${mesId}/Movimentacoes`);
-            commit("atualizarMovimentacoesDoMes", resultado);
-        } catch (error) {
-            console.error(error);
-        }
+    recuperarMovimentacoesDoMes({ commit }, { pessoaId, anoId, mesId }) {
+        return new Promise((resolve, reject) => {
+            httpRequest.get(`Movimentacoes/Pessoa/${pessoaId}/Ano/${anoId}/Mes/${mesId}/Movimentacoes`).then(resultado => {
+                commit("atualizarMovimentacoesDoMes", resultado);
+                resolve();
+            }).catch(erro => {
+                reject(erro);
+            })
+        })
     },
-    async removerOperacaoDoMes({ commit }, { mesId, operacaoMesId }) {
-        try {
-            await httpRequest.delete(`Movimentacoes/Mes/${mesId}/Movimentacao/${operacaoMesId}`);
-            commit("removerOperacaoDoMes", operacaoMesId);
-        } catch (error) {
-            console.error(error);
-        }
+    removerOperacaoDoMes({ commit }, { mesId, operacaoMesId }) {
+        return new Promise((resolve, reject) => {
+            httpRequest.delete(`Movimentacoes/Mes/${mesId}/Movimentacao/${operacaoMesId}`).then(() => {
+                commit("removerOperacaoDoMes", operacaoMesId);
+                resolve()
+            }).catch(erro => {
+                reject(erro);
+            })
+        })
     },
-    async adicionarOperacaoDoMes(_, { pessoaId, operacao }) {
-        try {
-            await httpRequest.post(`Movimentacoes/Pessoa/${pessoaId}/OperacaoMes`, operacao);
-        } catch (error) {
-            console.error(error);
-        }
+    adicionarOperacaoDoMes(_, { pessoaId, operacao }) {
+        return new Promise((resolve, reject) => {
+            httpRequest.post(`Movimentacoes/Pessoa/${pessoaId}/OperacaoMes`, operacao)
+                .then(resolve)
+                .catch(reject);
+        })
     },
-    async atualizarOperacaoDoMes(_, { pessoaId, operacao }) {
-        try {
-            await httpRequest.put(`Movimentacoes/Pessoa/${pessoaId}/OperacaoMes/${operacao.id}`, operacao);
-        } catch (error) {
-            console.log(error);
-        }
+    atualizarOperacaoDoMes(_, { pessoaId, operacao }) {
+        return new Promise((resolve, reject) => {
+            httpRequest.put(`Movimentacoes/Pessoa/${pessoaId}/OperacaoMes/${operacao.id}`, operacao)
+                .then(resolve)
+                .catch(reject);
+        })
     },
 }
 const mutations = {

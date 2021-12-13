@@ -69,14 +69,15 @@ export default {
           this.credenciaisDeAcesso
         );
         this.$toast.open({
-          message: "Sua senha foi atualizada com sucesso.",
+          message: "Senha alterada com sucesso",
           type: "success",
         });
-        this.$router.push("Autenticado");
+        this.$router.push({ name: "Autenticado.VisaoGeral" });
       } catch (error) {
+        console.error(error);
         this.$toast.open({
           message:
-            "Houve um problema ao tentar atualizar o seu cadastro. Por favor, tente novamente mais tarde.",
+            "Houve um problema ao tentar alterar a sua senha. Tente novamente mais tarde",
           type: "error",
         });
       }

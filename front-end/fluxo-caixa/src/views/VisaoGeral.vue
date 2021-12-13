@@ -121,7 +121,13 @@
         <div class="card">
           <div class="card__header">
             <div>
-              <p class="m-0 card__title">Novembro de 2021</p>
+              --
+              <p class="m-0 card__title">
+                Histórico:
+                {{
+                  formatarMesDeReferencia(movimentacoesDoMes.mesDeReferencia)
+                }}
+              </p>
             </div>
             <div class="card-header__actions">
               <button class="btn btn-outline" @click="verHistoricoDeOperacoes">
@@ -160,8 +166,13 @@
               <p class="m-0 card__title">Metas</p>
             </div>
             <div class="card-header__actions">
-              <button class="btn btn-outline">Novo objetivo</button>
+              <button class="btn btn-outline" disabled>Novo objetivo</button>
             </div>
+          </div>
+          <div class="card__body">
+            <h4 class="color-primary text-center">
+              Funcionalidade não está disponível nessa versão
+            </h4>
           </div>
         </div>
       </div>
@@ -193,6 +204,7 @@
 
 
 <script>
+import moment from "moment";
 import CardMovimentacoesAnuais from "./components/CardMovimentacoesAnuais.vue";
 import NovaOperacaoNoMes from "./components/NovaOperacaoNoMes.vue";
 import Modal from "../components/Modal.vue";
@@ -230,6 +242,9 @@ export default {
         mesId: this.movimentacoesDoMes.id,
         operacaoMesId: operacaoDoMes.id,
       });
+    },
+    formatarMesDeReferencia(mesDeReferencia) {
+      return moment(mesDeReferencia).format("MMMM [de] YYYY");
     },
     editarOperacaoDoMes(tipoOperacao, operacaoDoMes) {
       this.configuracaoModalOperacaoMes = {

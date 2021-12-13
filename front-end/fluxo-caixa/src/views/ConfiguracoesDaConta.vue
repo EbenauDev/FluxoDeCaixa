@@ -95,7 +95,7 @@ export default {
           message: "Seu cadastro foi atualizado com sucesso.",
           type: "success",
         });
-        this.$router.push("Autenticado");
+        this.$router.push({ name: "Autenticado.VisaoGeral" });
       } catch (error) {
         this.$toast.open({
           message:

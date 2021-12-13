@@ -4,7 +4,6 @@ import router from './router'
 import store from './store'
 import "@/services/stringPrototypes"
 import "animate.css";
-
 //VueToast
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';

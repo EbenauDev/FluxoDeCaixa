@@ -88,20 +88,46 @@ export default {
       });
     },
     async _adicionarOperacao() {
-      await this.$store.dispatch("movimentacoes/adicionarOperacaoDoMes", {
-        pessoaId: this.pessoa.id,
-        operacao: this.operacaoDoMes,
-      });
-      await this._recuperarMovimentacoesDoMes();
-      this.onCancel();
+      try {
+        await this.$store.dispatch("movimentacoes/adicionarOperacaoDoMes", {
+          pessoaId: this.pessoa.id,
+          operacao: this.operacaoDoMes,
+        });
+        await this._recuperarMovimentacoesDoMes();
+        this.$toast.open({
+          message: `${this.tipoOperacao}s atualizado(a) com sucesso`,
+          type: "success",
+        });
+        this.onCancel && this.onCancel();
+      } catch (error) {
+        this.$toast.open({
+          message:
+            error.mensagem ||
+            `Houve um problema ao inserir as ${this.tipoOperacao}s`,
+          type: "error",
+        });
+      }
     },
     async _atualizarOperacao() {
-      await this.$store.dispatch("movimentacoes/atualizarOperacaoDoMes", {
-        pessoaId: this.pessoa.id,
-        operacao: this.operacaoDoMes,
-      });
-      await this._recuperarMovimentacoesDoMes();
-      this.onCancel();
+      try {
+        await this.$store.dispatch("movimentacoes/atualizarOperacaoDoMes", {
+          pessoaId: this.pessoa.id,
+          operacao: this.operacaoDoMes,
+        });
+        await this._recuperarMovimentacoesDoMes();
+        this.$toast.open({
+          message: `${this.tipoOperacao}s atualizado(a) com sucesso`,
+          type: "success",
+        });
+        this.onCancel && this.onCancel();
+      } catch (error) {
+        this.$toast.open({
+          message:
+            error.mensagem ||
+            `Houve um problema ao atualizar as ${this.tipoOperacao}s`,
+          type: "error",
+        });
+      }
     },
     handlerOperacao() {
       if (this.modo == "atualizar") {

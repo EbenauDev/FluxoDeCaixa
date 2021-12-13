@@ -28,7 +28,7 @@
             id="senha"
             v-model="credenciais.senha"
           />
-          <div class="text-right c-black">
+          <div class="text-right c-black" v-if="false">
             <span
               class="cursor-pointer f-13 color-primary f-bold"
               @click="mostrarModalRecuperarSenha"
@@ -223,8 +223,11 @@ export default {
         httpRequest.setHeaders("Authorization", `Bearer ${pessoa.token}`);
         this.$store.dispatch("pessoa/atualizarPessoaState", pessoa);
         this.$router.push("Autenticado");
+        this.$toast.open({
+          message: `conta criada com sucesso. Seja bem vindo ${pessoa.username}`,
+          type: "success",
+        });
       } catch (error) {
-        console.log(error);
         this.$toast.open({
           message:
             "Houve um problema ao tentar salvar o seu cadastro. Por favor, tente novamente mais tarde.",
@@ -242,6 +245,10 @@ export default {
         sessionService.setSessionToken(pessoa.token);
         this.$store.dispatch("pessoa/atualizarPessoaState", pessoa);
         this.$router.push("Autenticado");
+        this.$toast.open({
+          message: `Seja bem vindo ${pessoa.username}`,
+          type: "success",
+        });
       } catch (error) {
         this.$toast.open({
           message:
