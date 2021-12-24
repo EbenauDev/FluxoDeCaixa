@@ -70,6 +70,7 @@ namespace WebAPI
             services.AddSingleton<ILoginHandler, LoginHandler>();
             services.AddSingleton<IMovimentacoesRepositorio, MovimentacoesRepositorio>();
             services.AddSingleton<IMovimentacoesHandler, MovimentacoesHandler>();
+            services.AddSingleton<ISendGridSendEmailService, SendGridSendEmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

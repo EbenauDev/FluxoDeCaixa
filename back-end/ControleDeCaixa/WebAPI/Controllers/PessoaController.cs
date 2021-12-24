@@ -79,5 +79,15 @@ namespace ControleDeCaixa.WebAPI.Controllers
                 return BadRequest(resultado.Falha);
             return Ok(PessoaResumida.ConverterParaPessoaResumida(resultado.Sucesso));
         }
+
+        [HttpPost("RecuperarSenha")]
+        public async Task<IActionResult> RecuperarSenha([FromServices] ISendGridSendEmailService emailService, 
+            [FromBody] dynamic pessoa)
+        {
+            var template = $"<h1>Olá {pessoa.Nome}</h1>";
+            if (await emailService.EnviarEmailAsync("ebenau06@gmail.com", "Jão", template) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok();
+        }
     }
 }
