@@ -14,6 +14,7 @@ namespace ControleDeCaixa.WebAPI.Repositorio
     public interface IMetasRepositorio
     {
         Task<Resultado<bool, Falha>> AdicionarNovaMetaAsync(NovaMeta meta, int pessoaId);
+        Task<Resultado<bool, Falha>> AtualizarMetaAsync(MetaAtualizada meta, int pessoaId);
     }
     public class MetasRepositorio : IMetasRepositorio
     {
@@ -46,6 +47,38 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 catch (Exception ex)
                 {
                     return Falha.NovaComException("Falha ao definir a nova meta no sistema", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<Resultado<bool, Falha>> AtualizarMetaAsync(MetaAtualizada meta, int pessoaId)
+        {
+            const string sql = @"UPDATE ControleDeMetas SET  ValorDesejado = @Valor,
+	                                                         Descricao = @Descricao
+                                 WHERE Id = @Id AND PessoaId = @PessoaId";
+            using (var conexao = new SqlConnection(_stringDeConexao))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    var linhasAfetadas = await conexao.ExecuteAsync(sql, new
+                    {
+                        meta.Id,
+                        meta.Valor,
+                        meta.Descricao,
+                        PessoaId = pessoaId
+                    });
+                    if (linhasAfetadas == 0)
+                        return Falha.Nova("Houve um problema ao atualizar meta no sistema");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException("Falha ao atualizar meta no sistema", ex);
                 }
                 finally
                 {
