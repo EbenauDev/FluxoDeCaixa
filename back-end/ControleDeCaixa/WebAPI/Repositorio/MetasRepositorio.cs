@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 using ControleDeCaixa.WebAPI.Generics;
 using ControleDeCaixa.WebAPI.Helper;
 using ControleDeCaixa.WebAPI.Models;
+using ControleDeCaixa.WebAPI.Repositorio.DTO;
+using ControleDeCaixa.WebAPI.Views;
 using Dapper;
 
 namespace ControleDeCaixa.WebAPI.Repositorio
 {
-
     public interface IMetasRepositorio
     {
         Task<Resultado<bool, Falha>> AdicionarNovaMetaAsync(NovaMeta meta, int pessoaId);
         Task<Resultado<bool, Falha>> AtualizarMetaAsync(MetaAtualizada meta, int pessoaId);
+        Task<Resultado<IEnumerable<ResumoMetasViewModel>, Falha>> RecuperarResumoMetas(int pessoaId);
     }
+
     public class MetasRepositorio : IMetasRepositorio
     {
         private readonly string _stringDeConexao;
@@ -79,6 +82,27 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 catch (Exception ex)
                 {
                     return Falha.NovaComException("Falha ao atualizar meta no sistema", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<Resultado<IEnumerable<ResumoMetasViewModel>, Falha>> RecuperarResumoMetas(int pessoaId)
+        {
+            const string sql = @"EXEC ResumoMetas @PessoaId";
+            using (var conexao = new SqlConnection(_stringDeConexao))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    return (await conexao.QueryAsync<ResumoMetasDTO>(sql, new { PessoaId = pessoaId })).ConverterParaViewModel().ToList();
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException("Falha ao recuperar o resumo das metas", ex);
                 }
                 finally
                 {
