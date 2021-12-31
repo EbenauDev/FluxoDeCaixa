@@ -16,12 +16,28 @@ namespace ControleDeCaixa.WebAPI.Controllers
             _metasRepositorio = metasRepositorio;
         }
 
-        [HttpPost]
+        [HttpGet("Resumo")]
+        public async Task<IActionResult> RecuperarMeta([FromQuery] int pessoaId)
+        {
+            if (await _metasRepositorio.RecuperarResumoMetas(pessoaId) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(resultado.Sucesso);
+        }
+
+        [HttpPost("Nova")]
         public async Task<IActionResult> AdicionarNovaMeta([FromQuery] int pessoaId, [FromBody] NovaMeta meta)
         {
             if (await _metasRepositorio.AdicionarNovaMetaAsync(meta, pessoaId) is var resultado && resultado.EhFalha)
                 return BadRequest(resultado.Falha);
             return Created(nameof(AdicionarNovaMeta), meta);
+        }
+
+        [HttpPut("Atualizar")]
+        public async Task<IActionResult> AdicionarNovaMeta([FromQuery] int pessoaId, [FromBody] MetaAtualizada meta)
+        {
+            if (await _metasRepositorio.AtualizarMetaAsync(meta, pessoaId) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(resultado.Sucesso);
         }
     }
 }

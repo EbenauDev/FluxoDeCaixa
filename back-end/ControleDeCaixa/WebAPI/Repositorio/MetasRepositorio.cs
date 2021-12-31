@@ -43,7 +43,7 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 {
                     await conexao.OpenAsync();
                     var linhasAfetadas = await conexao.ExecuteAsync(sql, new { meta.ValorDesejado, meta.Descricao, PessoaId = pessoaId });
-                    if (linhasAfetadas == 0)
+                   if (linhasAfetadas == 0)
                         return Falha.Nova("Houve um problema ao definir a nova meta no sistema");
                     return true;
                 }
