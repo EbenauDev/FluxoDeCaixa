@@ -28,7 +28,7 @@
             id="senha"
             v-model="credenciais.senha"
           />
-          <div class="text-right c-black" v-if="false">
+          <div class="text-right c-black">
             <span
               class="cursor-pointer f-13 color-primary f-bold"
               @click="mostrarModalRecuperarSenha"

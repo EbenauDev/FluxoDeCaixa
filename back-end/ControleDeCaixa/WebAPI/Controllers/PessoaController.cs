@@ -79,5 +79,13 @@ namespace ControleDeCaixa.WebAPI.Controllers
                 return BadRequest(resultado.Falha);
             return Ok(PessoaResumida.ConverterParaPessoaResumida(resultado.Sucesso));
         }
+
+        [HttpPost("RecuperarSenha")]
+        public async Task<IActionResult> RecuperarPessoaPorId([FromBody] RecuperarSenhaModal recuperarSenhaModal)
+        {
+            if (await _pessoaHandler.RecuperarSenha(recuperarSenhaModal) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(resultado.Sucesso);
+        }
     }
 }

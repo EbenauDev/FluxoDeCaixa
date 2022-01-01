@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const _baseURL = 'https://api-movimentacoes.azurewebsites.net/api/';
+const _baseURL = 'http://localhost:5000/api/';
 const _defaultHeaders = {
     headers: {
         "Content-Type": "application/json",

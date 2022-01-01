@@ -70,7 +70,7 @@ namespace WebAPI
             services.AddSingleton<ILoginHandler, LoginHandler>();
             services.AddSingleton<IMovimentacoesRepositorio, MovimentacoesRepositorio>();
             services.AddSingleton<IMovimentacoesHandler, MovimentacoesHandler>();
-            services.AddSingleton<ISendGridSendEmailService, SendGridSendEmailService>();
+            services.AddSingleton<IMailService, GmailService>();
             services.AddSingleton<IMetasRepositorio, MetasRepositorio>();
         }
 

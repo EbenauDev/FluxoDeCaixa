@@ -17,17 +17,21 @@ namespace ControleDeCaixa.WebAPI.Handler
         Task<Resultado<Pessoa, Falha>> NovaContaAsync(PessoaInputModel inputModel);
         Task<Resultado<Pessoa, Falha>> AtualizarContaAsync(int pessoaId, PessoaAtualizada inputModel);
         Task<Resultado<Pessoa, Falha>> AtualizarSenhaAsync(int pessoaId, AlterarSenha alterarSenha);
+        Task<Resultado<bool, Falha>> RecuperarSenha(RecuperarSenhaModal recuperarSenha);
     }
 
     public sealed class PessoaHandler : IPessoaHandler
     {
         private readonly IPessoaRepositorio _pessoaRepositorio;
         private readonly ICriptografiaMD5 _criptografiaMD5;
+        private readonly IMailService _mailService;
         public PessoaHandler(IPessoaRepositorio pessoaRepositorio,
-                             ICriptografiaMD5 criptografiaMD5)
+                             ICriptografiaMD5 criptografiaMD5,
+                             IMailService mailService)
         {
             _pessoaRepositorio = pessoaRepositorio;
             _criptografiaMD5 = criptografiaMD5;
+            _mailService = mailService;
         }
 
         public async Task<Resultado<Pessoa, Falha>> NovaContaAsync(PessoaInputModel inputModel)
@@ -75,6 +79,17 @@ namespace ControleDeCaixa.WebAPI.Handler
             if (await _pessoaRepositorio.AtualizarPessoaAsync(pessoa) is var resultadoPessoa && resultadoPessoa.EhFalha)
                 return resultadoPessoa.Falha;
             return resultadoPessoa.Sucesso;
+        }
+
+        public async Task<Resultado<bool, Falha>> RecuperarSenha(RecuperarSenhaModal recuperarSenha)
+        {
+
+            var template = @"<h1>Olá João Tiago, foi solicitado a recuperação de 
+                                 senha para em controle de finanças</h1>";
+            var resultado = await _mailService.EnviarEmailAsync("ebenau06@gmail.com", "João Tiago", template);
+            if (resultado.EhFalha)
+                return resultado.Falha;
+            return resultado.Sucesso;
         }
     }
 }
