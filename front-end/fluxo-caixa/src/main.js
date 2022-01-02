@@ -34,7 +34,7 @@ app.directive('formatDate', (el, binding) => {
     const handler = (event) => {
         setTimeout(() => {
             _formaters[binding.value.format](event);
-        }, 200);
+        }, 500);
     }
     el.addEventListener("input", handler)
 });

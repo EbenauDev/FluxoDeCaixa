@@ -25,13 +25,16 @@ namespace ControleDeCaixa.WebAPI.Handler
         private readonly IPessoaRepositorio _pessoaRepositorio;
         private readonly ICriptografiaMD5 _criptografiaMD5;
         private readonly IMailService _mailService;
+        private readonly IEmailRepositorio _emailRepositorio;
         public PessoaHandler(IPessoaRepositorio pessoaRepositorio,
                              ICriptografiaMD5 criptografiaMD5,
-                             IMailService mailService)
+                             IMailService mailService,
+                             IEmailRepositorio emailRepositorio)
         {
             _pessoaRepositorio = pessoaRepositorio;
             _criptografiaMD5 = criptografiaMD5;
             _mailService = mailService;
+            _emailRepositorio = emailRepositorio;
         }
 
         public async Task<Resultado<Pessoa, Falha>> NovaContaAsync(PessoaInputModel inputModel)
@@ -83,10 +86,20 @@ namespace ControleDeCaixa.WebAPI.Handler
 
         public async Task<Resultado<bool, Falha>> RecuperarSenha(RecuperarSenhaModal recuperarSenha)
         {
+            if (await _pessoaRepositorio.RecuperarPessoaPorUsername(recuperarSenha.Username) is var pessoa && pessoa.EhFalha)
+                return pessoa.Falha;
+            if (pessoa.Sucesso.DataNascimento.Date.Equals(recuperarSenha.DataDeNascimento.Date) == false)
+                return Falha.Nova("Username ou data de nascimento está inválido");
 
-            var template = @"<h1>Olá João Tiago, foi solicitado a recuperação de 
-                                 senha para em controle de finanças</h1>";
-            var resultado = await _mailService.EnviarEmailAsync("ebenau06@gmail.com", "João Tiago", template);
+            if (await _emailRepositorio.RecuperarTemplateEmailAsync(tipoUso: "redefinicao-de-senha") is var resultadoTemplate && resultadoTemplate.EhFalha)
+                return resultadoTemplate.Falha;
+
+            var template = resultadoTemplate.Sucesso.Html
+                .Replace("#nomePessoa#", pessoa.Sucesso.Nome)
+                .Replace("#dataRedefinicao#", "")
+                .Replace("#linkRedefinicaoSenha#", "");
+
+            var resultado = await _mailService.EnviarEmailAsync(resultadoTemplate.Sucesso.EnderecoOrigem, pessoa.Sucesso.Nome, template);
             if (resultado.EhFalha)
                 return resultado.Falha;
             return resultado.Sucesso;

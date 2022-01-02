@@ -14,6 +14,7 @@ namespace ControleDeCaixa.WebAPI.Repositorio
         Task<Resultado<Pessoa, Falha>> NovaPessoaAsync(Pessoa pessoa);
         Task<Resultado<Pessoa, Falha>> AtualizarPessoaAsync(Pessoa pessoa);
         Task<Resultado<Pessoa, Falha>> RecuperarPessoaPorIdAsync(int pessoaId);
+        Task<Resultado<Pessoa, Falha>> RecuperarPessoaPorUsername(string username);
         Task<Resultado<bool, Falha>> UsernameEstahDisponivelAsync(string username);
     }
 
@@ -150,5 +151,36 @@ namespace ControleDeCaixa.WebAPI.Repositorio
             }
         }
 
+        public async Task<Resultado<Pessoa, Falha>> RecuperarPessoaPorUsername(string username)
+        {
+            const string sql = @"SELECT Id, 
+                                        Nome, 
+                                        DataNascimento, 
+                                        Avatar, 
+                                        Senha, 
+                                        Username, 
+                                        Email
+                                 FROM Pessoa
+                                 WHERE Username = @Username";
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    var pessoa = await conexao.QueryFirstOrDefaultAsync<Pessoa>(sql, new { Username = username });
+                    if (pessoa is null)
+                        return Falha.Nova($"Houve um problema ao recuperar pessoa de Id {username}");
+                    return pessoa;
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException($"Falha ao recuperar pessoa de Id{username}", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
     }
 }

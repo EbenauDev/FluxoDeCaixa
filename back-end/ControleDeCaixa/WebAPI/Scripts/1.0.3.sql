@@ -1,0 +1,10 @@
+﻿IF NOT EXISTS (SELECT * FROM TemplatesEmail WHERE TipoDeUso = 'redefinir-senha')
+BEGIN 
+	INSERT INTO TemplatesEmail(TipoDeUso, HTML, Assunto, EnderecoDeOrigem, DataDeRegistro)
+	VALUES('redefinicao-de-senha',
+			'<!DOCTYPE html><html lang=\"pt-br\"><head> <meta charset=\"UTF-8\"> <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> <title>Template Email</title></head><body style=\"background-color: #062c8b; padding: 0; margin: 0;\"> <table align=\"center\" style=\"padding: 0;\"> <tr> <td style=\"padding: 0;\"> <table style=\"width: 640px; background-color: #fff;\"> <tbody> <tr> <td style=\"padding: 0px 15px;\"> <p style=\"font-size: 24px; font-weight: 600; font-family: Arial, Helvetica, sans-serif;\"> Controle de finanças</p></td></tr><tr> <td style=\"padding: 0px 15px;\"> <p style=\"font-size: 15px; font-family: Arial, Helvetica, sans-serif;\">Olá #nomePessoa#, você solicitou a redefinição de senha em #dataRedefinicao#. Utilize o botão abaixo e não perca o seu acesso a sua conta. </p></td></tr><tr> <td style=\"padding: 60px 5px;\"> <table align=\"center\"> <tbody> <td style=\"width: 165px;height: 45px;background-color: #034bc3eb;text-align: center;border-radius: 4px; cursor: pointer;\"> <a href=\"#linkRedefinicaoSenha#\" style=\"text-decoration: none; font-weight: 600; color: #fff; font-family: Arial, Helvetica, sans-serif;\">Resetar a senha</a> </td></tbody> </table> </td></tr><tr> <td style=\"padding: 0px 15px;\"> <p style=\"font-size: 12px; color: red; font-family: Arial, Helvetica, sans-serif;\">Se caso não foi você que solicou a redefinição da senha. Entre em contato conosco atráves do e-mail <a style=\"color: #333;\" href=\"mailto:controlefinancas@support.com\">controlefinancas@support.com</a></p></td></tr></tbody> </table> </td></tr></table></body></html>',
+			'Recuperar senha de acesso - Controle de Finanças',
+			'meuemail@gmail.com.br',
+			GETDATE()
+	);
+END
