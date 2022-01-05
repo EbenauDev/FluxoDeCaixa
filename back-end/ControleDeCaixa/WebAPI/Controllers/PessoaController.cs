@@ -80,6 +80,7 @@ namespace ControleDeCaixa.WebAPI.Controllers
             return Ok(PessoaResumida.ConverterParaPessoaResumida(resultado.Sucesso));
         }
 
+        [AllowAnonymous]
         [HttpPost("RecuperarSenha")]
         public async Task<IActionResult> RecuperarPessoaPorId([FromBody] RecuperarSenhaModal recuperarSenhaModal)
         {

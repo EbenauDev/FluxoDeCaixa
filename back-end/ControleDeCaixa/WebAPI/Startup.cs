@@ -72,6 +72,9 @@ namespace WebAPI
             services.AddSingleton<IMovimentacoesHandler, MovimentacoesHandler>();
             services.AddSingleton<IMailService, GmailService>();
             services.AddSingleton<IMetasRepositorio, MetasRepositorio>();
+            services.AddSingleton<IEmailRepositorio, EmailRepositorio>();
+            services.AddSingleton<ISenhasRepositorio, SenhasRepositorio>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -26,15 +26,18 @@ namespace ControleDeCaixa.WebAPI.Handler
         private readonly ICriptografiaMD5 _criptografiaMD5;
         private readonly IMailService _mailService;
         private readonly IEmailRepositorio _emailRepositorio;
+        private readonly ISenhasRepositorio _senhaRepositorio;
         public PessoaHandler(IPessoaRepositorio pessoaRepositorio,
                              ICriptografiaMD5 criptografiaMD5,
                              IMailService mailService,
-                             IEmailRepositorio emailRepositorio)
+                             IEmailRepositorio emailRepositorio,
+                             ISenhasRepositorio senhaRepositorio)
         {
             _pessoaRepositorio = pessoaRepositorio;
             _criptografiaMD5 = criptografiaMD5;
             _mailService = mailService;
             _emailRepositorio = emailRepositorio;
+            _senhaRepositorio = senhaRepositorio;
         }
 
         public async Task<Resultado<Pessoa, Falha>> NovaContaAsync(PessoaInputModel inputModel)
@@ -91,15 +94,19 @@ namespace ControleDeCaixa.WebAPI.Handler
             if (pessoa.Sucesso.DataNascimento.Date.Equals(recuperarSenha.DataDeNascimento.Date) == false)
                 return Falha.Nova("Username ou data de nascimento está inválido");
 
+            var _tokenSenha = TokenSenha.GerarNovoToken(DateTime.Now.AddMinutes(15), pessoa.Sucesso.Id);
+            if (await _senhaRepositorio.GravarTokenNovaSenhaAsync(_tokenSenha) is var resultadoToken && resultadoToken.EhFalha)
+                return resultadoToken.Falha;
+
             if (await _emailRepositorio.RecuperarTemplateEmailAsync(tipoUso: "redefinicao-de-senha") is var resultadoTemplate && resultadoTemplate.EhFalha)
                 return resultadoTemplate.Falha;
 
             var template = resultadoTemplate.Sucesso.Html
                 .Replace("#nomePessoa#", pessoa.Sucesso.Nome)
-                .Replace("#dataRedefinicao#", "")
-                .Replace("#linkRedefinicaoSenha#", "");
+                .Replace("#dataRedefinicao#", _tokenSenha.DataDeRegistro.ToString("dddd, dd 'de' MMMM 'às' HH:mm"))
+                .Replace("#linkRedefinicaoSenha#", $"http://localhost:8080/redefinir-senha/{pessoa.Sucesso.Id}/{_tokenSenha.Id}");
 
-            var resultado = await _mailService.EnviarEmailAsync(resultadoTemplate.Sucesso.EnderecoOrigem, pessoa.Sucesso.Nome, template);
+            var resultado = await _mailService.EnviarEmailAsync(pessoa.Sucesso.Email, pessoa.Sucesso.Nome, template);
             if (resultado.EhFalha)
                 return resultado.Falha;
             return resultado.Sucesso;
