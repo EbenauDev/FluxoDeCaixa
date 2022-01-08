@@ -23,63 +23,63 @@
 }
 
 .form {
-    width         : 100%;
-    display       : flex;
+    width: 100%;
+    display: flex;
     flex-direction: column;
-    padding       : 10px;
+    padding: 10px;
 
     .form-footer {
-        display        : flex;
+        display: flex;
         justify-content: space-around;
     }
 }
 
 .form-group {
-    display       : flex;
+    display: flex;
     flex-direction: column;
-    margin-bottom : 10px;
+    margin-bottom: 10px;
 }
 
 .form-label {
-    display    : block;
-    font-size  : 14px;
+    display: block;
+    font-size: 14px;
     font-weight: 600;
-    margin     : 6px 0px;
+    margin: 6px 0px;
 }
 
 .form-control {
-    padding      : 5px 10px;
-    min-height   : 22px;
+    padding: 5px 10px;
+    min-height: 22px;
     border-radius: 4px;
-    border       : 1px solid #ddd;
+    border: 1px solid #ddd;
 
     &:focus {
-        outline     : var(--main-color-light);
+        outline: var(--main-color-light);
         border-color: var(--main-color-light);
     }
 }
 
 .btn {
-    min-height     : 40px;
-    border         : none;
-    outline        : none;
-    border-radius  : 4px;
-    cursor         : pointer;
-    display        : flex;
-    align-items    : center;
+    min-height: 40px;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    min-width      : 95px;
+    min-width: 95px;
 
     &:disabled {
-        opacity       : 0.6;
-        cursor        : not-allowed;
+        opacity: 0.6;
+        cursor: not-allowed;
         pointer-events: none;
     }
 }
 
 .btn-primary {
     background-color: var(--main-color-dark);
-    color           : #fff;
+    color: #fff;
 
     &:hover {
         filter: brightness(0.5);
@@ -87,21 +87,21 @@
 }
 
 .btn-outline {
-    color           : var(--main-color-dark);
-    font-weight     : bold;
-    border          : 1px solid var(--main-color-dark);
+    color: var(--main-color-dark);
+    font-weight: bold;
+    border: 1px solid var(--main-color-dark);
     background-color: transparent;
-    transition      : background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
 
     &:hover {
         background-color: var(--main-color-dark);
-        color           : #fff;
+        color: #fff;
     }
 }
 
 .btn-small {
     min-height: 30px;
-    min-width : 45px;
+    min-width: 45px;
 }
 
 .w-100 {
@@ -176,90 +176,90 @@ div.tooltip {
     margin-bottom: 15px;
 
     p {
-        color      : var(--main-color-dark);
-        position   : relative;
+        color: var(--main-color-dark);
+        position: relative;
         font-weight: 600;
-        font-size  : 1.6rem;
+        font-size: 1.6rem;
 
         &::before {
-            content         : "";
-            width           : 40px;
-            height          : 6px;
+            content: "";
+            width: 40px;
+            height: 6px;
             background-color: var(--main-color-dark);
-            border-radius   : 6px;
-            position        : absolute;
-            top             : -10px;
+            border-radius: 6px;
+            position: absolute;
+            top: -10px;
         }
     }
 }
 
 .formulario {
     background-color: #fff;
-    display         : flex;
-    align-items     : center;
-    padding         : 20px;
-    border-radius   : 16px;
-    min-height      : 300px;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 16px;
+    min-height: 300px;
 
     label.form-label {
         color: #222;
     }
 
     .form-steps {
-        width          : 100%;
-        display        : flex;
-        align-items    : center;
+        width: 100%;
+        display: flex;
+        align-items: center;
         justify-content: center;
-        margin-top     : 15px;
+        margin-top: 15px;
     }
 
     div.form-footer {
         flex-direction: column;
-        align-items   : center;
-        margin-top    : 40px;
+        align-items: center;
+        margin-top: 40px;
 
         button {
             max-width: 190px;
-            width    : 100%;
+            width: 100%;
         }
 
         span {
-            color      : var(--main-color-dark);
-            font-size  : 12px;
+            color: var(--main-color-dark);
+            font-size: 12px;
             font-weight: 600;
-            margin-top : 4rem;
-            display    : block;
-            cursor     : pointer;
+            margin-top: 4rem;
+            display: block;
+            cursor: pointer;
         }
     }
 }
 
 .card {
-    padding         : 10px 15px;
-    border-radius   : 10px;
+    padding: 10px 15px;
+    border-radius: 10px;
     background-color: #fff;
-    color           : #333;
-    margin          : 2rem 1rem;
+    color: #333;
+    margin: 2rem 1rem;
 
     .card__header {
-        display              : grid;
+        display: grid;
         grid-template-columns: 1fr 160px;
-        align-items          : center;
+        align-items: center;
 
         .card__title {
-            font-size  : 18px;
+            font-size: 18px;
             font-weight: bold;
-            color      : var(--main-color-dark);
-            position   : relative;
+            color: var(--main-color-dark);
+            position: relative;
 
             &::before {
-                content         : "";
-                width           : 35px;
-                height          : 6px;
+                content: "";
+                width: 35px;
+                height: 6px;
                 background-color: var(--main-color-dark);
-                border-radius   : 6px;
-                position        : absolute;
-                top             : -10px;
+                border-radius: 6px;
+                position: absolute;
+                top: -10px;
             }
         }
 
@@ -274,20 +274,20 @@ div.tooltip {
 }
 
 .tabela-operacoes-mes {
-    margin-top   : 15px;
+    margin-top: 15px;
     margin-bottom: 15px;
 
     @mixin estilo-base {
-        display              : grid;
+        display: grid;
         grid-template-columns: 30px 1fr 0.45fr 120px;
-        min-height           : 30px;
-        align-items          : center;
-        padding              : 4px 8px;
+        min-height: 30px;
+        align-items: center;
+        padding: 4px 8px;
     }
 
     .__cabecalho {
         @include estilo-base;
-        color           : #fff;
+        color: #fff;
         background-color: var(--main-color-dark);
     }
 
@@ -309,18 +309,37 @@ div.tooltip {
 }
 
 @media print {
-
     html,
     body {
         background: #fff !important;
     }
 
     .no-print {
-        display   : none !important;
+        display: none !important;
         visibility: hidden !important;
     }
 }
 
 .text-center {
     text-align: center;
+}
+
+.formulario {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 16px;
+    min-height: 300px;
+
+    label.form-label {
+        color: #222;
+    }
+
+    div.form-footer--modal {
+        margin-top: 2.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 2rem;
+    }
 }

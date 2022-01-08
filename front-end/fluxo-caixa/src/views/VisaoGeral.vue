@@ -160,21 +160,7 @@
             </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card__header">
-            <div>
-              <p class="m-0 card__title">Metas</p>
-            </div>
-            <div class="card-header__actions">
-              <button class="btn btn-outline" disabled>Novo objetivo</button>
-            </div>
-          </div>
-          <div class="card__body">
-            <h4 class="color-primary text-center">
-              Funcionalidade não está disponível nessa versão
-            </h4>
-          </div>
-        </div>
+        <listagem-de-metas></listagem-de-metas>
       </div>
     </div>
     <div v-else class="card empty-state">
@@ -207,6 +193,7 @@
 import moment from "moment";
 import CardMovimentacoesAnuais from "./components/CardMovimentacoesAnuais.vue";
 import NovaOperacaoNoMes from "./components/NovaOperacaoNoMes.vue";
+import ListagemDeMetas from "./components/metas/ListagemDeMetas.vue";
 import Modal from "../components/Modal.vue";
 import { mapState } from "vuex";
 export default {
@@ -214,6 +201,7 @@ export default {
   components: {
     CardMovimentacoesAnuais,
     NovaOperacaoNoMes,
+    ListagemDeMetas,
     Modal,
   },
   computed: {
@@ -244,7 +232,7 @@ export default {
       });
     },
     formatarMesDeReferencia(mesDeReferencia) {
-      moment.locale('pt-br');
+      moment.locale("pt-br");
       return moment(mesDeReferencia).format("MMMM [de] YYYY");
     },
     editarOperacaoDoMes(tipoOperacao, operacaoDoMes) {

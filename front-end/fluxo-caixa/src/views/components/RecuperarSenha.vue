@@ -23,7 +23,7 @@
           name="DataNascimento"
           id="dataNascimento"
           v-format-date="{ format: 'DD/MM/YYYY' }"
-          v-model="recuperarSenha.dataNascimento"
+          v-model="recuperarSenha.nascimento"
           required
         />
       </div>
@@ -58,16 +58,16 @@ export default {
     return {
       recuperarSenha: {
         username: null,
-        dataNascimento: null,
+        nascimento: null,
       },
     };
   },
   methods: {
     async solicitarRecuperacaoDeSenha() {
       try {
-        this.recuperarSenha.dataNascimento = dateFormater(
+        this.recuperarSenha.dataDeNascimento = dateFormater(
           "DD/MM/YYYY",
-          this.recuperarSenha.dataNascimento
+          this.recuperarSenha.nascimento
         );
         await httpRequest.post("Pessoa/RecuperarSenha", this.recuperarSenha);
         this.$toast.open({
@@ -75,6 +75,7 @@ export default {
             "Enviamos um e-mail para você com o link de recuperação de senha",
           type: "success",
         });
+        this.onClose && this.onClose();
       } catch (error) {
         this.$toast.open({
           message:
@@ -86,25 +87,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.formulario {
-  background-color: #fff;
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  border-radius: 16px;
-  min-height: 300px;
-
-  label.form-label {
-    color: #222;
-  }
-
-  div.form-footer--modal {
-    margin-top: 2.5rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 2rem;
-  }
-}
-</style>
