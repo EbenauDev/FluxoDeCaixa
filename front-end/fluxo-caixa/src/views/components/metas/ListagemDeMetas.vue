@@ -15,7 +15,7 @@
         <div class="card-meta" v-for="meta in metas" :key="meta.id">
           <div class="__cabecalho">
             <div>
-              <h4>{{ meta.descricao }}</h4>
+              <h4 class="main-color-dark">{{ meta.descricao }}</h4>
             </div>
             <div class="__acoes">
               <button
@@ -37,11 +37,11 @@
           <div class="__corpo">
             <div class="m-b-5">
               <p class="f-13">Valor desejado</p>
-              <p class="f-bold">{{ meta.valorDesejado }}</p>
+              <p class="f-bold">{{ Number(meta.valorDesejado).toReal() }}</p>
             </div>
             <div>
               <p class="f-13">Valor que falta</p>
-              <p class="f-bold">{{ meta.valorRestante }}</p>
+              <p class="f-bold">{{ Number(meta.valorRestante).toReal() }}</p>
             </div>
           </div>
           <div class="__progresso">
@@ -138,12 +138,13 @@ export default {
     .__status {
       display: grid;
       grid-template-columns: 1fr 30px;
-      height: 100%;
+      min-height: 20px;
       align-items: center;
       padding: 5px 16px;
       border-radius: 20px;
       background: #12bf12;
       color: #fff;
+      font-size: 13px;
     }
   }
 
