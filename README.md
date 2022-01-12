@@ -9,11 +9,10 @@ Este projeto tem como objetivos testar conceitos de back-end utilizando .NET Cor
 - Onion Architecture
 - Conceitos de DDD
 - Generics
+- Envio de E-mail utilizando o protocolo SMTP
 
 ## :memo: Conceitos de front-end que serão abordados
 - Sistema de GRID e Flex layout
 - Requisições AJAX com axios no Vue
 - Componentes
 - Autenticação nas requisições 
-- Middleware nas rotas da UI
-
