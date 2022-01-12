@@ -12,9 +12,47 @@
         </div>
       </div>
       <div class="card__body">
-        <h4 class="color-primary text-center">
-          Funcionalidade não está disponível nessa versão
-        </h4>
+        <div class="card-meta" v-for="meta in metas" :key="meta.id">
+          <div class="__cabecalho">
+            <div>
+              <h4>{{ meta.descricao }}</h4>
+            </div>
+            <div class="__acoes">
+              <button
+                class="btn btn-small m-r-5"
+                type="button"
+                @click="removerMeta(meta)"
+              >
+                <i class="far fa-trash-alt"></i>
+              </button>
+              <button
+                class="btn btn-small btn-primary"
+                @click="editarMeta(meta)"
+                type="button"
+              >
+                <i class="fas fa-pen"></i>
+              </button>
+            </div>
+          </div>
+          <div class="__corpo">
+            <div class="m-b-5">
+              <p class="f-13">Valor desejado</p>
+              <p class="f-bold">{{ meta.valorDesejado }}</p>
+            </div>
+            <div>
+              <p class="f-13">Valor que falta</p>
+              <p class="f-bold">{{ meta.valorRestante }}</p>
+            </div>
+          </div>
+          <div class="__progresso">
+            <div class="__status" :style="{ width: meta.progressoMeta + '%' }">
+              <span> {{ meta.progressoMeta }}% </span>
+              <span>
+                <i class="far fa-flag"></i>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div v-if="abrirModalFormulario">
@@ -38,20 +76,82 @@ export default {
   computed: {
     ...mapState({
       metas: (state) => state.metas.metas,
+      pessoa: (state) => state.pessoa.pessoa,
     }),
   },
+
   data() {
     return {
       abrirModalFormulario: false,
     };
   },
+  mounted() {
+    this.recuperarMetas();
+  },
   methods: {
+    async recuperarMetas() {
+      try {
+        await this.$store.dispatch("metas/recuperarMetas", this.pessoa.id);
+      } catch (error) {
+        this.$toast.open({
+          message: `Houve um problema recuperar as suas metas`,
+          type: "error",
+        });
+      }
+    },
     abrirModalHandler() {
       this.abrirModalFormulario = !this.abrirModalFormulario;
     },
+    removerMeta() {},
+    editarMeta() {},
   },
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.card-meta {
+  padding: 20px 18px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px #e3e3e3;
+  margin-bottom: 15px;
+  .__cabecalho {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    margin-bottom: 10px;
+    .__acoes {
+      display: flex;
+      justify-content: center;
+      button {
+        height: 30px;
+      }
+    }
+  }
+  .__corpo {
+    margin-bottom: 15px;
+  }
+  .__progresso {
+    width: 100%;
+    display: flex;
+    background: #f5f5f5;
+    max-height: 30px;
+    border-radius: 20px;
+    .__status {
+      display: grid;
+      grid-template-columns: 1fr 30px;
+      height: 100%;
+      align-items: center;
+      padding: 5px 16px;
+      border-radius: 20px;
+      background: #12bf12;
+      color: #fff;
+    }
+  }
+
+  p,
+  h3,
+  h4 {
+    margin: 4px 0px;
+    padding: 0;
+  }
+}
 </style>
