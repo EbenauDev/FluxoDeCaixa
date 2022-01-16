@@ -17,6 +17,7 @@ namespace ControleDeCaixa.WebAPI.Repositorio
         Task<Resultado<bool, Falha>> AdicionarNovaMetaAsync(NovaMeta meta, int pessoaId);
         Task<Resultado<bool, Falha>> AtualizarMetaAsync(MetaAtualizada meta, int pessoaId);
         Task<Resultado<IEnumerable<ResumoMetasViewModel>, Falha>> RecuperarResumoMetas(int pessoaId);
+        Task<Resultado<bool, Falha>> RemoverMetaAsync(int pessoaId, int metaId);
     }
 
     public class MetasRepositorio : IMetasRepositorio
@@ -43,7 +44,7 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 {
                     await conexao.OpenAsync();
                     var linhasAfetadas = await conexao.ExecuteAsync(sql, new { meta.ValorDesejado, meta.Descricao, PessoaId = pessoaId });
-                   if (linhasAfetadas == 0)
+                    if (linhasAfetadas == 0)
                         return Falha.Nova("Houve um problema ao definir a nova meta no sistema");
                     return true;
                 }
@@ -103,6 +104,30 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 catch (Exception ex)
                 {
                     return Falha.NovaComException("Falha ao recuperar o resumo das metas", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<Resultado<bool, Falha>> RemoverMetaAsync(int pessoaId, int metaId)
+        {
+            const string sql = @"DELETE FROM ControleDeMetas WHERE Id = @Id AND PessoaId = @PessoaId";
+            using (var conexao = new SqlConnection(_stringDeConexao))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    var lihasAfetadas = await conexao.ExecuteAsync(sql, new { Id = metaId, PessoaId = pessoaId });
+                    if (lihasAfetadas <= 0)
+                        return Falha.Nova($"Houve um problema ao deletar a meta {metaId}");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException("Falha ao deletar a meta", ex);
                 }
                 finally
                 {

@@ -6,7 +6,7 @@
           <p class="m-0 card__title">Metas</p>
         </div>
         <div class="card-header__actions">
-          <button class="btn btn-outline" @click="abrirModalHandler()">
+          <button class="btn btn-outline" @click="novoObjetivo()">
             Novo objetivo
           </button>
         </div>
@@ -57,7 +57,10 @@
     </div>
     <div v-if="abrirModalFormulario">
       <modal>
-        <formulario-meta></formulario-meta>
+        <formulario-meta
+          :on-close="fecharModal"
+          :configuracao="configuracao"
+        ></formulario-meta>
       </modal>
     </div>
   </div>
@@ -83,6 +86,11 @@ export default {
   data() {
     return {
       abrirModalFormulario: false,
+      configuracao: {
+        pessoaId: 0,
+        ehNovaMeta: false,
+        metaParaAtualizar: {},
+      },
     };
   },
   mounted() {
@@ -99,11 +107,44 @@ export default {
         });
       }
     },
-    abrirModalHandler() {
-      this.abrirModalFormulario = !this.abrirModalFormulario;
+    novoObjetivo() {
+      this.abrirModalFormulario = true;
+      this.configuracao = {
+        pessoaId: this.pessoa.id,
+        ehNovaMeta: false,
+        metaParaAtualizar: {},
+      };
     },
-    removerMeta() {},
-    editarMeta() {},
+    editarMeta(meta) {
+      this.configuracao = {
+        pessoaId: this.pessoa.id,
+        ehNovaMeta: false,
+        metaParaAtualizar: meta,
+      };
+      this.abrirModalFormulario = true;
+    },
+    removerMeta({ id }) {
+      this.$store
+        .dispatch("metas/removerMeta", {
+          pessoaId: this.pessoa.id,
+          metaId: id,
+        })
+        .then(() => {
+          this.$toast.open({
+            message: `Meta foi removida com sucesso`,
+            type: "success",
+          });
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: `Houve um problema recuperar as suas metas`,
+            type: "error",
+          });
+        });
+    },
+    fecharModal() {
+      this.abrirModalFormulario = false;
+    },
   },
 };
 </script>

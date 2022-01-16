@@ -1,10 +1,12 @@
 ﻿using ControleDeCaixa.WebAPI.Models;
 using ControleDeCaixa.WebAPI.Repositorio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace ControleDeCaixa.WebAPI.Controllers
 {
+    [Authorize(Roles = "ContaRegistrada")]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
@@ -36,6 +38,14 @@ namespace ControleDeCaixa.WebAPI.Controllers
         public async Task<IActionResult> AdicionarNovaMeta([FromQuery] int pessoaId, [FromBody] MetaAtualizada meta)
         {
             if (await _metasRepositorio.AtualizarMetaAsync(meta, pessoaId) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(resultado.Sucesso);
+        }
+
+        [HttpDelete("Remover")]
+        public async Task<IActionResult> RemoverMeta([FromQuery] int pessoaId, int metaId)
+        {
+            if (await _metasRepositorio.RemoverMetaAsync(metaId, pessoaId) is var resultado && resultado.EhFalha)
                 return BadRequest(resultado.Falha);
             return Ok(resultado.Sucesso);
         }

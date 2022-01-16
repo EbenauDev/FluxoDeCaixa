@@ -15,6 +15,18 @@ const actions = {
                     reject(erro);
                 });
         });
+    },
+    removerMeta({ dispatch }, { pessoaId, metaId }) {
+        return new Promise((resolve, reject) => {
+            httpRequest.delete(`Metas/Remover?pessoaId=${pessoaId}&metaId=${metaId}`)
+                .then(() => {
+                    dispatch("recuperarMetas", pessoaId);
+                    resolve()
+                })
+                .catch(erro => {
+                    reject(erro);
+                });
+        });
     }
 }
 

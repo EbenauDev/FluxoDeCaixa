@@ -59,6 +59,7 @@ export default {
     delete: (context) => {
         return axios.delete(
             `${_baseURL}${context}`,
+            _defaultHeaders
         )
     },
 }

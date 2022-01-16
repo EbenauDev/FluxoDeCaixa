@@ -47,6 +47,18 @@
 <script>
 export default {
   name: "FormularioMeta",
+  props: {
+    onClose: {
+      type: Function,
+      required: true,
+    },
+    configuracao: {
+      type: Object,
+    },
+  },
+  created() {
+    console.log(this.configuracao);
+  },
   data() {
     return {
       meta: {},
