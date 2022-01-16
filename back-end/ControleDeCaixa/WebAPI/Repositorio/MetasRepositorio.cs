@@ -72,7 +72,7 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                     var linhasAfetadas = await conexao.ExecuteAsync(sql, new
                     {
                         meta.Id,
-                        meta.Valor,
+                        Valor = meta.ValorDesejado,
                         meta.Descricao,
                         PessoaId = pessoaId
                     });

@@ -57,9 +57,8 @@ export default {
     },
   },
   created() {
-    console.log(this.configuracao);
     if (this.configuracao.ehNovaMeta == false) {
-      this.meta = this.configuracao.metaParaAtualizar;
+      this.meta = Object.assign({}, this.configuracao.metaParaAtualizar);
     }
   },
   data() {
@@ -71,7 +70,7 @@ export default {
     _atualizarMeta() {
       this.$store
         .dispatch("metas/atualizarMeta", {
-          pessoaId: this.pessoa.id,
+          pessoaId: this.configuracao.pessoaId,
           meta: this.meta,
         })
         .then(() => {
@@ -90,7 +89,7 @@ export default {
     _adicionarMeta() {
       this.$store
         .dispatch("metas/novaMeta", {
-          pessoaId: this.pessoa.id,
+          pessoaId: this.configuracao.pessoaId,
           meta: this.meta,
         })
         .then(() => {

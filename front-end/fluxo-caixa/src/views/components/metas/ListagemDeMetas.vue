@@ -111,7 +111,7 @@ export default {
       this.abrirModalFormulario = true;
       this.configuracao = {
         pessoaId: this.pessoa.id,
-        ehNovaMeta: false,
+        ehNovaMeta: true,
         metaParaAtualizar: {},
       };
     },
@@ -137,7 +137,7 @@ export default {
         })
         .catch(() => {
           this.$toast.open({
-            message: `Houve um problema recuperar as suas metas`,
+            message: `Houve um problema ao remover a meta do sistema. Tente novamente mais tarde`,
             type: "error",
           });
         });
