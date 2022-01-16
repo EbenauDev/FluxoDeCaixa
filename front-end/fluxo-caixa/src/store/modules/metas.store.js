@@ -27,6 +27,30 @@ const actions = {
                     reject(erro);
                 });
         });
+    },
+    novaMeta({ dispatch }, { pessoaId, meta }) {
+        return new Promise((resolve, reject) => {
+            httpRequest.post(`Metas/Nova?pessoaId=${pessoaId}`, meta)
+                .then(() => {
+                    dispatch("recuperarMetas", pessoaId);
+                    resolve()
+                })
+                .catch(erro => {
+                    reject(erro);
+                });
+        });
+    },
+    atualizarMeta({ dispatch }, { pessoaId, meta }) {
+        return new Promise((resolve, reject) => {
+            httpRequest.put(`Metas/Atualizar?pessoaId=${pessoaId}`, meta)
+                .then(() => {
+                    dispatch("recuperarMetas", pessoaId);
+                    resolve()
+                })
+                .catch(erro => {
+                    reject(erro);
+                });
+        });
     }
 }
 

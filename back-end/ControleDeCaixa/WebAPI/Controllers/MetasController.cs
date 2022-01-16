@@ -45,7 +45,7 @@ namespace ControleDeCaixa.WebAPI.Controllers
         [HttpDelete("Remover")]
         public async Task<IActionResult> RemoverMeta([FromQuery] int pessoaId, int metaId)
         {
-            if (await _metasRepositorio.RemoverMetaAsync(metaId, pessoaId) is var resultado && resultado.EhFalha)
+            if (await _metasRepositorio.RemoverMetaAsync(pessoaId, metaId) is var resultado && resultado.EhFalha)
                 return BadRequest(resultado.Falha);
             return Ok(resultado.Sucesso);
         }

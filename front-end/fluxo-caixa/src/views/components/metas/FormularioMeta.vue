@@ -2,7 +2,7 @@
   <div class="formulario w-100">
     <form name="recuperarSenha" class="form w-100">
       <div class="tooltip">
-        <p>Metas</p>
+        <p>{{ configuracao.ehNovaMeta ? "Nova Meta" : "Atualizar meta" }}</p>
       </div>
 
       <div class="form-group">
@@ -37,7 +37,7 @@
           type="button"
           @click="handlerMeta && handlerMeta()"
         >
-          Nova
+          Salvar
         </button>
       </div>
     </form>
@@ -58,6 +58,9 @@ export default {
   },
   created() {
     console.log(this.configuracao);
+    if (this.configuracao.ehNovaMeta == false) {
+      this.meta = this.configuracao.metaParaAtualizar;
+    }
   },
   data() {
     return {
@@ -65,8 +68,50 @@ export default {
     };
   },
   methods: {
+    _atualizarMeta() {
+      this.$store
+        .dispatch("metas/atualizarMeta", {
+          pessoaId: this.pessoa.id,
+          meta: this.meta,
+        })
+        .then(() => {
+          this.$toast.open({
+            message: `A meta foi atualizada com sucesso`,
+            type: "success",
+          });
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: `Houve ao tentar atualizar a sua meta`,
+            type: "error",
+          });
+        });
+    },
+    _adicionarMeta() {
+      this.$store
+        .dispatch("metas/novaMeta", {
+          pessoaId: this.pessoa.id,
+          meta: this.meta,
+        })
+        .then(() => {
+          this.$toast.open({
+            message: `Nova meta foi adicionada ao sistema com sucesso`,
+            type: "success",
+          });
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: `Houve um problema ao tentar adicionar a nova menta no sistema`,
+            type: "error",
+          });
+        });
+    },
     handlerMeta() {
-      console.log("to do...");
+      if (this.configuracao.ehNovaMeta) {
+        this._adicionarMeta();
+        return;
+      }
+      this._atualizarMeta();
     },
   },
 };
