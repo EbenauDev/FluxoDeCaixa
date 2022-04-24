@@ -2,9 +2,9 @@
 {
     public class OperacoesMes
     {
-        public double Valor { get; set; }
         public int MesId { get; set; }
+        public int OperacaoTransacaoId { get; set; }
         public string Descricao { get; set; }
-        public string TipoOperacao { get; set; }
+        public decimal Valor { get; set; }
     }
 }

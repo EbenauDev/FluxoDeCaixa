@@ -12,15 +12,18 @@ namespace ControleDeCaixa.WebAPI.Handler
     {
         Task<Resultado<MovimentacaoAnual, Falha>> NovoAnoDeMovimentacoesAsync(MoviementacoesAnuais moviementacoes, int pessoaId);
         Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacaoAsync(MesDeMovimentacoes movimentacao, int pessoaId);
-        Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacoesMes operacoes, int pessoaId);
+        Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacoesMes operacao, int pessoaId);
     }
 
     public class MovimentacoesHandler : IMovimentacoesHandler
     {
         private readonly IMovimentacoesRepositorio _movimentacoesRepositorio;
-        public MovimentacoesHandler(IMovimentacoesRepositorio movimentacoesRepositorio)
+        private readonly IOperacoesRepositorio _operacoesRepositorio;
+        public MovimentacoesHandler(IMovimentacoesRepositorio movimentacoesRepositorio,
+            IOperacoesRepositorio operacoesRepositorio)
         {
             _movimentacoesRepositorio = movimentacoesRepositorio;
+            _operacoesRepositorio = operacoesRepositorio;
         }
 
         public async Task<Resultado<MovimentacaoAnual, Falha>> NovoAnoDeMovimentacoesAsync(MoviementacoesAnuais moviementacoes, int pessoaId)
@@ -54,15 +57,15 @@ namespace ControleDeCaixa.WebAPI.Handler
             return resultado.Sucesso;
         }
 
-        public async Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacoesMes operacoes, int pessoaId)
+        //TODO Verificar necessidade de ter esse handler
+        public async Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacoesMes operacao, int pessoaId)
         {
-
-            var movimentacaoMes = new OperacaoMes(
-                operacoes.Valor,
-                operacoes.MesId,
-                operacoes.Descricao,
-                (ETipoOperacaoMes)Enum.Parse(typeof(ETipoOperacaoMes), operacoes.TipoOperacao));
-            if (await _movimentacoesRepositorio.NovaOperacaoNoMesAsync(movimentacaoMes) is var resultado && resultado.EhFalha)
+            var movimentacaoMes = OperacaoMes.Nova(
+                operacao.MesId,
+                operacao.OperacaoTransacaoId,
+                operacao.Valor,
+                operacao.Descricao);
+            if (await _operacoesRepositorio.NovaOperacaoNoMesAsync(movimentacaoMes) is var resultado && resultado.EhFalha)
                 return resultado.Falha;
             return resultado.Sucesso;
         }

@@ -17,12 +17,10 @@ namespace ControleDeCaixa.WebAPI.Repositorio
         Task<Resultado<bool, Falha>> AnoDeMovimentacoesJahExiste(int ano, int pessoaId);
         Task<Resultado<MovimentacaoAnual, Falha>> NovoAnoDeMovimentacaoAsync(MovimentacaoAnual movimentacaoAnual);
         Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacoesAsync(MovimentacaoMes mesDeMovimentacoes);
-        Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacaoMes mesDeMovimentacoes);
         Task<Resultado<IEnumerable<MesDeMovimentacaoDTO>, Falha>> RecuperarMesesDeMovimentacaoDoAnoAsync(int pessoaId, int anoId);
         Task<Resultado<IEnumerable<AnoDeMovimentacaoDTO>, Falha>> RecuperarAnosDeMovimentacoesAsync(int pessoaId);
         Task<Resultado<MovimentacaoMes, Falha>> ListarMovimentacoesDoMesAsync(int anoId, int mesId);
         Task<Resultado<bool, Falha>> ExcluirOperacaoDoMesAsync(int mesId, int operacaoMesId);
-        Task<Resultado<OperacaoMes, Falha>> AtualizarOperacaoNoMesAsync(int operacaoMesId, OperacaoMes mesDeMovimentacoes);
         Task<Resultado<HistoricoAnual, Falha>> HistoricoMovimentacoesAsync(int pessoaId, int anoId);
         Task<Resultado<bool, Falha>> MesDeMovimentacaoJahExisteAsync(int anoId, int mes);
 
@@ -126,43 +124,6 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                     await conexao.CloseAsync();
                 }
             }
-        }
-
-        public async Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacaoMes operacaoMes)
-        {
-            const string sql = @"INSERT INTO OperacoesDoMes(Valor, MesId, Descricao, TipoOperacao, DataDeRegistro)
-                                 VALUES(@Valor, @MesId, @Descricao, @TipoOperacao, @DataDeRegistro);
-
-                                 SELECT SCOPE_IDENTITY() AS Id;";
-
-            using (var conexao = new SqlConnection(_connectionString))
-            {
-                try
-                {
-                    await conexao.OpenAsync();
-                    var resultadoIdMovimentacaoAnual = await conexao.QueryFirstOrDefaultAsync<int>(sql, new
-                    {
-                        operacaoMes.Valor,
-                        operacaoMes.MesId,
-                        operacaoMes.Descricao,
-                        TipoOperacao = (char)operacaoMes.TipoOperacao,
-                        DataDeRegistro = DateTime.Now
-                    });
-                    if (resultadoIdMovimentacaoAnual == 0)
-                        return Falha.Nova("Houve um problema ao tentar salvar o novo ano de movimentações");
-                    operacaoMes.DefinirId(resultadoIdMovimentacaoAnual);
-                    return operacaoMes;
-                }
-                catch (Exception ex)
-                {
-                    return Falha.NovaComException("Falha ao salvar o ano de movimentações", ex);
-                }
-                finally
-                {
-                    await conexao.CloseAsync();
-                }
-            }
-
         }
 
         public async Task<Resultado<IEnumerable<MesDeMovimentacaoDTO>, Falha>> RecuperarMesesDeMovimentacaoDoAnoAsync(int pessoaId, int anoId)
@@ -306,44 +267,6 @@ namespace ControleDeCaixa.WebAPI.Repositorio
             }
         }
 
-        public async Task<Resultado<OperacaoMes, Falha>> AtualizarOperacaoNoMesAsync(int operacaoMesId, OperacaoMes operacao)
-        {
-            const string sql = @"UPDATE OperacoesDoMes
-	                                   SET Valor = @Valor,
-		                                   Descricao = @Descricao,
-		                                   TipoOperacao = @TipoOperacao,
-		                                   DataDeRegistro = @DataDeRegistro
-                                 WHERE Id =  @operacaoMesId;";
-
-            using (var conexao = new SqlConnection(_connectionString))
-            {
-                try
-                {
-                    await conexao.OpenAsync();
-                    var linhasAfetadas = await conexao.ExecuteAsync(sql, new
-                    {
-                        operacaoMesId,
-                        operacao.Valor,
-                        operacao.Descricao,
-                        TipoOperacao = (char)operacao.TipoOperacao,
-                        DataDeRegistro = DateTime.Now
-                    });
-                    if (linhasAfetadas <= 0)
-                        return Falha.Nova("Falha ao atualizar operação do mês");
-                    operacao.DefinirId(operacaoMesId);
-                    return operacao;
-                }
-                catch (Exception ex)
-                {
-                    return Falha.NovaComException($"Falha ao atualizar operação do mês", ex);
-                }
-                finally
-                {
-                    await conexao.CloseAsync();
-                }
-            }
-        }
-
         public async Task<Resultado<HistoricoAnual, Falha>> HistoricoMovimentacoesAsync(int pessoaId, int anoId)
         {
             const string sql = @"SELECT Id, 
@@ -362,9 +285,9 @@ namespace ControleDeCaixa.WebAPI.Repositorio
 
                                  SELECT OperacoesDoMes.Id, 
 	                                    Valor, 
-	                                    MesId, 
-	                                    OperacoesDoMes.Descricao, 
-	                                    TipoOperacao
+	                                    MesId,
+                                        OperacaoTransacaoId,
+	                                    OperacoesDoMes.Descricao
                                  FROM OperacoesDoMes (NOLOCK)
                                  INNER JOIN MesDeMovimentacoes ON MesDeMovimentacoes.Id = OperacoesDoMes.MesId AND MesDeMovimentacoes.IdAnoMovimentacoes = @AnoId;";
 
@@ -381,13 +304,10 @@ namespace ControleDeCaixa.WebAPI.Repositorio
 
                         var movimentacoesMes = (await queryMultipla.ReadAsync<dynamic>())
                                         .Select(o => new OperacaoMes((int)o.Id,
-                                                (double)o.Valor,
                                                 (int)o.MesId,
-                                                (string)o.Descricao,
-                                                (ETipoOperacaoMes)Char.Parse(o.TipoOperacao)));
-
-
-
+                                                (int)o.MesId,
+                                                (decimal)o.Valor,
+                                                (string)o.Descricao));
 
                         return new HistoricoAnual(ano.Id,
                                                   ano.Ano,

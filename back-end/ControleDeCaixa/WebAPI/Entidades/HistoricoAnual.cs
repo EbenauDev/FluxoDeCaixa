@@ -20,6 +20,7 @@ namespace ControleDeCaixa.WebAPI.Entidades
         public IEnumerable<HistoricoMes> MovimentacoesMes { get; set; }
     }
 
+    [Obsolete("Método obsoleto devido a mexida na classe OperacaoMes")]
     public class HistoricoMes
     {
         public HistoricoMes(int id, DateTime mesDeReferencia, string descricao, IEnumerable<OperacaoMes> movimentacoes)
@@ -30,8 +31,8 @@ namespace ControleDeCaixa.WebAPI.Entidades
             Descricao = descricao;
             Movimentacoes = movimentacoes;
             SaldoMovimentacoes = new Saldo(
-                     totalReceitas: movimentacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Entrada).Sum(o => o.Valor),
-                     totalDespesas: movimentacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Saida).Sum(o => o.Valor)
+                     totalReceitas: 0,
+                     totalDespesas: 0
                 );
         }
 

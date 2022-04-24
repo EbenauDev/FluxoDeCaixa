@@ -17,11 +17,14 @@ namespace ControleDeCaixa.WebAPI.Controllers
     {
         private readonly IMovimentacoesHandler _movimentacoesHandler;
         private readonly IMovimentacoesRepositorio _movimentacoesRepositorio;
+        private readonly IOperacoesRepositorio _operacoesRepositorio;
         public MovimentacoesController(IMovimentacoesHandler movimentacoesHandler,
-                                       IMovimentacoesRepositorio movimentacoesRepositorio)
+                                       IMovimentacoesRepositorio movimentacoesRepositorio,
+                                       IOperacoesRepositorio operacoesRepositorio)
         {
             _movimentacoesHandler = movimentacoesHandler;
             _movimentacoesRepositorio = movimentacoesRepositorio;
+            _operacoesRepositorio = operacoesRepositorio;
         }
 
         [HttpPost("Pessoa/{pessoaId}/NovoAnoDeMovimentacoes")]
@@ -55,11 +58,11 @@ namespace ControleDeCaixa.WebAPI.Controllers
         {
             var operacao = new OperacaoMes(
                 id: operacaoId,
-                operacaoMes.Valor,
                 operacaoMes.MesId,
-                operacaoMes.Descricao,
-                (ETipoOperacaoMes)Enum.Parse(typeof(ETipoOperacaoMes), operacaoMes.TipoOperacao));
-            if (await _movimentacoesRepositorio.AtualizarOperacaoNoMesAsync(operacaoId, operacao) is var resultado && resultado.EhFalha)
+                operacaoMes.OperacaoTransacaoId,
+                operacaoMes.Valor,
+                operacaoMes.Descricao);
+            if (await _operacoesRepositorio.AtualizarOperacaoNoMesAsync(operacaoId, operacao) is var resultado && resultado.EhFalha)
                 return BadRequest(resultado.Falha);
             return Ok(resultado.Sucesso);
         }
