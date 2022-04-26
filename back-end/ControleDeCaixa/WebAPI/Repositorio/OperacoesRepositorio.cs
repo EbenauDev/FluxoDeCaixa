@@ -1,6 +1,7 @@
 ﻿using ControleDeCaixa.WebAPI.Entidades;
 using ControleDeCaixa.WebAPI.Generics;
 using ControleDeCaixa.WebAPI.Helper;
+using ControleDeCaixa.WebAPI.Views;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace ControleDeCaixa.WebAPI.Repositorio
     {
         Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacaoMes operacaoMes);
         Task<Resultado<OperacaoMes, Falha>> AtualizarOperacaoNoMesAsync(int operacaoMesId, OperacaoMes operacaoMes);
+        Task<Resultado<IEnumerable<OperacaoTransacaoViewModel>, Falha>> RecuperarOperacoesTransacaoAsync();
     }
 
     public class OperacoesRepositorio : IOperacoesRepositorio
@@ -92,6 +94,32 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                 catch (Exception ex)
                 {
                     return Falha.NovaComException($"Falha ao atualizar operação do mês", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<Resultado<IEnumerable<OperacaoTransacaoViewModel>, Falha>> RecuperarOperacoesTransacaoAsync()
+        {
+            const string sql = @"SELECT Id, 
+	                                    Nome, 
+	                                    Descricao, 
+	                                    Tag 
+                                FROM OperacaoTransacao(NOLOCK);";
+
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    await conexao.OpenAsync();
+                    return (await conexao.QueryAsync<OperacaoTransacaoViewModel>(sql)).ToList();
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException("Falha ao recuperar as operações transação", ex);
                 }
                 finally
                 {
