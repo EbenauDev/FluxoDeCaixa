@@ -69,6 +69,7 @@ namespace WebAPI
             services.AddSingleton<ISessaoRepositorio, SessaoRepositorio>();
             services.AddSingleton<ILoginHandler, LoginHandler>();
             services.AddSingleton<IMovimentacoesRepositorio, MovimentacoesRepositorio>();
+            services.AddSingleton<IOperacoesRepositorio, OperacoesRepositorio>();
             services.AddSingleton<IMovimentacoesHandler, MovimentacoesHandler>();
             services.AddSingleton<IMailService, GmailService>();
             services.AddSingleton<IMetasRepositorio, MetasRepositorio>();

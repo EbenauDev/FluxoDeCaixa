@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ControleDeCaixa.WebAPI.Entidades
 {
+    //TODO: Refatorar o método que popula essa classe
     public class MovimentacaoMes
     {
         public MovimentacaoMes(int idAnoMovimentacoes, DateTime mesDeReferencia, string descricao)
@@ -55,18 +56,19 @@ namespace ControleDeCaixa.WebAPI.Entidades
         }
     }
 
+    [Obsolete]
     public sealed class Saldo
     {
-        public Saldo(double totalReceitas = 0, double totalDespesas = 0)
+        public Saldo(decimal totalReceitas = 0, decimal totalDespesas = 0)
         {
             TotalReceitas = totalReceitas;
             TotalDespesas = totalDespesas;
             SaldoTotal = totalReceitas - totalDespesas;
         }
 
-        public double TotalReceitas { get; set; } = 0;
-        public double TotalDespesas { get; set; } = 0;
-        public double SaldoTotal { get; set; } = 0;
+        public decimal TotalReceitas { get; set; } = 0;
+        public decimal TotalDespesas { get; set; } = 0;
+        public decimal SaldoTotal { get; set; } = 0;
 
     }
 

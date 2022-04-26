@@ -14,8 +14,9 @@ namespace ControleDeCaixa.WebAPI.Repositorio.DTO
         public string Descricao { get; set; }
         //OperacaoMes
         public int OperacoesDoMesId { get; set; }
-        public double Valor { get; set; }
         public int MesId { get; set; }
+        public int OperacaoTransacaoId { get; set; }
+        public decimal Valor { get; set; }
         public string OperacoesDoMesDescricao { get; set; }
         public char TipoOperacao { get; set; }
 
@@ -26,14 +27,14 @@ namespace ControleDeCaixa.WebAPI.Repositorio.DTO
         public static MovimentacaoMes ConverterParaEntidade(this IEnumerable<MovimentacaoMesDTO> movimentacaoMesDTOs)
         {
             var movimentacaoMes = movimentacaoMesDTOs.Select(m => new MovimentacaoMes(m.Id, m.IdAnoMovimentacoes, m.MesDeReferencia, m.Descricao)).FirstOrDefault();
-            var operacoes = movimentacaoMesDTOs.Select(m => new OperacaoMes(m.OperacoesDoMesId, m.Valor, m.MesId, m.OperacoesDoMesDescricao, (ETipoOperacaoMes)m.TipoOperacao));
+            var operacoes = movimentacaoMesDTOs.Select(m => new OperacaoMes(m.OperacoesDoMesId, m.MesId, m.OperacaoTransacaoId, m.Valor,  m.OperacoesDoMesDescricao));
             if (operacoes.Any())
             {
-                movimentacaoMes.DefinirDespesas(operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Saida));
-                movimentacaoMes.DefinirReceitas(operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Entrada));
+                movimentacaoMes.DefinirDespesas(operacoes.Where(o => o.OperacaoTransacaoId == 4));
+                movimentacaoMes.DefinirReceitas(operacoes.Where(o => o.OperacaoTransacaoId == 1));
                 movimentacaoMes.DefinirSaldo(new Saldo(
-                    totalReceitas: operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Entrada).Sum(o => o.Valor),
-                    totalDespesas: operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Saida).Sum(o => o.Valor)
+                    totalReceitas: operacoes.Where(o => o.OperacaoTransacaoId == 4).Sum(o => o.Valor),
+                    totalDespesas: operacoes.Where(o => o.OperacaoTransacaoId == 1).Sum(o => o.Valor)
                     ));
             }
 

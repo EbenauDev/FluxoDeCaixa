@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ControleDeCaixa.WebAPI.Controllers
 {
-    [Authorize(Roles = "ContaRegistrada")]
+    //[Authorize(Roles = "ContaRegistrada")]
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]

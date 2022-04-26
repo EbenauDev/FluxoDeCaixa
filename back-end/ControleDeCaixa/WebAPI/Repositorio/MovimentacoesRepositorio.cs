@@ -212,16 +212,16 @@ namespace ControleDeCaixa.WebAPI.Repositorio
                         if (movimentacoesMes.Any())
                         {
                             var operacoes = movimentacoesMes.Select(o => new OperacaoMes((int)o.Id,
-                                                   (double)o.Valor,
                                                    (int)o.MesId,
-                                                   (string)o.Descricao,
-                                                   (ETipoOperacaoMes)Char.Parse(o.TipoOperacao)));
+                                                   (int)o.OperacaoTransacaoId,
+                                                   (decimal)o.Valor,
+                                                   (string)o.Descricao));
 
-                            mesDeMovimentacao.DefinirDespesas(operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Saida));
-                            mesDeMovimentacao.DefinirReceitas(operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Entrada));
+                            mesDeMovimentacao.DefinirDespesas(operacoes.Where(o => o.OperacaoTransacaoId == 4));
+                            mesDeMovimentacao.DefinirReceitas(operacoes.Where(o => o.OperacaoTransacaoId == 1));
                             mesDeMovimentacao.DefinirSaldo(new Saldo(
-                                totalReceitas: operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Entrada).Sum(o => o.Valor),
-                                totalDespesas: operacoes.Where(o => o.TipoOperacao == ETipoOperacaoMes.Saida).Sum(o => o.Valor)
+                                totalReceitas: operacoes.Where(o => o.OperacaoTransacaoId == 1).Sum(o => o.Valor),
+                                totalDespesas: operacoes.Where(o => o.OperacaoTransacaoId == 4).Sum(o => o.Valor)
                                 ));
                         }
                         return mesDeMovimentacao;
