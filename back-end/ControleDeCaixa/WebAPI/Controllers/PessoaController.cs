@@ -1,8 +1,8 @@
-﻿using ControleDeCaixa.WebAPI.Aplicacao;
-using ControleDeCaixa.WebAPI.Entidades;
-using ControleDeCaixa.WebAPI.Handler;
-using ControleDeCaixa.WebAPI.Models;
-using ControleDeCaixa.WebAPI.Repositorio;
+﻿using ControleDeCaixa.Aplicacao.Handler;
+using ControleDeCaixa.Dominio.Entidades;
+using ControleDeCaixa.Dominio.Models;
+using ControleDeCaixa.Infraestrutura.Repositorio;
+using ControleDeCaixa.Infraestrutura.Servicos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -35,7 +35,7 @@ namespace ControleDeCaixa.WebAPI.Controllers
         [AllowAnonymous]
         [HttpPost("NovoCadastro")]
         public async Task<IActionResult> AdicionarNovoCadastro([FromServices] ITokenJWT tokenJWT,
-        [FromBody] PessoaInputModel inputModel)
+                                                               [FromBody] PessoaInputModel inputModel)
         {
             if (await _pessoaHandler.NovaContaAsync(inputModel) is var resultado && resultado.EhFalha)
                 return BadRequest(resultado.Falha);

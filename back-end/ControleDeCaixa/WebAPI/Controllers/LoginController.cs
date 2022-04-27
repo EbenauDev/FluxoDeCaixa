@@ -1,11 +1,8 @@
-﻿using ControleDeCaixa.WebAPI.Aplicacao;
-using ControleDeCaixa.WebAPI.Handler;
-using ControleDeCaixa.WebAPI.Models;
+﻿using ControleDeCaixa.Aplicacao.Handler;
+using ControleDeCaixa.Dominio.Models;
+using ControleDeCaixa.Infraestrutura.Servicos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ControleDeCaixa.WebAPI.Controllers

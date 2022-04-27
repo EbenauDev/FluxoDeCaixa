@@ -1,15 +1,13 @@
-using ControleDeCaixa.WebAPI.Helper;
-using ControleDeCaixa.WebAPI.Aplicacao;
-using ControleDeCaixa.WebAPI.Repositorio;
-using ControleDeCaixa.WebAPI.Handler;
+using ControleDeCaixa.Aplicacao;
+using ControleDeCaixa.Infraestrutura.Infra;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace WebAPI
 {
@@ -60,22 +58,8 @@ namespace WebAPI
                     ValidateAudience = false
                 };
             });
-            services.AddSingleton<IPessoaRepositorio, PessoaRepositorio>();
-            services.AddSingleton<IPessoaHandler, PessoaHandler>();
-            services.AddSingleton<ICriptografiaMD5, CriptografiaMD5>();
-            services.AddSingleton<IConnectionHelper, ConnectionHelper>();
-            services.AddSingleton<ITokenJWT, TokenJWT>();
-            services.AddSingleton<ILoginRepositorio, LoginRepositorio>();
-            services.AddSingleton<ISessaoRepositorio, SessaoRepositorio>();
-            services.AddSingleton<ILoginHandler, LoginHandler>();
-            services.AddSingleton<IMovimentacoesRepositorio, MovimentacoesRepositorio>();
-            services.AddSingleton<IOperacoesRepositorio, OperacoesRepositorio>();
-            services.AddSingleton<IMovimentacoesHandler, MovimentacoesHandler>();
-            services.AddSingleton<IMailService, GmailService>();
-            services.AddSingleton<IMetasRepositorio, MetasRepositorio>();
-            services.AddSingleton<IEmailRepositorio, EmailRepositorio>();
-            services.AddSingleton<ISenhasRepositorio, SenhasRepositorio>();
-
+            services.RegistrarServicosAplicacao();
+            services.RegistrarServicosInfra();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

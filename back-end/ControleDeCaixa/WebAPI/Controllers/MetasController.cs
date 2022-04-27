@@ -1,5 +1,5 @@
-﻿using ControleDeCaixa.WebAPI.Models;
-using ControleDeCaixa.WebAPI.Repositorio;
+﻿using ControleDeCaixa.Dominio.Models;
+using ControleDeCaixa.Infraestrutura.Repositorio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
