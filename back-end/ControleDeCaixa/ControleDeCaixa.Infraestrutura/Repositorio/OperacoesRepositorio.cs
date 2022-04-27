@@ -1,5 +1,6 @@
 ﻿using ControleDeCaixa.Compartilhado.Generics;
 using ControleDeCaixa.Dominio.Entidades;
+using ControleDeCaixa.Dominio.Models;
 using ControleDeCaixa.Dominio.Views;
 using ControleDeCaixa.Infraestrutura.Helper;
 using Dapper;
@@ -17,6 +18,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
         Task<Resultado<OperacaoMes, Falha>> NovaOperacaoNoMesAsync(OperacaoMes operacaoMes);
         Task<Resultado<OperacaoMes, Falha>> AtualizarOperacaoNoMesAsync(int operacaoMesId, OperacaoMes operacaoMes);
         Task<Resultado<IEnumerable<OperacaoTransacaoViewModel>, Falha>> RecuperarOperacoesTransacaoAsync();
+        Task<Resultado<OperacaoTransacaoViewModel, Falha>> NovaOperacoesTransacaoAsync(OperacaoTransacaoInputModel model);
     }
 
     public class OperacoesRepositorio : IOperacoesRepositorio
@@ -128,6 +130,43 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
             }
         }
 
+        public async Task<Resultado<OperacaoTransacaoViewModel, Falha>> NovaOperacoesTransacaoAsync(OperacaoTransacaoInputModel model)
+        {
+            const string sql = @"INSERT INTO OperacaoTransacao(Nome, Descricao, Tag)
+                                    VALUES(@Nome, @Descricao, @Tag);
 
+                                    SELECT SCOPE_IDENTITY() AS Id;";
+
+            using (var conexao = new SqlConnection(_connectionString))
+            {
+                try
+                {
+                    var id = await conexao.QueryFirstOrDefaultAsync<int>(sql, new
+                    {
+                        model.Nome,
+                        model.Descricao,
+                        model.Tag
+                    });
+                    if (id <= 0)
+                        return Falha.Nova($"Não foi possível salvar a operação de transação {model.Nome}");
+                    return new OperacaoTransacaoViewModel
+                    {
+                        Id = id,
+                        Nome = model.Nome,
+                        Descricao = model.Descricao,
+                        Tag = model.Tag
+                    };
+                }
+                catch (Exception ex)
+                {
+                    return Falha.NovaComException("Falha ao recuperar as salvar a operação de transação", ex);
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
+                }
+
+            }
+        }
     }
 }

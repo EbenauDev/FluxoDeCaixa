@@ -1,4 +1,5 @@
-﻿using ControleDeCaixa.Infraestrutura.Repositorio;
+﻿using ControleDeCaixa.Dominio.Models;
+using ControleDeCaixa.Infraestrutura.Repositorio;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -22,5 +23,16 @@ namespace ControleDeCaixa.WebAPI.Controllers
                 return BadRequest(resultado.Falha);
             return Ok(resultado.Sucesso);
         }
+
+
+        [HttpPost("OperacoesTransacao")]
+        //OperacaoTransacaoInputModel
+        public async Task<IActionResult> RecuperarOperacoesTransacaoAsync([FromBody] OperacaoTransacaoInputModel inputModel)
+        {
+            if (await _operacoesRepositorio.NovaOperacoesTransacaoAsync(inputModel) is var resultado && resultado.EhFalha)
+                return BadRequest(resultado.Falha);
+            return Ok(resultado.Sucesso);
+        }
+
     }
 }
