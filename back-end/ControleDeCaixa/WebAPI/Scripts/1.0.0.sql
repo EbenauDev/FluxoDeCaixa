@@ -38,7 +38,7 @@ ALTER TABLE MovimentacoesAnuais
 ADD CONSTRAINT FK_MovimentacoesAnuais_IdPessoa FOREIGN KEY (IdPessoa)
     REFERENCES Pessoa(id);
 
-	CREATE TABLE MesDeMovimentacoes(
+CREATE TABLE MesDeMovimentacoes(
 	Id INT IDENTITY NOT NULL PRIMARY KEY,
 	IdAnoMovimentacoes INT NOT NULL,
 	MesDeReferencia DateTime NOT NULL,

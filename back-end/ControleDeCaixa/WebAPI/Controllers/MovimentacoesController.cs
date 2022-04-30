@@ -3,6 +3,7 @@ using ControleDeCaixa.Dominio.Entidades;
 using ControleDeCaixa.Dominio.Models;
 using ControleDeCaixa.Infraestrutura.Repositorio;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace ControleDeCaixa.WebAPI.Controllers
@@ -65,28 +66,30 @@ namespace ControleDeCaixa.WebAPI.Controllers
             return Ok(resultado.Sucesso);
         }
 
+        [Obsolete]
         [HttpGet("Pessoa/{pessoaId}/ListarAnosDeMovimentacoes")]
         public async Task<IActionResult> ListarAnosDeMovimentacoesParaAPessoa([FromRoute] int pessoaId)
         {
-            if (await _movimentacoesRepositorio.RecuperarAnosDeMovimentacoesAsync(pessoaId) is var resultado && resultado.EhFalha)
-                return BadRequest(resultado.Falha);
-            return Ok(resultado.Sucesso);
+            //if (await _movimentacoesRepositorio.RecuperarAnosDeMovimentacoesAsync(pessoaId) is var resultado && resultado.EhFalha)
+            //    return BadRequest(resultado.Falha);
+            return Ok();
         }
 
         [HttpGet("Pessoa/{pessoaId}/Ano/{anoId}/MesDeMovimentacoes")]
         public async Task<IActionResult> ListarMesesDeMovimentacoes([FromRoute] int pessoaId, int anoId)
         {
-            if (await _movimentacoesRepositorio.RecuperarMesesDeMovimentacaoDoAnoAsync(pessoaId, anoId) is var resultado && resultado.EhFalha)
+            if (await _movimentacoesRepositorio.RecuperarMesesDeMovimentacaoAsync(pessoaId, anoId) is var resultado && resultado.EhFalha)
                 return BadRequest(resultado.Falha);
             return Ok(resultado.Sucesso);
         }
 
+        [Obsolete]
         [HttpGet("Pessoa/{pessoaId}/Ano/{anoId}/Mes/{mesId}/Movimentacoes")]
         public async Task<IActionResult> ListarMovimentacoesDoMesAsync([FromRoute] int pessoaId, int anoId, int mesId)
         {
-            if (await _movimentacoesRepositorio.ListarMovimentacoesDoMesAsync(anoId, mesId) is var resultado && resultado.EhFalha)
-                return BadRequest(resultado.Falha);
-            return Ok(resultado.Sucesso);
+            //if (await _movimentacoesRepositorio.ListarMovimentacoesDoMesAsync(anoId, mesId) is var resultado && resultado.EhFalha)
+            //    return BadRequest(resultado.Falha);
+            return Ok();
         }
 
         [HttpDelete("Mes/{mesId}/Movimentacao/{operacaoMesId}")]

@@ -1,5 +1,6 @@
 ﻿using ControleDeCaixa.Compartilhado.Generics;
 using ControleDeCaixa.Dominio.Entidades;
+using ControleDeCaixa.Dominio.Views;
 using ControleDeCaixa.Infraestrutura.Helper;
 using ControleDeCaixa.Infraestrutura.Repositorio.DTO;
 using Dapper;
@@ -16,9 +17,9 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
         Task<Resultado<bool, Falha>> AnoDeMovimentacoesJahExiste(int ano, int pessoaId);
         Task<Resultado<MovimentacaoAnual, Falha>> NovoAnoDeMovimentacaoAsync(MovimentacaoAnual movimentacaoAnual);
         Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacoesAsync(MovimentacaoMes mesDeMovimentacoes);
-        Task<Resultado<IEnumerable<MesDeMovimentacaoDTO>, Falha>> RecuperarMesesDeMovimentacaoDoAnoAsync(int pessoaId, int anoId);
-        Task<Resultado<IEnumerable<AnoDeMovimentacaoDTO>, Falha>> RecuperarAnosDeMovimentacoesAsync(int pessoaId);
+        Task<Resultado<IEnumerable<MovimentacaoMesViewModel>, Falha>> RecuperarMesesDeMovimentacaoAsync(int pessoaId, int anoId);
         Task<Resultado<MovimentacaoMes, Falha>> ListarMovimentacoesDoMesAsync(int anoId, int mesId);
+        //Task<Resultado<IEnumerable<AnoDeMovimentacaoDTO>, Falha>> RecuperarAnosDeMovimentacoesAsync(int pessoaId);
         Task<Resultado<bool, Falha>> ExcluirOperacaoDoMesAsync(int mesId, int operacaoMesId);
         Task<Resultado<HistoricoAnual, Falha>> HistoricoMovimentacoesAsync(int pessoaId, int anoId);
         Task<Resultado<bool, Falha>> MesDeMovimentacaoJahExisteAsync(int anoId, int mes);
@@ -92,8 +93,8 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
 
         public async Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacoesAsync(MovimentacaoMes mesDeMovimentacoes)
         {
-            const string sql = @"INSERT INTO MesDeMovimentacoes(IdAnoMovimentacoes, MesDeReferencia, Descricao, DataDeCriacao)
-                                 VALUES(@IdAnoMovimentacoes, @MesDeReferencia, @Descricao, @DataDeCriacao);
+            const string sql = @"INSERT INTO MesDeMovimentacoes(IdAnoMovimentacoes, Mes, Descricao, DataDeCriacao)
+                                 VALUES(@IdAnoMovimentacoes, @Mes, @Descricao, @DataDeCriacao);
 
                                  SELECT SCOPE_IDENTITY() AS Id;";
 
@@ -105,7 +106,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
                     var resultadoIdMovimentacaoAnual = await conexao.QueryFirstOrDefaultAsync<int>(sql, new
                     {
                         mesDeMovimentacoes.IdAnoMovimentacoes,
-                        mesDeMovimentacoes.MesDeReferencia,
+                        mesDeMovimentacoes.Mes,
                         mesDeMovimentacoes.Descricao,
                         DataDeCriacao = DateTime.Now
                     });
@@ -125,10 +126,10 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
             }
         }
 
-        public async Task<Resultado<IEnumerable<MesDeMovimentacaoDTO>, Falha>> RecuperarMesesDeMovimentacaoDoAnoAsync(int pessoaId, int anoId)
+        public async Task<Resultado<IEnumerable<MovimentacaoMesViewModel>, Falha>> RecuperarMesesDeMovimentacaoAsync(int pessoaId, int anoId)
         {
             const string sql = @"SELECT MesDeMovimentacoes.Id,
-	                                    MesDeMovimentacoes.MesDeReferencia,
+	                                    MesDeMovimentacoes.Mes,
 	                                    MesDeMovimentacoes.DataDeCriacao
 	                                    FROM MovimentacoesAnuais (NOLOCK) 
                                  INNER JOIN MesDeMovimentacoes (NOLOCK) 
@@ -139,7 +140,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
                 try
                 {
                     await conexao.OpenAsync();
-                    return (await conexao.QueryAsync<MesDeMovimentacaoDTO>(sql, new { pessoaId, anoId })).ToList();
+                    return (await conexao.QueryAsync<MovimentacaoMesViewModel>(sql, new { pessoaId, anoId })).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -178,11 +179,12 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
             }
         }
 
+        //TODO:: Refatorar
         public async Task<Resultado<MovimentacaoMes, Falha>> ListarMovimentacoesDoMesAsync(int anoId, int mesId)
         {
             const string sql = @"SELECT Id,
                                         IdAnoMovimentacoes,
-	                                    MesDeReferencia, 
+	                                    Mes, 
 	                                    Descricao
                                  FROM MesDeMovimentacoes (NOLOCK)
                                  WHERE IdAnoMovimentacoes = @AnoId AND Id = @MesId;
@@ -191,7 +193,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
 	                                    Valor, 
 	                                    MesId, 
 	                                    OperacoesDoMes.Descricao, 
-	                                    TipoOperacao
+	                                    OperacaoTransacaoId
                                  FROM OperacoesDoMes (NOLOCK)
                                  INNER JOIN MesDeMovimentacoes ON MesDeMovimentacoes.Id = OperacoesDoMes.MesId 
                                             AND MesDeMovimentacoes.IdAnoMovimentacoes = @AnoId AND OperacoesDoMes.MesId = @MesId";
@@ -277,7 +279,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
 
                                  SELECT Id,
                                         IdAnoMovimentacoes,
-	                                    MesDeReferencia, 
+	                                    Mes, 
 	                                    Descricao
                                  FROM MesDeMovimentacoes (NOLOCK)
                                  WHERE IdAnoMovimentacoes = @AnoId;
@@ -299,7 +301,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
                     {
                         var ano = await queryMultipla.ReadFirstOrDefaultAsync<AnoDeMovimentacaoDTO>();
                         var meses = (await queryMultipla.ReadAsync<dynamic>())
-                                        .Select(m => new MovimentacaoMes((int)m.Id, (int)m.IdAnoMovimentacoes, m.MesDeReferencia, m.Descricao));
+                                        .Select(m => new MovimentacaoMes((int)m.Id, (int)m.IdAnoMovimentacoes, m.Mes, m.Descricao));
 
                         var movimentacoesMes = (await queryMultipla.ReadAsync<dynamic>())
                                         .Select(o => new OperacaoMes((int)o.Id,
@@ -312,7 +314,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
                                                   ano.Ano,
                                                   ano.DataDeCriacao,
                                                   movimentacoesMes: meses.Select(m => new HistoricoMes(m.Id,
-                                                              m.MesDeReferencia,
+                                                              m.Mes,
                                                               m.Descricao,
                                                               movimentacoesMes.Where(movimentacao => movimentacao.MesId == m.Id)
                                                   )));

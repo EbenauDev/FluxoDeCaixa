@@ -23,11 +23,10 @@ namespace ControleDeCaixa.Dominio.Entidades
     [Obsolete("Método obsoleto devido a mexida na classe OperacaoMes")]
     public class HistoricoMes
     {
-        public HistoricoMes(int id, DateTime mesDeReferencia, string descricao, IEnumerable<OperacaoMes> movimentacoes)
+        public HistoricoMes(int id, string mes, string descricao, IEnumerable<OperacaoMes> movimentacoes)
         {
             Id = id;
-            MesDeReferencia = mesDeReferencia;
-            Mes = mesDeReferencia.ToString("MMMM");
+            Mes = mes;
             Descricao = descricao;
             Movimentacoes = movimentacoes;
             SaldoMovimentacoes = new Saldo(

@@ -10,7 +10,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio.DTO
         //MovimentacaoMes
         public int Id { get; set; }
         public int IdAnoMovimentacoes { get; set; }
-        public DateTime MesDeReferencia { get; set; }
+        public string Mes { get; set; }
         public string Descricao { get; set; }
         //OperacaoMes
         public int OperacoesDoMesId { get; set; }
@@ -26,7 +26,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio.DTO
     {
         public static MovimentacaoMes ConverterParaEntidade(this IEnumerable<MovimentacaoMesDTO> movimentacaoMesDTOs)
         {
-            var movimentacaoMes = movimentacaoMesDTOs.Select(m => new MovimentacaoMes(m.Id, m.IdAnoMovimentacoes, m.MesDeReferencia, m.Descricao)).FirstOrDefault();
+            var movimentacaoMes = movimentacaoMesDTOs.Select(m => new MovimentacaoMes(m.Id, m.IdAnoMovimentacoes, m.Mes, m.Descricao)).FirstOrDefault();
             var operacoes = movimentacaoMesDTOs.Select(m => new OperacaoMes(m.OperacoesDoMesId, m.MesId, m.OperacaoTransacaoId, m.Valor,  m.OperacoesDoMesDescricao));
             if (operacoes.Any())
             {

@@ -6,25 +6,25 @@ namespace ControleDeCaixa.Dominio.Entidades
     //TODO: Refatorar o método que popula essa classe
     public class MovimentacaoMes
     {
-        public MovimentacaoMes(int idAnoMovimentacoes, DateTime mesDeReferencia, string descricao)
+        public MovimentacaoMes(int idAnoMovimentacoes, string mes, string descricao)
         {
             Id = 0;
             IdAnoMovimentacoes = idAnoMovimentacoes;
-            MesDeReferencia = mesDeReferencia;
+            Mes = mes;
             Descricao = descricao;
         }
 
-        public MovimentacaoMes(int id, int idAnoMovimentacoes, DateTime mesDeReferencia, string descricao)
+        public MovimentacaoMes(int id, int idAnoMovimentacoes, string mes, string descricao)
         {
             Id = id;
             IdAnoMovimentacoes = idAnoMovimentacoes;
-            MesDeReferencia = mesDeReferencia;
+            Mes = mes;
             Descricao = descricao;
         }
-
+         
         public int Id { get; set; }
         public int IdAnoMovimentacoes { get; set; }
-        public DateTime MesDeReferencia { get; set; }
+        public string Mes { get; set; }
         public string Descricao { get; set; }
 
         public IEnumerable<OperacaoMes> Receitas { get; set; } = new List<OperacaoMes>();

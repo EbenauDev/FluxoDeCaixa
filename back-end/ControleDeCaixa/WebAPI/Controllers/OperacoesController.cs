@@ -26,7 +26,6 @@ namespace ControleDeCaixa.WebAPI.Controllers
 
 
         [HttpPost("OperacoesTransacao")]
-        //OperacaoTransacaoInputModel
         public async Task<IActionResult> RecuperarOperacoesTransacaoAsync([FromBody] OperacaoTransacaoInputModel inputModel)
         {
             if (await _operacoesRepositorio.NovaOperacoesTransacaoAsync(inputModel) is var resultado && resultado.EhFalha)
