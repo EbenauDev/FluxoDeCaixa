@@ -23,7 +23,12 @@ namespace ControleDeCaixa.Testes.Repositorio
         {
             var resultado = await _movimentacoesRepositorio.ListarMovimentacoesDoMesAsync(anoId: 1, mesId: 1);
             Assert.True(resultado.EhSucesso);
+        }
+
+        [Fact]
+        public async Task Criar_Ano_De_Movimentacoes() { 
 
         }
+
     }
 }

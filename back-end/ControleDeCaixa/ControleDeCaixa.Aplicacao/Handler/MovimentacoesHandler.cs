@@ -43,14 +43,14 @@ namespace ControleDeCaixa.Aplicacao.Handler
             return resultado.Sucesso;
         }
 
+        //TODO Refatorar
         public async Task<Resultado<MovimentacaoMes, Falha>> NovoMesDeMovimentacaoAsync(MesDeMovimentacoes movimentacao, int pessoaId)
         {
             var movimentacaoMes = new MovimentacaoMes(
                     movimentacao.IdAnoMovimentacoes,
-                    movimentacao.MesDeReferencia,
+                    movimentacao.Mes,
                     movimentacao.Descricao);
-            if (await _movimentacoesRepositorio.MesDeMovimentacaoJahExisteAsync(movimentacao.IdAnoMovimentacoes,
-                                                                           movimentacao.MesDeReferencia.Month) is var resultadoValidacao && resultadoValidacao.Sucesso)
+            if (await _movimentacoesRepositorio.MesDeMovimentacaoJahExisteAsync(movimentacao.IdAnoMovimentacoes, mes: 1) is var resultadoValidacao && resultadoValidacao.Sucesso)
                 return Falha.Nova("Já existe um mes de movimentações para o ano informado");
             if (await _movimentacoesRepositorio.NovoMesDeMovimentacoesAsync(movimentacaoMes) is var resultado && resultado.EhFalha)
                 return resultado.Falha;

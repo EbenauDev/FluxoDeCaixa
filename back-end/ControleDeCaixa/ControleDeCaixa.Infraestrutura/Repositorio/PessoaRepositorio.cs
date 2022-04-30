@@ -85,6 +85,7 @@ namespace ControleDeCaixa.Infraestrutura.Repositorio
                 }
             }
         }
+
         public async Task<Resultado<Pessoa, Falha>> RecuperarPessoaPorIdAsync(int pessoaId)
         {
             const string sql = @"SELECT Id, 
