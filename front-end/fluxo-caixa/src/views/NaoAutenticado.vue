@@ -4,8 +4,8 @@
       <h1>Controle suas finanças de um jeito mais simples</h1>
       <p>Crie sua conta agora mesmo e tenha acesso a recursos incríveis</p>
     </div>
-    <div class="formulario">
-      <form name="login" class="form" v-if="!criarConta">
+    <div class="formulario autenticao">
+      <form v-if="!criarConta" name="login" class="form">
         <div class="tooltip">
           <p class="m-0">Login</p>
         </div>
@@ -264,11 +264,20 @@ export default {
 <style lang="scss">
 .tela-principal {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.4fr 1fr;
   align-content: center;
   height: 100vh;
-  max-width: 960px;
+  max-width: 1024px;
   margin: 0 auto;
+  .autenticao {
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 25px 30px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 360px;
+  }
   .titulo {
     font-family: "poppins";
     h1 {
