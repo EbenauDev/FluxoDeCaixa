@@ -10,9 +10,26 @@ namespace ControleDeCaixa.WebAPI.Controllers
     [Route("api/[controller]")]
     public class CaixaController : ControllerBase
     {
-        public async Task<IActionResult> RecuperarCaixas()
+        public async Task<IActionResult> CadastrarCaixaAsync()
         {
-            return Ok(new { Mensagem = "Olá mundo" });
+            return Ok();
+        }
+
+        public async Task<IActionResult> AtualizarCaixaAsync()
+        {
+            return Ok();
+        }
+
+        public async Task<IActionResult> AbrirCaixa()
+        {
+
+            return Ok();
+        }
+
+        public async Task<IActionResult> FecharCaixa()
+        {
+
+            return Ok();
         }
     }
 }
