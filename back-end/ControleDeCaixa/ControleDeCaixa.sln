@@ -5,11 +5,15 @@ VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.WebAPI", "ControleDeCaixa.WebAPI\ControleDeCaixa.WebAPI.csproj", "{D8D81BFC-F492-4379-8F92-079007C194E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDeCaixa.Dominio", "ControleDeCaixa.Dominio\ControleDeCaixa.Dominio.csproj", "{5C9A4170-AB48-4A89-848F-E3F802956128}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Dominio", "ControleDeCaixa.Dominio\ControleDeCaixa.Dominio.csproj", "{5C9A4170-AB48-4A89-848F-E3F802956128}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDeCaixa.Core", "ControleDeCaixa.Core\ControleDeCaixa.Core.csproj", "{D3876152-34AE-4399-AAF7-0FAA44F4E198}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Core", "ControleDeCaixa.Core\ControleDeCaixa.Core.csproj", "{D3876152-34AE-4399-AAF7-0FAA44F4E198}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integracoes", "Integracoes", "{00CDDD6B-7900-441E-83EB-00C7887AD909}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDeCaixa.Infra", "ControleDeCaixa.Infra\ControleDeCaixa.Infra.csproj", "{F4266D21-5B5F-431C-A9E3-C13AD1C5CDEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDeCaixa.Aplicacao", "ControleDeCaixa.Aplicacao\ControleDeCaixa.Aplicacao.csproj", "{CEF02D0A-0274-44C7-BA69-40E05C0A060C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,14 @@ Global
 		{D3876152-34AE-4399-AAF7-0FAA44F4E198}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3876152-34AE-4399-AAF7-0FAA44F4E198}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3876152-34AE-4399-AAF7-0FAA44F4E198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4266D21-5B5F-431C-A9E3-C13AD1C5CDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4266D21-5B5F-431C-A9E3-C13AD1C5CDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4266D21-5B5F-431C-A9E3-C13AD1C5CDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4266D21-5B5F-431C-A9E3-C13AD1C5CDEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEF02D0A-0274-44C7-BA69-40E05C0A060C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEF02D0A-0274-44C7-BA69-40E05C0A060C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEF02D0A-0274-44C7-BA69-40E05C0A060C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEF02D0A-0274-44C7-BA69-40E05C0A060C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

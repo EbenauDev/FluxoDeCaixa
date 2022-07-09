@@ -20,6 +20,10 @@ namespace ControleDeCaixa.Dominio
         public ETipoCliente TipoCliente { get; private set; }
         public Credenciais Credenciais { get; private set; }
 
+        public static PessoaFisica Nova(string nome, DateTime dataNascimento, Credenciais credenciais)
+            => new PessoaFisica(Guid.NewGuid(), nome, dataNascimento)
+                            .AtualizarCredenciais(credenciais);
+
         public PessoaFisica AtualizarFoto(string fotoUrl)
         {
             FotoUrl = fotoUrl;
