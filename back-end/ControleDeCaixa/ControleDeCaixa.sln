@@ -10,10 +10,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Core", "ControleDeCaixa.Core\ControleDeCaixa.Core.csproj", "{D3876152-34AE-4399-AAF7-0FAA44F4E198}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integracoes", "Integracoes", "{00CDDD6B-7900-441E-83EB-00C7887AD909}"
+	ProjectSection(SolutionItems) = preProject
+		tabela-pessoas.sql = tabela-pessoas.sql
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDeCaixa.Infra", "ControleDeCaixa.Infra\ControleDeCaixa.Infra.csproj", "{F4266D21-5B5F-431C-A9E3-C13AD1C5CDEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Infra", "ControleDeCaixa.Infra\ControleDeCaixa.Infra.csproj", "{F4266D21-5B5F-431C-A9E3-C13AD1C5CDEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDeCaixa.Aplicacao", "ControleDeCaixa.Aplicacao\ControleDeCaixa.Aplicacao.csproj", "{CEF02D0A-0274-44C7-BA69-40E05C0A060C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Aplicacao", "ControleDeCaixa.Aplicacao\ControleDeCaixa.Aplicacao.csproj", "{CEF02D0A-0274-44C7-BA69-40E05C0A060C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
