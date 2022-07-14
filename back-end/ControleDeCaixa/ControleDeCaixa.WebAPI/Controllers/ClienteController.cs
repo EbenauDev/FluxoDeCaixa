@@ -12,6 +12,8 @@ namespace ControleDeCaixa.WebAPI.Controllers
     [Route("api/[controller]")]
     public class ClienteController : ControllerBase
     {
+
+        [HttpPost("cadastro")]
         public async Task<IActionResult> CadastrarClienteAsync(
             [FromServices] ISalvarRegistroClienteCommand command,
             [FromBody] NovoClienteInputModel inputModel)
@@ -20,6 +22,7 @@ namespace ControleDeCaixa.WebAPI.Controllers
             return Ok();
         }
 
+        [HttpPost("login")]
         public async Task<IActionResult> LoginClienteAsync()
         {
 

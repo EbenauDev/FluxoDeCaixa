@@ -18,6 +18,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Infra", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Aplicacao", "ControleDeCaixa.Aplicacao\ControleDeCaixa.Aplicacao.csproj", "{CEF02D0A-0274-44C7-BA69-40E05C0A060C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testes", "Testes", "{95867057-54B9-42A8-885A-FE3C1A26DE03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDeCaixa.Testes", "ControleDeCaixa.Testes\ControleDeCaixa.Testes.csproj", "{5B633A3A-E9E6-40E1-B88C-45AA4C019E93}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,9 +48,16 @@ Global
 		{CEF02D0A-0274-44C7-BA69-40E05C0A060C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEF02D0A-0274-44C7-BA69-40E05C0A060C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEF02D0A-0274-44C7-BA69-40E05C0A060C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B633A3A-E9E6-40E1-B88C-45AA4C019E93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B633A3A-E9E6-40E1-B88C-45AA4C019E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B633A3A-E9E6-40E1-B88C-45AA4C019E93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B633A3A-E9E6-40E1-B88C-45AA4C019E93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5B633A3A-E9E6-40E1-B88C-45AA4C019E93} = {95867057-54B9-42A8-885A-FE3C1A26DE03}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4E46FCBF-96C3-4D16-ADEF-54F37C674B57}
