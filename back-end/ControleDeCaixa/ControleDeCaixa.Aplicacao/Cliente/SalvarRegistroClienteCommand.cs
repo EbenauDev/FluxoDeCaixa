@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace ControleDeCaixa.Aplicacao.Cliente
 {
-    public sealed class SalvarRegistroClienteCommand : ICommand<NovoClienteInputModel>
+
+    public interface ISalvarRegistroClienteCommand
     {
-        public SalvarRegistroClienteCommand(NovoClienteInputModel payload)
-        {
-            Payload = payload;
-        }
 
-        public NovoClienteInputModel Payload { get; }
+    }
 
-        public async Task ExecutarAsync()
+    public sealed class SalvarRegistroClienteCommand : ISalvarRegistroClienteCommand
+    {
+
+        public async Task ExecutarAsync(NovoClienteInputModel inputModel)
         {
             //Validar usuário
 
             //Criar entidade
-            var nova = PessoaFisica.Nova(Payload.Nome, Payload.Nascimento, new Credenciais(Payload.Usuario, Payload.Senha));
+            var nova = PessoaFisica.Nova(inputModel.Nome, inputModel.Nascimento, new Credenciais(inputModel.Usuario, inputModel.Senha));
             return;
             //Persistir no banco
         }

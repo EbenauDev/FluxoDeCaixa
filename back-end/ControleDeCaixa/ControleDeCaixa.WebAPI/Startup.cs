@@ -1,4 +1,5 @@
 using ControleDeCaixa.Core.Utils;
+using ControleDeCaixa.Infra.Cliente;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,7 @@ namespace ControleDeCaixa.WebAPI
             services.AddControllers();
             services.AddSingleton<IConnectionStringHelper>(new ConnectionStringHelper(Configuration));
 
+            services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

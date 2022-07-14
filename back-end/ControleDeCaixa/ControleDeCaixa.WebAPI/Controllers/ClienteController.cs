@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ControleDeCaixa.Aplicacao.Cliente;
+using ControleDeCaixa.Core.Compartilhado;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,8 @@ namespace ControleDeCaixa.WebAPI.Controllers
     [Route("api/[controller]")]
     public class ClienteController : ControllerBase
     {
-        public async Task<IActionResult> CadastrarClienteAsync()
+        public async Task<IActionResult> CadastrarClienteAsync(
+            [FromBody] NovoClienteInputModel inputModel)
         {
 
             return Ok();

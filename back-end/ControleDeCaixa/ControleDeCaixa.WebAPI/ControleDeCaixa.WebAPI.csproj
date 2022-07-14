@@ -10,7 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ControleDeCaixa.Aplicacao\ControleDeCaixa.Aplicacao.csproj" />
     <ProjectReference Include="..\ControleDeCaixa.Core\ControleDeCaixa.Core.csproj" />
+    <ProjectReference Include="..\ControleDeCaixa.Infra\ControleDeCaixa.Infra.csproj" />
   </ItemGroup>
 
 </Project>
