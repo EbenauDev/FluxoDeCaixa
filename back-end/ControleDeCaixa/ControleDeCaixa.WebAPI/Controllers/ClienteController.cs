@@ -13,9 +13,10 @@ namespace ControleDeCaixa.WebAPI.Controllers
     public class ClienteController : ControllerBase
     {
         public async Task<IActionResult> CadastrarClienteAsync(
+            [FromServices] ISalvarRegistroClienteCommand command,
             [FromBody] NovoClienteInputModel inputModel)
         {
-
+            await command.ExecutarAsync(inputModel);
             return Ok();
         }
 
