@@ -36,6 +36,6 @@ namespace ControleDeCaixa.Core.Compartilhado
             => new Falha().AdicionarMensagens(mensagem);
 
         public bool PossuiMensagens()
-               => Mensagens.Any();
+            => Mensagens.Any();
     }
 }

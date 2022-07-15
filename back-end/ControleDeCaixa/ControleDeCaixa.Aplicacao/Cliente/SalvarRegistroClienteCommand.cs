@@ -11,7 +11,7 @@ namespace ControleDeCaixa.Aplicacao.Cliente
 
     public interface ISalvarRegistroClienteCommand
     {
-        Task<Resultado<bool, Falha>> ExecutarAsync(NovoClienteInputModel inputModel);
+        Task<Resultado<PessoaFisica, Falha>> ExecutarAsync(NovoClienteInputModel inputModel);
     }
 
     public sealed class SalvarRegistroClienteCommand : ISalvarRegistroClienteCommand
@@ -22,7 +22,7 @@ namespace ControleDeCaixa.Aplicacao.Cliente
             _clienteRepositorio = clienteRepositorio;
         }
 
-        public async Task<Resultado<bool, Falha>> ExecutarAsync(NovoClienteInputModel inputModel)
+        public async Task<Resultado<PessoaFisica, Falha>> ExecutarAsync(NovoClienteInputModel inputModel)
         {
             var resultadoValidacao = new NovoClienteInputModelValidator().Validate(inputModel);
             if (resultadoValidacao.IsValid is false)
@@ -33,8 +33,7 @@ namespace ControleDeCaixa.Aplicacao.Cliente
                                            inputModel.Nascimento,
                                            new Credenciais(inputModel.Usuario, inputModel.Senha));
             //Persistir no banco
-            await _clienteRepositorio.SalvarRegistroCliente(pessoa);
-            return true;
+            return await _clienteRepositorio.SalvarRegistroClienteAsync(pessoa);
         }
     }
 }

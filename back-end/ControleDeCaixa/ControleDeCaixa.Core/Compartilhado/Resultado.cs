@@ -11,13 +11,12 @@
         private Resultado(TFalha falha)
         {
             Falha = falha;
-            EhFalha = true;
+            EhSucesso = false;
         }
 
         public TSucesso Sucesso { get; private set; }
         public bool EhSucesso { get; private set; }
         public TFalha Falha { get; private set; }
-        public bool EhFalha { get; private set; }
 
         public static implicit operator Resultado<TSucesso, TFalha>(TSucesso sucesso)
                 => new Resultado<TSucesso, TFalha>(sucesso);

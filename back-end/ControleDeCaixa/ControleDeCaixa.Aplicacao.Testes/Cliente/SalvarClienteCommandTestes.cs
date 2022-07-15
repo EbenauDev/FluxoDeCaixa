@@ -28,7 +28,7 @@ namespace ControleDeCaixa.Aplicacao.Testes.Cliente
                 Senha = "12345"
             });
 
-            Assert.False(resultado);
+            Assert.False(resultado.EhSucesso);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace ControleDeCaixa.Aplicacao.Testes.Cliente
                 Senha = "123456"
             });
 
-            Assert.True(resultado);
+            Assert.True(resultado.EhSucesso);
         }
     }
 }

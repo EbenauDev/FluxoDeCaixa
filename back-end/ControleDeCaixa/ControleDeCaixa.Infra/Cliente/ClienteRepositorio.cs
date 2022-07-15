@@ -1,4 +1,5 @@
-﻿using ControleDeCaixa.Core.Utils;
+﻿using ControleDeCaixa.Core.Compartilhado;
+using ControleDeCaixa.Core.Utils;
 using ControleDeCaixa.Dominio;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,11 @@ namespace ControleDeCaixa.Infra.Cliente
             _stringConexao = _helper.GetConnection();
         }
 
-        public Task SalvarRegistroCliente(PessoaFisica pessoaFisica)
+        public async Task<Resultado<PessoaFisica, Falha>> SalvarRegistroClienteAsync(PessoaFisica pessoaFisica)
         {
-            throw new NotImplementedException();
+
+
+            return Falha.Nova("Método de salvar cliente não foi implementado");
         }
     }
 }
