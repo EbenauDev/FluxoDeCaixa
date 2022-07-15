@@ -2,7 +2,6 @@
 {
     public sealed class Resultado<TSucesso, TFalha>
     {
-
         private Resultado(TSucesso sucesso)
         {
             Sucesso = sucesso;

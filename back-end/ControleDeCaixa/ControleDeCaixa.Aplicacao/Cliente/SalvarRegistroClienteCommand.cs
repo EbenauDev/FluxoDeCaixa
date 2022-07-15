@@ -11,7 +11,7 @@ namespace ControleDeCaixa.Aplicacao.Cliente
 
     public interface ISalvarRegistroClienteCommand
     {
-        Task<bool> ExecutarAsync(NovoClienteInputModel inputModel);
+        Task<Resultado<bool, Falha>> ExecutarAsync(NovoClienteInputModel inputModel);
     }
 
     public sealed class SalvarRegistroClienteCommand : ISalvarRegistroClienteCommand
@@ -22,11 +22,11 @@ namespace ControleDeCaixa.Aplicacao.Cliente
             _clienteRepositorio = clienteRepositorio;
         }
 
-        public async Task<bool> ExecutarAsync(NovoClienteInputModel inputModel)
+        public async Task<Resultado<bool, Falha>> ExecutarAsync(NovoClienteInputModel inputModel)
         {
             var resultadoValidacao = new NovoClienteInputModelValidator().Validate(inputModel);
             if (resultadoValidacao.IsValid is false)
-                return false;
+                return Falha.Nova(resultadoValidacao.Errors.ConvertAll(e => $"{e.ErrorCode} - {e.ErrorMessage}"));
 
             //Criar entidade
             var pessoa = PessoaFisica.Nova(inputModel.Nome,
