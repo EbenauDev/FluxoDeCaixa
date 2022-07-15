@@ -11,7 +11,7 @@ namespace ControleDeCaixa.Aplicacao.Cliente
 
     public interface ISalvarRegistroClienteCommand
     {
-        Task ExecutarAsync(NovoClienteInputModel inputModel);
+        Task<bool> ExecutarAsync(NovoClienteInputModel inputModel);
     }
 
     public sealed class SalvarRegistroClienteCommand : ISalvarRegistroClienteCommand
@@ -22,11 +22,11 @@ namespace ControleDeCaixa.Aplicacao.Cliente
             _clienteRepositorio = clienteRepositorio;
         }
 
-        public async Task ExecutarAsync(NovoClienteInputModel inputModel)
+        public async Task<bool> ExecutarAsync(NovoClienteInputModel inputModel)
         {
             var resultadoValidacao = new NovoClienteInputModelValidator().Validate(inputModel);
             if (resultadoValidacao.IsValid is false)
-                return;
+                return false;
 
             //Criar entidade
             var pessoa = PessoaFisica.Nova(inputModel.Nome,
@@ -34,6 +34,7 @@ namespace ControleDeCaixa.Aplicacao.Cliente
                                            new Credenciais(inputModel.Usuario, inputModel.Senha));
             //Persistir no banco
             await _clienteRepositorio.SalvarRegistroCliente(pessoa);
+            return true;
         }
     }
 }
