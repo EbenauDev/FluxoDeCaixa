@@ -33,11 +33,16 @@ namespace ControleDeCaixa.Aplicacao.Cliente
                 if (resultadoValidacao.IsValid is false)
                     return Falha.Nova(resultadoValidacao.Errors.ConvertAll(e => $"{e.PropertyName} - {e.ErrorMessage}"));
 
-                //Criar entidade
                 var pessoa = PessoaFisica.Nova(inputModel.Nome,
-                                               inputModel.Nascimento,
-                                               new Credenciais(inputModel.Usuario, inputModel.Senha));
-                //Persistir no banco
+                                               inputModel.Email,
+                                               inputModel.Nascimento);
+
+                //TODO:: Gerenciar as credenciais da pessoa
+
+
+                //TODO:: Atualizar entidade cliente com as novas credenciais
+
+
                 var cliente = await _clienteRepositorio.SalvarRegistroClienteAsync(pessoa);
 
                 return new RegistroClienteViewModel
