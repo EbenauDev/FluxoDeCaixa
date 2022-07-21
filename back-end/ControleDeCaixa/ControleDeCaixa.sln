@@ -11,7 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Core", "Con
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integracoes", "Integracoes", "{00CDDD6B-7900-441E-83EB-00C7887AD909}"
 	ProjectSection(SolutionItems) = preProject
-		tabela-pessoas.sql = tabela-pessoas.sql
+		Integracoes\Scripts\procedure-usuario.sql = Integracoes\Scripts\procedure-usuario.sql
+		Integracoes\Scripts\tabela-pessoas.sql = Integracoes\Scripts\tabela-pessoas.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Infra", "ControleDeCaixa.Infra\ControleDeCaixa.Infra.csproj", "{F4266D21-5B5F-431C-A9E3-C13AD1C5CDEF}"
@@ -22,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testes", "Testes", "{958670
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unitarios", "Unitarios", "{98D21F06-E1B3-4986-8E2B-B68B6BC1466F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleDeCaixa.Aplicacao.Testes", "ControleDeCaixa.Aplicacao.Testes\ControleDeCaixa.Aplicacao.Testes.csproj", "{E3E9A73E-57AE-4B30-8E0F-C0C7E591A11D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControleDeCaixa.Aplicacao.Testes", "ControleDeCaixa.Aplicacao.Testes\ControleDeCaixa.Aplicacao.Testes.csproj", "{E3E9A73E-57AE-4B30-8E0F-C0C7E591A11D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

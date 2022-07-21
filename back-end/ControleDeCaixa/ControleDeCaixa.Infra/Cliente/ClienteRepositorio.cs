@@ -23,7 +23,6 @@ namespace ControleDeCaixa.Infra.Cliente
             const string sql = @"INSERT INTO Pessoa(Id, Nome, Email, Tipo, Usuario, Senha)
                                  VALUES(@Id, @Nome, @Email, @Tipo, @Usuario, @Senha);";
 
-
             using (var conexao = new SqlConnection(_stringConexao))
             {
                 try
@@ -33,18 +32,25 @@ namespace ControleDeCaixa.Infra.Cliente
                     {
                         Id = pessoaFisica.Id,
                         Nome = pessoaFisica.Nome,
-                        Email = pessoaFisica.ema,
-                        Tipo,
-                        Usuario,
-                        Senha
+                        Email = pessoaFisica.Email,
+                        Tipo = pessoaFisica.RecuperarTipoCliente(),
+                        Usuario = pessoaFisica.Credenciais.Usuario,
+                        Senha = pessoaFisica.Credenciais.Senha
                     });
+                    if (linhasAfetadas <= 0)
+                        return Falha.Nova("Falha ao salvar o seu cadastro. Por favor, tente novamente mais tarde");
+                    return pessoaFisica;
                 }
                 catch (Exception)
                 {
-
+                    return Falha.Nova("Falha ao salvar o seu cadastro. Por favor, tente novamente mais tarde");
+                }
+                finally
+                {
+                    await conexao.CloseAsync();
                 }
             }
-            return Falha.Nova("Método de salvar cliente não foi implementado");
+
         }
     }
 }

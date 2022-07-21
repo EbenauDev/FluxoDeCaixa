@@ -1,4 +1,5 @@
 ﻿using ControleDeCaixa.Aplicacao.Cliente;
+using ControleDeCaixa.Dominio.ServicosDeDominio.Identidade;
 using ControleDeCaixa.Infra.Cliente;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -16,8 +17,9 @@ namespace ControleDeCaixa.Aplicacao.Testes.Cliente
         private readonly SalvarRegistroClienteCommand _command;
         public SalvarClienteCommandTestes()
         {
-            _command = new SalvarRegistroClienteCommand(new Mock<IClienteRepositorio>().Object, 
-                                                        new Mock<NullLoggerFactory>().Object);
+            _command = new SalvarRegistroClienteCommand(new Mock<IClienteRepositorio>().Object,
+                                                        new Mock<NullLoggerFactory>().Object,
+                                                        new Mock<IndentidadeServico>().Object);
         }
 
         [Fact]

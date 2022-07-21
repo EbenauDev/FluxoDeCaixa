@@ -1,5 +1,6 @@
 ﻿using ControleDeCaixa.Core.Compartilhado;
 using ControleDeCaixa.Dominio;
+using ControleDeCaixa.Dominio.ServicosDeDominio.Identidade;
 using ControleDeCaixa.Infra.Cliente;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,10 +19,15 @@ namespace ControleDeCaixa.Aplicacao.Cliente
     public sealed class SalvarRegistroClienteCommand : ISalvarRegistroClienteCommand
     {
         private readonly IClienteRepositorio _clienteRepositorio;
+        private readonly IIndentidadeServico _indentidadeServico;
         private readonly ILogger _logger;
-        public SalvarRegistroClienteCommand(IClienteRepositorio clienteRepositorio, ILoggerFactory loggerFactory)
+
+        public SalvarRegistroClienteCommand(IClienteRepositorio clienteRepositorio,
+                                            ILoggerFactory loggerFactory,
+                                            IIndentidadeServico indentidadeServico)
         {
             _clienteRepositorio = clienteRepositorio;
+            _indentidadeServico = indentidadeServico;
             _logger = loggerFactory.CreateLogger<SalvarRegistroClienteCommand>();
         }
 
@@ -37,11 +43,11 @@ namespace ControleDeCaixa.Aplicacao.Cliente
                                                inputModel.Email,
                                                inputModel.Nascimento);
 
-                //TODO:: Gerenciar as credenciais da pessoa
+                var credenciais = await _indentidadeServico.CriarCredenciaisAsync(inputModel.Usuario, inputModel.Senha);
+                if (credenciais.EhSucesso is false)
+                    return credenciais.Falha;
 
-
-                //TODO:: Atualizar entidade cliente com as novas credenciais
-
+                pessoa.AtualizarCredenciais(credenciais.Sucesso);
 
                 var cliente = await _clienteRepositorio.SalvarRegistroClienteAsync(pessoa);
 

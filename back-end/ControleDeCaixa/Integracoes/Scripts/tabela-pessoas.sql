@@ -6,4 +6,9 @@
 	Tipo CHAR(1) NOT NULL,
 	Usuario VARCHAR(30) NOT NULL,
 	Senha VARCHAR(65)
-)
+);
+GO
+
+ALTER TABLE Pessoa
+ALTER COLUMN Senha VARCHAR(256);
+GO
