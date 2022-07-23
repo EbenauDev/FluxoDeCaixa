@@ -1,12 +1,12 @@
 ﻿using ControleDeCaixa.Aplicacao.Cliente;
-using ControleDeCaixa.Dominio.ServicosDeDominio.Identidade;
+using ControleDeCaixa.Aplicacao.Identidade;
+using ControleDeCaixa.Core.Compartilhado;
+using ControleDeCaixa.Dominio;
 using ControleDeCaixa.Infra.Cliente;
-using Microsoft.Extensions.Logging;
+using ControleDeCaixa.Infra.Identidade;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,61 +14,41 @@ namespace ControleDeCaixa.Aplicacao.Testes.Cliente
 {
     public class SalvarClienteCommandTestes
     {
-        private readonly SalvarRegistroClienteCommand _command;
-        public SalvarClienteCommandTestes()
-        {
-            _command = new SalvarRegistroClienteCommand(new Mock<IClienteRepositorio>().Object,
-                                                        new Mock<NullLoggerFactory>().Object,
-                                                        new Mock<IndentidadeServico>().Object);
-        }
 
         [Fact]
-        public async Task Excutar_Model_Invalida()
+        public async Task Excutar_Model_Valida()
         {
-            var resultado = await _command.ExecutarAsync(new NovoClienteInputModel
+
+            var _identidadeRepositorioMock = new Mock<IIdentidadeRepositorio>();
+            _identidadeRepositorioMock.Setup(i => i.UsuarioEstahDisponivel("jaotiago")).ReturnsAsync(true);
+
+            var identidadeServicoMock = new IndentidadeServico(_identidadeRepositorioMock.Object);
+
+            var inputModel = new NovoClienteInputModel
             {
-                Nome = String.Empty,
-                Nascimento = DateTime.MinValue,
-                Usuario = "123",
-                Senha = "12345"
-            });
+                Nome = "João Tiago",
+                Email = "teste@gmail.com",
+                Nascimento = DateTime.Parse("2000-06-24T00:00:00"),
+                Usuario = "jaotiago",
+                Senha = "123456"
+            };
 
-            Assert.False(resultado.EhSucesso);
-        }
+            var pessoaMock = new PessoaFisica(Guid.Parse("f6bcfbd3-1445-4fd5-8c0b-48f988d0e839"),
+                                               inputModel.Nome,
+                                               inputModel.Email,
+                                               inputModel.Nascimento)
+                                    .AtualizarCredenciais(new Credenciais("jaotiago", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"));
 
-        //[Fact]
-        //public async Task Excutar_Model_Valida()
-        //{
-        //    var resultado = await _command.ExecutarAsync(new NovoClienteInputModel
-        //    {
-        //        Nome = "João Tiago",
-        //        Nascimento = DateTime.Parse("2000-06-24T00:00:00"),
-        //        Usuario = "jaotiago",
-        //        Senha = "123456"
-        //    });
+            var clienteRespositorioMock = new Mock<IClienteRepositorio>();
+            clienteRespositorioMock.Setup(c => c.SalvarRegistroClienteAsync(pessoaMock)).ReturnsAsync(pessoaMock);
 
-        //    Assert.True(resultado.EhSucesso);
-        //}
+            var comando = new SalvarRegistroClienteCommand(clienteRespositorioMock.Object,
+                                                           new Mock<NullLoggerFactory>().Object,
+                                                           identidadeServicoMock);
 
-        [Fact]
-        public async Task Response_Model_Nao_Eh_Exception()
-        {
-            try
-            {
-                var resultado = await _command.ExecutarAsync(new NovoClienteInputModel
-                {
-                    Nome = "João Tiago",
-                    Nascimento = DateTime.Parse("2000-06-24T00:00:00"),
-                    Usuario = "jaotiago",
-                    Senha = "123456"
-                });
+            var resultado = await comando.ExecutarAsync(inputModel);
 
-                Assert.IsType<RegistroClienteViewModel>(resultado);
-            }
-            catch (Exception e)
-            {
-                Assert.IsType<RegistroClienteViewModel>(e);
-            }
+            Assert.True(resultado.EhSucesso);
         }
     }
 }

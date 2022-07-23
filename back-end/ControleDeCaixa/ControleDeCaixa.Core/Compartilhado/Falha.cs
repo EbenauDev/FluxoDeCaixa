@@ -15,7 +15,14 @@ namespace ControleDeCaixa.Core.Compartilhado
             Mensagens.Add(mensagem);
         }
 
+        public Falha(string mensagem, Falha falhaInterna)
+        {
+            Mensagens.Add(mensagem);
+            FalhaInterna = falhaInterna;
+        }
+
         public List<string> Mensagens { get; private set; }
+        public Falha FalhaInterna { get; private set; }
 
         public Falha AdicionarMensagem(string mensagem)
         {
@@ -31,6 +38,9 @@ namespace ControleDeCaixa.Core.Compartilhado
 
         public static Falha Nova(string mensagem)
             => new Falha(mensagem);
+
+        public static Falha Nova(string mensagem, Falha falhaInterna)
+            => new Falha(mensagem, falhaInterna);
 
         public static Falha Nova(IEnumerable<string> mensagem)
             => new Falha().AdicionarMensagens(mensagem);

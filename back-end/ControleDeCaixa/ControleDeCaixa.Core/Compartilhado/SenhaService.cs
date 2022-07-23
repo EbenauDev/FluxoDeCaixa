@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ControleDeCaixa.Core.Compartilhado
@@ -9,9 +10,14 @@ namespace ControleDeCaixa.Core.Compartilhado
         {
             using (var servico = SHA256.Create())
             {
-                byte[] senhaEmBytes = UTF8Encoding.UTF8.GetBytes(senha);
+                byte[] senhaEmBytes = Encoding.UTF8.GetBytes(senha);
                 byte[] hashValue = servico.ComputeHash(senhaEmBytes);
-                return hashValue.ToString();
+                string hashString = string.Empty;
+                foreach (byte x in hashValue)
+                {
+                    hashString += String.Format("{0:x2}", x);
+                }
+                return hashString;
             }
         }
     }

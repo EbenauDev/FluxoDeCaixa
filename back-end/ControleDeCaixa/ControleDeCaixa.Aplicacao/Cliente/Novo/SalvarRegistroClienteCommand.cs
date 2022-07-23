@@ -1,6 +1,6 @@
-﻿using ControleDeCaixa.Core.Compartilhado;
+﻿using ControleDeCaixa.Aplicacao.Identidade;
+using ControleDeCaixa.Core.Compartilhado;
 using ControleDeCaixa.Dominio;
-using ControleDeCaixa.Dominio.ServicosDeDominio.Identidade;
 using ControleDeCaixa.Infra.Cliente;
 using Microsoft.Extensions.Logging;
 using System;
@@ -49,7 +49,8 @@ namespace ControleDeCaixa.Aplicacao.Cliente
 
                 pessoa.AtualizarCredenciais(credenciais.Sucesso);
 
-                var cliente = await _clienteRepositorio.SalvarRegistroClienteAsync(pessoa);
+                if (await _clienteRepositorio.SalvarRegistroClienteAsync(pessoa) is var cliente && cliente.EhSucesso is false)
+                    return cliente.Falha;
 
                 return new RegistroClienteViewModel
                 {
